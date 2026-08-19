@@ -1,0 +1,3 @@
+<svg viewBox="0 0 1024 1024" width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <path fill="currentColor" d="M796 57v590q0 25-15 46t-41 34-57 13H341q-31 0-57-13t-41-34-15-46V57zM171 647q0 41 23 75t62 54 85 20h342q46 0 85-20t62-54 23-75V0H171zM319 383h1l62 101h29V313h-35v99h-1l-61-99h-30v171h35zM469 449v-35h59v-32h-59v-34h62v-35h-99v171h99v-35zM643 377l24 107h35l38-171h-38l-20 115h-1l-24-115h-29l-24 115h-1l-20-115h-38l38 171h35l24-107z" />
+</svg>

@@ -1,0 +1,154 @@
+// ============================================================
+// ddktv-ui SCSS Mixins
+// ============================================================
+
+// 玻璃拟态 (H5: backdrop-filter; MP: 降级为 solid bg)
+@mixin dd-glass($intensity: default) {
+  $blur: $dd-glass-blur;
+  @if $intensity == sm { $blur: $dd-glass-blur-sm; }
+  @else if $intensity == md { $blur: $dd-glass-blur-md; }
+  @else if $intensity == lg { $blur: $dd-glass-blur-lg; }
+  background: $dd-glass-bg;
+  border: 1px solid $dd-glass-border;
+  /* #ifdef H5 */
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  /* #endif */
+}
+
+@mixin dd-glass-strong {
+  background: $dd-glass-bg-strong;
+  border: 1px solid $dd-glass-border;
+  /* #ifdef H5 */
+  backdrop-filter: blur($dd-glass-blur);
+  -webkit-backdrop-filter: blur($dd-glass-blur);
+  /* #endif */
+}
+
+// 发光阴影 — 支持 size: sm / md / lg
+@mixin dd-glow($color: gold, $size: md) {
+  $shadows: (
+    gold-sm: $dd-shadow-glow-gold-sm,
+    gold-md: $dd-shadow-glow-gold-md,
+    gold-lg: $dd-shadow-glow-gold-lg,
+    blue-sm: $dd-shadow-glow-blue-sm,
+    blue-md: $dd-shadow-glow-blue-md,
+    blue-lg: $dd-shadow-glow-blue-lg,
+    success-sm: $dd-shadow-glow-success-sm,
+    success-md: $dd-shadow-glow-success-md,
+    success-lg: $dd-shadow-glow-success-lg,
+    warning-sm: $dd-shadow-glow-warning-sm,
+    warning-md: $dd-shadow-glow-warning-md,
+    warning-lg: $dd-shadow-glow-warning-lg,
+    error-sm: $dd-shadow-glow-error-sm,
+    error-md: $dd-shadow-glow-error-md,
+    error-lg: $dd-shadow-glow-error-lg,
+    info-sm: $dd-shadow-glow-info-sm,
+    info-md: $dd-shadow-glow-info-md,
+    info-lg: $dd-shadow-glow-info-lg,
+    vip-sm: $dd-shadow-glow-vip-sm,
+    vip-md: $dd-shadow-glow-vip-md,
+    vip-lg: $dd-shadow-glow-vip-lg,
+  );
+  $key: $color + '-' + $size;
+  box-shadow: map-get($shadows, $key);
+}
+
+// 文字渐变
+@mixin dd-text-gradient($color: gold) {
+  $gradients: (
+    gold: $dd-gradient-text-gold,
+    'gold-light': $dd-gradient-text-gold-light,
+    blue: $dd-gradient-text-blue,
+  );
+  background: map-get($gradients, $color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// 文本溢出省略
+@mixin dd-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lines;
+    overflow: hidden;
+  }
+}
+
+// 安全区域
+@mixin dd-safe-area-top {
+  padding-top: var(--status-bar-height, 20px);
+}
+
+@mixin dd-safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+// 1px 边框 (retina)
+@mixin dd-hairline-bottom($color: $dd-border-default) {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: $color;
+    transform: scaleY(0.5);
+    transform-origin: 0 100%;
+  }
+}
+
+@mixin dd-hairline-top($color: $dd-border-default) {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1px;
+    background: $color;
+    transform: scaleY(0.5);
+    transform-origin: 0 0;
+  }
+}
+
+// flex 居中
+@mixin dd-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin dd-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// 过渡：arglist 直传
+// 支持单属性 dd-transition(transform 0.3s ease) 与多属性
+// dd-transition(opacity 0.3s, transform 0.3s)；旧的位置参数写法
+// (transform, 0.3s, ease) 会把第二段时间值当成 CSS delay，造成隐性延时
+@mixin dd-transition($args...) {
+  @if length($args) == 0 {
+    transition: all 0.3s linear;
+  } @else {
+    transition: $args;
+  }
+}
+
+// 禁止点击
+@mixin dd-no-touch {
+  pointer-events: none;
+  user-select: none;
+}

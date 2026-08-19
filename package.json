@@ -1,0 +1,58 @@
+{
+  "name": "@didaoktv/uniapp-ui",
+  "version": "1.0.0",
+  "description": "帝到KTV UniApp 组件库",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./uni.scss": "./uni.scss",
+    "./scss/variables": "./scss/_variables.scss",
+    "./scss/mixins": "./scss/_mixins.scss",
+    "./scss/functions": "./scss/_functions.scss",
+    "./components/*": "./components/*"
+  },
+  "files": [
+    "components/",
+    "scss/",
+    "libs/",
+    "index.ts",
+    "uni.scss"
+  ],
+  "scripts": {
+    "dev:h5": "cd ../ddktv-ui-docs/h5-demo && npm run dev:h5",
+    "build:docs": "cd ../ddktv-ui-docs && npm run build",
+    "type-check": "vue-tsc --noEmit",
+    "prepublishOnly": "node -e \"const p=require('./package.json');if(p.publishConfig&&p.publishConfig.access==='public'){process.exit(0)}console.error('publishConfig.access must be public');process.exit(1)\""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vue": "^3.4.0",
+    "vue-tsc": "^2.0.0",
+    "typescript": "^5.4.0",
+    "sass": "^1.70.0",
+    "@dcloudio/types": "^3.4.8"
+  },
+  "keywords": [
+    "uniapp",
+    "vue3",
+    "ui",
+    "component-library",
+    "typescript",
+    "didaoktv"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/didaoktv/uniapp-ui"
+  },
+  "sideEffects": [
+    "*.scss",
+    "*.css"
+  ]
+}

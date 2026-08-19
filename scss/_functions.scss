@@ -1,0 +1,68 @@
+// ============================================================
+// ddktv-ui SCSS Functions
+// ============================================================
+
+// px → rpx 转换 (750rpx = 375px 屏幕宽度)
+@function dd-px-to-rpx($px) {
+  @return $px * 2rpx;
+}
+
+// 颜色变暗
+@function dd-darken($color, $amount) {
+  @return darken($color, $amount);
+}
+
+// 颜色变亮
+@function dd-lighten($color, $amount) {
+  @return lighten($color, $amount);
+}
+
+// 色阶获取
+@function dd-color($name, $level: 500) {
+  $map: (
+    primary: (
+      50: $dd-primary-50, 100: $dd-primary-100, 200: $dd-primary-200,
+      300: $dd-primary-300, 400: $dd-primary-400, 500: $dd-primary-500,
+      600: $dd-primary-600, 700: $dd-primary-700, 800: $dd-primary-800,
+      900: $dd-primary-900,
+    ),
+    accent: (
+      50: $dd-accent-50, 100: $dd-accent-100, 200: $dd-accent-200,
+      300: $dd-accent-300, 400: $dd-accent-400, 500: $dd-accent-500,
+      600: $dd-accent-600, 700: $dd-accent-700, 800: $dd-accent-800,
+      900: $dd-accent-900,
+    ),
+    neutral: (
+      50: $dd-neutral-50, 100: $dd-neutral-100, 200: $dd-neutral-200,
+      300: $dd-neutral-300, 400: $dd-neutral-400, 500: $dd-neutral-500,
+      600: $dd-neutral-600, 700: $dd-neutral-700, 800: $dd-neutral-800,
+      900: $dd-neutral-900,
+    ),
+    success: (
+      50: $dd-success-50, 100: $dd-success-100, 200: $dd-success-200,
+      300: $dd-success-300, 400: $dd-success-400, 500: $dd-success-500,
+      600: $dd-success-600, 700: $dd-success-700, 800: $dd-success-800,
+      900: $dd-success-900,
+    ),
+    warning: (
+      50: $dd-warning-50, 100: $dd-warning-100, 200: $dd-warning-200,
+      300: $dd-warning-300, 400: $dd-warning-400, 500: $dd-warning-500,
+      600: $dd-warning-600, 700: $dd-warning-700, 800: $dd-warning-800,
+      900: $dd-warning-900,
+    ),
+    error: (
+      50: $dd-error-50, 100: $dd-error-100, 200: $dd-error-200,
+      300: $dd-error-300, 400: $dd-error-400, 500: $dd-error-500,
+      600: $dd-error-600, 700: $dd-error-700, 800: $dd-error-800,
+      900: $dd-error-900,
+    ),
+    info: (
+      50: $dd-info-50, 100: $dd-info-100, 200: $dd-info-200,
+      300: $dd-info-300, 400: $dd-info-400, 500: $dd-info-500,
+      600: $dd-info-600, 700: $dd-info-700, 800: $dd-info-800,
+      900: $dd-info-900,
+    ),
+  );
+  $group: map-get($map, $name);
+  @return map-get($group, $level);
+}

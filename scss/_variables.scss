@@ -1,0 +1,317 @@
+// ============================================================
+// ddktv-ui SCSS Variables
+// 数据源: .design_library/didao-ktv/css.json + colors_and_type.css
+// ============================================================
+
+// === primary — 帝王金 (from css.json + colors_and_type.css) ===
+$dd-primary-50: #FFF8E1;
+$dd-primary-100: #FFEDB3;
+$dd-primary-200: #FFE082;
+$dd-primary-300: #FFD54F;
+$dd-primary-400: #FFC107;
+$dd-primary-500: #F5A623;
+$dd-primary-600: #D4891A;
+$dd-primary-700: #B26D12;
+$dd-primary-800: #8F520B;
+$dd-primary-900: #6B3A05;
+$dd-primary: $dd-primary-500;
+$dd-primary-contrast: #0A0A0A;
+
+// === accent — 皇家蓝 ===
+$dd-accent-50: #E8EEF5;
+$dd-accent-100: #C5D3E8;
+$dd-accent-200: #9BB3D6;
+$dd-accent-300: #728FC4;
+$dd-accent-400: #4E6EB2;
+$dd-accent-500: #2D4BA0;
+$dd-accent-600: #1E3A8A;
+$dd-accent-700: #152B6B;
+$dd-accent-800: #0D1E4D;
+$dd-accent-900: #061230;
+$dd-accent: $dd-accent-500;
+$dd-accent-contrast: #FFFFFF;
+
+// === neutral — 抖音风纯黑系 ===
+$dd-neutral-50: #F5F5F5;
+$dd-neutral-100: #E0E0E0;
+$dd-neutral-200: #BDBDBD;
+$dd-neutral-300: #9E9E9E;
+$dd-neutral-400: #757575;
+$dd-neutral-500: #616161;
+$dd-neutral-600: #424242;
+$dd-neutral-700: #2A2A2A;
+$dd-neutral-800: #171717;
+$dd-neutral-900: #0A0A0A;
+$dd-neutral-950: #050505;
+
+// === success ===
+$dd-success-50: #E8F5E9;
+$dd-success-100: #C8E6C9;
+$dd-success-200: #A5D6A7;
+$dd-success-300: #81C784;
+$dd-success-400: #66BB6A;
+$dd-success-500: #4CAF50;
+$dd-success-600: #388E3C;
+$dd-success-700: #2E7D32;
+$dd-success-800: #1B5E20;
+$dd-success-900: #0D3B10;
+$dd-success: $dd-success-500;
+$dd-success-contrast: #FFFFFF;
+
+// === warning ===
+$dd-warning-50: #FFFDE7;
+$dd-warning-100: #FFF9C4;
+$dd-warning-200: #FFF176;
+$dd-warning-300: #FFEE58;
+$dd-warning-400: #FDD835;
+$dd-warning-500: #F9A825;
+$dd-warning-600: #F57F17;
+$dd-warning-700: #C65D00;
+$dd-warning-800: #994200;
+$dd-warning-900: #6B2D00;
+$dd-warning: $dd-warning-500;
+$dd-warning-contrast: #0A0A0A;
+
+// === error ===
+$dd-error-50: #FFEBEE;
+$dd-error-100: #FFCDD2;
+$dd-error-200: #EF9A9A;
+$dd-error-300: #E57373;
+$dd-error-400: #EF5350;
+$dd-error-500: #E53935;
+$dd-error-600: #C62828;
+$dd-error-700: #991B1B;
+$dd-error-800: #6D1212;
+$dd-error-900: #400A0A;
+$dd-error: $dd-error-500;
+$dd-error-contrast: #FFFFFF;
+
+// === info ===
+$dd-info-50: #E0F7FA;
+$dd-info-100: #B2EBF2;
+$dd-info-200: #80DEEA;
+$dd-info-300: #4DD0E1;
+$dd-info-400: #26C6DA;
+$dd-info-500: #00BCD4;
+$dd-info-600: #0097A7;
+$dd-info-700: #007580;
+$dd-info-800: #00535A;
+$dd-info-900: #003136;
+$dd-info: $dd-info-500;
+$dd-info-contrast: #FFFFFF;
+
+// === VIP Purple ===
+$dd-vip-500: #9C27B0;
+$dd-vip-700: #6A1B9A;
+
+// === 语义别名 (from colors_and_type.css Layer 2) ===
+$dd-bg: $dd-neutral-900;
+$dd-fg: $dd-neutral-50;
+$dd-muted: $dd-neutral-400;
+$dd-rule: $dd-neutral-700;
+$dd-link: $dd-primary-400;
+$dd-surface: $dd-neutral-900;
+$dd-surface-dim: $dd-neutral-800;
+$dd-surface-container-low: $dd-neutral-800;
+$dd-surface-container: $dd-neutral-800;
+$dd-surface-container-high: $dd-neutral-700;
+$dd-surface-container-highest: $dd-neutral-600;
+$dd-bg-section: $dd-neutral-800;
+$dd-bg-card: $dd-neutral-800;
+$dd-bg-elevated: $dd-neutral-800;
+
+// === 文本色 ===
+$dd-text-primary: $dd-neutral-50;
+$dd-text-secondary: $dd-neutral-200;
+$dd-text-tertiary: $dd-neutral-400;
+
+// === 边框 ===
+$dd-border-default: $dd-neutral-700;
+$dd-border-subtle: rgba(255, 255, 255, 0.06);
+$dd-border-strong: rgba(255, 255, 255, 0.12);
+
+// === 交互态 ===
+$dd-interactive-hover: rgba(255, 255, 255, 0.08);
+$dd-interactive-focus: rgba(255, 255, 255, 0.12);
+$dd-interactive-press: rgba(255, 255, 255, 0.16);
+
+// === 纯色辅助 ===
+$dd-color-white: #FFFFFF;
+$dd-color-black: #000000;
+$dd-color-primary-deep: #1A1200;
+$dd-color-bronze: #CD7F32;
+
+// === 遮罩 ===
+$dd-color-overlay: rgba(0, 0, 0, 0.5);
+$dd-color-overlay-strong: rgba(0, 0, 0, 0.6);
+$dd-color-overlay-soft: rgba(0, 0, 0, 0.4);
+
+$dd-surface-hover: rgba(255, 255, 255, 0.1);
+$dd-surface-press: rgba(255, 255, 255, 0.2);
+$dd-sheen: rgba(255, 255, 255, 0.25);
+$dd-text-glow: rgba(255, 255, 255, 0.3);
+
+// === 字体 (from css.json font.family) ===
+$dd-font-display: 'Playfair Display', serif;
+$dd-font-heading: 'Noto Sans SC', sans-serif;
+$dd-font-body: 'Noto Sans SC', sans-serif;
+$dd-font-mono: 'JetBrains Mono', monospace;
+
+// === 字号 (from css.json font.size) ===
+$dd-font-size-display: 32px;
+$dd-font-size-h1: 24px;
+$dd-font-size-h2: 20px;
+$dd-font-size-h3: 18px;
+$dd-font-size-h4: 16px;
+$dd-font-size-body: 14px;
+$dd-font-size-lead: 16px;
+$dd-font-size-caption: 12px;
+$dd-font-size-mono: 14px;
+
+// === 字重 (from css.json font.weight) ===
+$dd-font-weight-display: 900;
+$dd-font-weight-h1: 800;
+$dd-font-weight-h2: 800;
+$dd-font-weight-h3: 700;
+$dd-font-weight-h4: 700;
+$dd-font-weight-body: 500;
+$dd-font-weight-lead: 500;
+$dd-font-weight-caption: 500;
+$dd-font-weight-mono: 600;
+
+// === 行高 (from css.json font.lineHeight) ===
+$dd-line-height-display: 1.1;
+$dd-line-height-h1: 1.15;
+$dd-line-height-h2: 1.2;
+$dd-line-height-h3: 1.3;
+$dd-line-height-h4: 1.4;
+$dd-line-height-body: 1.6;
+$dd-line-height-lead: 1.7;
+$dd-line-height-caption: 1.5;
+$dd-line-height-mono: 1.6;
+
+// === 间距 (from css.json spacing) ===
+$dd-space-1: 4px;
+$dd-space-2: 8px;
+$dd-space-3: 12px;
+$dd-space-4: 16px;
+$dd-space-5: 24px;
+$dd-space-6: 32px;
+$dd-space-7: 48px;
+$dd-space-8: 64px;
+
+// === 圆角 (from css.json radius) ===
+$dd-radius-sm: 2px;
+$dd-radius-md: 4px;
+$dd-radius-lg: 8px;
+$dd-radius-xl: 12px;
+$dd-radius-2xl: 16px;
+$dd-radius-full: 9999px;
+
+// === 尺寸 (from css.json size) ===
+$dd-size-icon-sm: 16px;
+$dd-size-icon-md: 20px;
+$dd-size-icon-lg: 24px;
+$dd-size-icon-xl: 32px;
+$dd-size-button-sm: 32px;
+$dd-size-button-md: 44px;
+$dd-size-button-lg: 50px;
+$dd-size-input-height: 44px;
+
+// 按钮内边距
+$dd-button-padding-x-sm: 12px;
+$dd-button-padding-x-md: 16px;
+$dd-button-padding-x-lg: 24px;
+$dd-button-height-sm: $dd-size-button-sm;
+$dd-button-height-md: $dd-size-button-md;
+$dd-button-height-lg: $dd-size-button-lg;
+$dd-input-height: $dd-size-input-height;
+
+// === 阴影 (from css.json shadow) ===
+$dd-shadow-1: 0 2px 8px rgba(0, 0, 0, 0.3);
+$dd-shadow-2: 0 8px 24px rgba(0, 0, 0, 0.4);
+$dd-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.5);
+$dd-shadow-4: 0 24px 64px rgba(0, 0, 0, 0.6);
+$dd-shadow-5: 0 40px 80px rgba(0, 0, 0, 0.7);
+
+// === 发光阴影（sm / md / lg 三档）===
+// 品牌色发光
+$dd-shadow-glow-gold-sm: 0 0 8px rgba(245, 166, 35, 0.4);
+$dd-shadow-glow-gold-md: 0 0 20px rgba(245, 166, 35, 0.4);
+$dd-shadow-glow-gold-lg: 0 0 24px rgba(245, 166, 35, 0.4), 0 0 48px rgba(245, 166, 35, 0.2);
+$dd-shadow-glow-blue-sm: 0 0 8px rgba(45, 75, 160, 0.4);
+$dd-shadow-glow-blue-md: 0 0 20px rgba(45, 75, 160, 0.5);
+$dd-shadow-glow-blue-lg: 0 0 24px rgba(45, 75, 160, 0.5), 0 0 48px rgba(45, 75, 160, 0.25);
+// 语义色发光 — md 带暗影托底，lg 为双层霓虹
+$dd-shadow-glow-success-sm: 0 0 8px rgba(76, 175, 80, 0.4);
+$dd-shadow-glow-success-md: 0 0 16px rgba(76, 175, 80, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+$dd-shadow-glow-success-lg: 0 0 24px rgba(76, 175, 80, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+$dd-shadow-glow-warning-sm: 0 0 8px rgba(249, 168, 37, 0.4);
+$dd-shadow-glow-warning-md: 0 0 16px rgba(249, 168, 37, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+$dd-shadow-glow-warning-lg: 0 0 24px rgba(249, 168, 37, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+$dd-shadow-glow-error-sm: 0 0 8px rgba(229, 57, 53, 0.4);
+$dd-shadow-glow-error-md: 0 0 16px rgba(229, 57, 53, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+$dd-shadow-glow-error-lg: 0 0 24px rgba(229, 57, 53, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+$dd-shadow-glow-info-sm: 0 0 8px rgba(0, 188, 212, 0.4);
+$dd-shadow-glow-info-md: 0 0 16px rgba(0, 188, 212, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+$dd-shadow-glow-info-lg: 0 0 24px rgba(0, 188, 212, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+$dd-shadow-glow-vip-sm: 0 0 8px rgba(156, 39, 176, 0.4);
+$dd-shadow-glow-vip-md: 0 0 16px rgba(156, 39, 176, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+$dd-shadow-glow-vip-lg: 0 0 24px rgba(156, 39, 176, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+
+// === 渐变 (from css.json gradient) ===
+// 主渐变：135° 对角，400→600
+$dd-gradient-primary: linear-gradient(135deg, $dd-primary-400, $dd-primary-600);
+$dd-gradient-accent: linear-gradient(135deg, $dd-accent-400, $dd-accent-600);
+$dd-gradient-success: linear-gradient(135deg, $dd-success-400, $dd-success-600);
+$dd-gradient-warning: linear-gradient(135deg, $dd-warning-400, $dd-warning-600);
+$dd-gradient-error: linear-gradient(135deg, $dd-error-400, $dd-error-600);
+$dd-gradient-info: linear-gradient(135deg, $dd-info-400, $dd-info-600);
+$dd-gradient-vip: linear-gradient(135deg, $dd-vip-500, $dd-vip-700);
+$dd-gradient-neutral: linear-gradient(135deg, $dd-neutral-600, $dd-neutral-800);
+// 宽幅渐变：135° 对角，300→600/700
+$dd-gradient-primary-wide: linear-gradient(135deg, $dd-primary-300, $dd-primary-600);
+$dd-gradient-accent-wide: linear-gradient(135deg, $dd-accent-300, $dd-accent-700);
+// 三段渐变：135° 三段色（金属质感）
+$dd-gradient-primary-triple: linear-gradient(135deg, $dd-primary-300 0%, $dd-primary-500 50%, $dd-primary-600 100%);
+// 垂直渐变：180°
+$dd-gradient-primary-v: linear-gradient(180deg, $dd-primary-400, $dd-primary-600);
+// 水平渐变：90°
+$dd-gradient-primary-h: linear-gradient(90deg, $dd-primary-400, $dd-primary-600);
+$dd-gradient-accent-h: linear-gradient(90deg, $dd-accent-400, $dd-accent-600);
+// 文字渐变
+$dd-gradient-text-gold: linear-gradient(135deg, $dd-primary-300, $dd-primary-500);
+$dd-gradient-text-gold-light: linear-gradient(135deg, $dd-color-white, $dd-primary-200);
+$dd-gradient-text-blue: linear-gradient(135deg, $dd-accent-300, $dd-accent-500);
+// 装饰径向光斑
+$dd-gradient-spot-gold: radial-gradient(ellipse at top, rgba(245, 166, 35, 0.08), transparent 60%);
+$dd-gradient-spot-blue: radial-gradient(ellipse at bottom right, rgba(45, 75, 160, 0.08), transparent 60%);
+// sheen 高光渐变
+$dd-gradient-sheen-top: linear-gradient(180deg, $dd-sheen 0%, transparent 100%);
+$dd-gradient-sheen-diagonal: linear-gradient(135deg, $dd-sheen 0%, transparent 50%);
+
+// === 玻璃拟态 (from colors_and_type.css) ===
+$dd-glass-bg: rgba(23, 23, 23, 0.72);
+$dd-glass-bg-strong: rgba(23, 23, 23, 0.85);
+$dd-glass-bg-solid: rgba(23, 23, 23, 0.95);
+$dd-glass-border: rgba(255, 255, 255, 0.08);
+$dd-glass-blur-sm: 4px;
+$dd-glass-blur-md: 10px;
+$dd-glass-blur: 20px;
+$dd-glass-blur-lg: 24px;
+
+// === 组件特定 (from colors_and_type.css Component-specific) ===
+$dd-popup-duration: 0.3s;
+$dd-popover-offset: 8px;
+$dd-step-inactive-color: $dd-neutral-500;
+$dd-step-active-color: $dd-primary-500;
+
+// === z-index 层级 ===
+$dd-z-index-base: 1;
+$dd-z-index-sticky: 100;
+$dd-z-index-fixed: 1000;
+$dd-z-index-overlay: 2000;
+$dd-z-index-popup: 2001;
+$dd-z-index-modal: 3000;
+$dd-z-index-toast: 4000;
+$dd-z-index-loading: 5000;

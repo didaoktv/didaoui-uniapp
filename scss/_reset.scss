@@ -1,0 +1,30 @@
+// ============================================================
+// ddktv-ui Component Reset
+// ============================================================
+
+view, text, image, input, textarea, button, scroll-view,
+swiper, swiper-item, picker-view, picker-view-column {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  &::after {
+    border: none;
+  }
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+image {
+  display: block;
+}
