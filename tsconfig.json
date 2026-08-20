@@ -12,8 +12,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@didaoktv/uniapp-ui": ["./index.ts"],
-      "@didaoktv/uniapp-ui/*": ["./*"]
+      "@didaoktv/didaoui-uniapp": ["./index.ts"],
+      "@didaoktv/didaoui-uniapp/*": ["./*"]
     },
     "lib": ["ESNext", "DOM"],
     "types": ["@dcloudio/types"]

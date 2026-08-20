@@ -87,8 +87,8 @@ function onChoose() {
     count,
     sourceType: props.sourceType as any,
     success: (res) => {
-      const paths = res.tempFilePaths || []
-      const sizes = res.tempFiles?.map((f: any) => f.size) || []
+      const paths = (res.tempFilePaths as string[]) || []
+      const sizes = (res.tempFiles as any[] | undefined)?.map((f: any) => f.size) || []
       const accepted: UploadFileItem[] = []
       const rejected: UploadFileItem[] = []
       paths.forEach((p, i) => {

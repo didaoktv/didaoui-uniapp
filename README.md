@@ -1,4 +1,4 @@
-# @didaoktv/uniapp-ui
+# @didaoktv/didaoui-uniapp
 
 > 帝到KTV UniApp 组件库 — 帝王金 · 皇家蓝 · 抖音商城风
 
@@ -15,7 +15,7 @@
 ## 安装
 
 ```bash
-npm install @didaoktv/uniapp-ui
+npm install @didaoktv/didaoui-uniapp
 ```
 
 ## 快速开始
@@ -25,8 +25,8 @@ npm install @didaoktv/uniapp-ui
 ```ts
 import { createSSRApp } from 'vue'
 import App from './App.vue'
-import DdktvUI from '@didaoktv/uniapp-ui'
-import '@didaoktv/uniapp-ui/uni.scss'
+import DdktvUI from '@didaoktv/didaoui-uniapp'
+import '@didaoktv/didaoui-uniapp/uni.scss'
 
 export function createApp() {
   const app = createSSRApp(App)
@@ -39,7 +39,7 @@ export function createApp() {
 
 ```vue
 <script setup lang="ts">
-import { DdButton, DdInput } from '@didaoktv/uniapp-ui'
+import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 </script>
 
 <template>

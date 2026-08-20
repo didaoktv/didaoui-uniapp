@@ -1,0 +1,38 @@
+name: publish-to-npm
+
+# GitHub Release 打 tag（v*）即自动发布 npm；也支持手动触发
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      # 版本与 tag 对齐：v1.2.0 -> package.json version = 1.2.0
+      - name: Align version from tag
+        run: node -e "const p=require('./package.json');p.version=process.env.GITHUB_REF_NAME.replace(/^v/,'');require('fs').writeFileSync('./package.json',JSON.stringify(p,null,2)+'\n')"
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - run: npm install
+
+      - name: Type check
+        run: npm run type-check
+
+      # prepublishOnly 会再次校验 publishConfig.access 为 public，失败即停止
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

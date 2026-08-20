@@ -86,8 +86,9 @@ let startTranslate = 0
 let dragging = false
 let moved = false
 
-const leftWidthPx = computed(() => rpxToPx(props.actionWidth) * props.leftActions.length)
-const rightWidthPx = computed(() => rpxToPx(props.actionWidth) * props.rightActions.length)
+const actionWidthPx = computed(() => rpxToPx(props.actionWidth))
+const leftWidthPx = computed(() => actionWidthPx.value * props.leftActions.length)
+const rightWidthPx = computed(() => actionWidthPx.value * props.rightActions.length)
 
 function rpxToPx(rpx: number): number {
   try {

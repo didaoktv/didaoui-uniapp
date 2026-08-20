@@ -1,5 +1,5 @@
 {
-  "name": "@didaoktv/uniapp-ui",
+  "name": "@didaoktv/didaoui-uniapp",
   "version": "1.0.0",
   "description": "帝到KTV UniApp 组件库",
   "main": "index.ts",
@@ -20,8 +20,8 @@
     "uni.scss"
   ],
   "scripts": {
-    "dev:h5": "cd ../ddktv-ui-docs/h5-demo && npm run dev:h5",
-    "build:docs": "cd ../ddktv-ui-docs && npm run build",
+    "dev:h5": "cd ../DidaoUI-uniapp-docs/h5-demo && npm run dev:h5",
+    "build:docs": "cd ../DidaoUI-uniapp-docs && npm run build",
     "type-check": "vue-tsc --noEmit",
     "prepublishOnly": "node -e \"const p=require('./package.json');if(p.publishConfig&&p.publishConfig.access==='public'){process.exit(0)}console.error('publishConfig.access must be public');process.exit(1)\""
   },
@@ -49,7 +49,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/didaoktv/uniapp-ui"
+    "url": "https://github.com/didaoktv/didaoui-uniapp"
   },
   "sideEffects": [
     "*.scss",

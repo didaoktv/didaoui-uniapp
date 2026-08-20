@@ -122,8 +122,8 @@ watch(
 
       // Phase 2: 双 RAF 确保浏览器已 paint 初始帧，再加 show class
       await nextTick()
-      await new Promise<void>(r => requestAnimationFrame(r))
-      await new Promise<void>(r => requestAnimationFrame(r))
+      await new Promise<void>(r => requestAnimationFrame(() => r()))
+      await new Promise<void>(r => requestAnimationFrame(() => r()))
       showClass.value = true
       timer = setTimeout(() => emit('opened'), animDuration.value)
     } else {

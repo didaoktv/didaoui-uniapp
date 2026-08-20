@@ -1,38 +1,30 @@
 // ============================================================
-// ddktv-ui Utility Functions
+// DidaoUI-uniapp Utility Functions
 // ============================================================
 
 // 平台检测
+// ponytail: vue-tsc 不识别 #ifdef 注释，四个 const 块会被视为重复声明，
+// 故改为单次 let 声明 + 条件编译赋值。代价：失去编译期常量的 tree-shake
+// （升级路径：改用 process.env.UNI_PLATFORM 判定）。
+export let isH5 = false
+export let isMP = false
+export let isMPWeixin = false
+export let isMPToutiao = false
+export let isApp = false
+
 // #ifdef H5
-export const isH5 = true
-export const isMP = false
-export const isMPWeixin = false
-export const isMPToutiao = false
-export const isApp = false
+isH5 = true
 // #endif
-
 // #ifdef MP-WEIXIN
-export const isH5 = false
-export const isMP = true
-export const isMPWeixin = true
-export const isMPToutiao = false
-export const isApp = false
+isMP = true
+isMPWeixin = true
 // #endif
-
 // #ifdef MP-TOUTIAO
-export const isH5 = false
-export const isMP = true
-export const isMPWeixin = false
-export const isMPToutiao = true
-export const isApp = false
+isMP = true
+isMPToutiao = true
 // #endif
-
 // #ifdef APP-PLUS
-export const isH5 = false
-export const isMP = false
-export const isMPWeixin = false
-export const isMPToutiao = false
-export const isApp = true
+isApp = true
 // #endif
 
 // 防抖
