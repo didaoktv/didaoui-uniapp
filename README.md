@@ -1,7 +1,5 @@
 # @didaoktv/didaoui-uniapp
 
-> 帝到KTV UniApp 组件库 — 帝王金 · 皇家蓝 · 抖音商城风
-
 专为 KTV 场景打造的 UniApp 组件库。
 
 ## 特性
