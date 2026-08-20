@@ -2,7 +2,7 @@
 
 > 帝到KTV UniApp 组件库 — 帝王金 · 皇家蓝 · 抖音商城风
 
-专为 KTV 场景打造的 UniApp 组件库，采用帝王金与皇家蓝的高端配色方案，融合抖音商城级别的交互质感。
+专为 KTV 场景打造的 UniApp 组件库。
 
 ## 特性
 
@@ -50,15 +50,15 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 
 ## 组件分类
 
-| 分类 | 数量 | 组件 |
-|------|------|------|
-| 表单输入 | 13 | Button, Input, Field, Switch, Checkbox, Radio, Stepper, SearchBar, Slider, DatePicker, Picker, Rate, Upload |
-| 导航 | 12 | Navigation, TopNavbar, SwipeableTab, SegmentedTab, Drawer, Tabbar, TabbarItem, Backtop, Collapse, CollapseItem, DropdownMenu, DropdownItem |
-| 布局 | 4 | Card, RoomCard, FeatureGrid, Sticky |
-| 数据展示 | 16 | Tag, StatCard, ChampionCard, Avatar, Badge, ListCell, Cell, CellGroup, CountDown, Divider, Image, Progress, Skeleton, EmptyState, Step, Steps |
-| 浮层反馈 | 11 | Modal, ActionSheet, Toast, Alert, Loading, Dialog, Overlay, Popup, Popover, PopoverItem, SwipeAction |
-| 交互 | 3 | Swipe, SwipeItem, PullRefresh |
-| 小程序专属 | 2 | CapsuleButton, MiniProgramNavbar |
+| 分类    | 数量 | 组件                                                                                                                                            |
+| ----- | -- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 表单输入  | 13 | Button, Input, Field, Switch, Checkbox, Radio, Stepper, SearchBar, Slider, DatePicker, Picker, Rate, Upload                                   |
+| 导航    | 12 | Navigation, TopNavbar, SwipeableTab, SegmentedTab, Drawer, Tabbar, TabbarItem, Backtop, Collapse, CollapseItem, DropdownMenu, DropdownItem    |
+| 布局    | 4  | Card, RoomCard, FeatureGrid, Sticky                                                                                                           |
+| 数据展示  | 16 | Tag, StatCard, ChampionCard, Avatar, Badge, ListCell, Cell, CellGroup, CountDown, Divider, Image, Progress, Skeleton, EmptyState, Step, Steps |
+| 浮层反馈  | 11 | Modal, ActionSheet, Toast, Alert, Loading, Dialog, Overlay, Popup, Popover, PopoverItem, SwipeAction                                          |
+| 交互    | 3  | Swipe, SwipeItem, PullRefresh                                                                                                                 |
+| 小程序专属 | 2  | CapsuleButton, MiniProgramNavbar                                                                                                              |
 
 ## 设计规范
 
@@ -86,4 +86,4 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 
 ## License
 
-[MIT](./LICENSE) &copy; 帝到KTV
+[MIT](./LICENSE) © 帝到KTV
