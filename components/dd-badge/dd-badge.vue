@@ -6,9 +6,8 @@
       class="dd-badge__sup"
       :class="[`dd-badge__sup--${type}`, `dd-badge__sup--${variant}`]"
     >
-      <template v-if="type === 'dot'"></template>
-      <text v-else-if="type === 'number'" class="dd-badge__num">{{ displayContent }}</text>
-      <text v-else class="dd-badge__txt"><slot>{{ content }}</slot></text>
+      <text v-if="type === 'number'" class="dd-badge__num">{{ displayContent }}</text>
+      <text v-else-if="type === 'text'" class="dd-badge__txt">{{ content }}</text>
     </view>
   </view>
 </template>
@@ -54,9 +53,8 @@ const visible = computed(() => {
     if (n === 0 && !props.showZero) return false
     return true
   }
-  // text
-  const hasSlot = false // slot 默认内容由父级传入, 此处依赖 content prop
-  return hasSlot || String(props.content).length > 0
+  // text: content 为空时隐藏
+  return String(props.content).length > 0
 })
 </script>
 
