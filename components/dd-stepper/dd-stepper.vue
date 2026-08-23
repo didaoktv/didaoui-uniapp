@@ -91,8 +91,8 @@ function onPlus() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8rpx;
-  padding: 4rpx;
+  gap: $dd-space-1;
+  padding: $dd-space-1;
   background: $dd-neutral-800;
   border: 1px solid $dd-neutral-700;
   border-radius: $dd-radius-full;
@@ -146,11 +146,11 @@ function onPlus() {
     height: 56rpx;
   }
   .dd-stepper__icon {
-    font-size: 32rpx;
+    font-size: $dd-font-size-h4;
   }
   .dd-stepper__value {
     min-width: 80rpx;
-    font-size: 32rpx;
+    font-size: $dd-font-size-h4;
   }
 }
 
@@ -164,8 +164,8 @@ function onPlus() {
     font-size: 26rpx;
   }
   .dd-stepper__value {
-    min-width: 64rpx;
-    font-size: 28rpx;
+    min-width: $dd-space-6;
+    font-size: $dd-font-size-body;
   }
 }
 </style>

@@ -70,21 +70,21 @@ function onClick(e: Event) {
 .dd-btn {
   @include dd-flex-center;
   @include dd-transition(background 0.2s, box-shadow 0.2s, opacity 0.2s);
-  gap: 8rpx;
+  gap: $dd-space-1;
   box-sizing: border-box;
   border: 1px solid transparent;
   border-radius: $dd-radius-md;
   font-family: $dd-font-body;
   white-space: nowrap;
   user-select: none;
-  height: 88rpx;
-  padding: 0 32rpx;
-  font-size: 28rpx;
+  height: $dd-size-button-md;
+  padding: 0 $dd-space-4;
+  font-size: $dd-font-size-body;
   font-weight: 600;
   line-height: 1;
 
   &__icon {
-    font-size: 32rpx;
+    font-size: $dd-font-size-h4;
     line-height: 1;
   }
 
@@ -103,7 +103,7 @@ function onClick(e: Event) {
 
   .dd-btn--icon-only {
     padding: 0;
-    width: 88rpx;
+    width: $dd-size-button-md;
     gap: 0;
   }
 
@@ -124,11 +124,11 @@ function onClick(e: Event) {
 }
 
 .dd-btn--sm {
-  height: 64rpx;
-  padding: 0 24rpx;
-  font-size: 24rpx;
+  height: $dd-size-button-sm;
+  padding: 0 $dd-space-3;
+  font-size: $dd-font-size-caption;
   &.dd-btn--icon-only {
-    width: 64rpx;
+    width: $dd-size-button-sm;
   }
   .dd-btn__loading {
     width: 22rpx;
@@ -137,11 +137,11 @@ function onClick(e: Event) {
 }
 
 .dd-btn--lg {
-  height: 100rpx;
-  padding: 0 48rpx;
-  font-size: 32rpx;
+  height: $dd-size-button-lg;
+  padding: 0 $dd-space-5;
+  font-size: $dd-font-size-h4;
   &.dd-btn--icon-only {
-    width: 100rpx;
+    width: $dd-size-button-lg;
   }
   .dd-btn__loading {
     width: 34rpx;
@@ -168,9 +168,9 @@ function onClick(e: Event) {
   border-color: transparent;
   border-radius: 0;
   height: auto;
-  min-height: 48rpx;
-  padding: 0 16rpx;
-  font-size: 24rpx;
+  min-height: $dd-space-5;
+  padding: 0 $dd-space-2;
+  font-size: $dd-font-size-caption;
   font-weight: 500;
   &.dd-btn--icon-only {
     width: auto;

@@ -137,7 +137,7 @@ function onClick() {
 .dd-room-card__status {
   display: flex;
   align-items: center;
-  gap: 8rpx;
+  gap: $dd-space-1;
 
   &--inline {
     margin-left: $dd-space-2;
@@ -174,7 +174,7 @@ function onClick() {
   background: $dd-gradient-primary;
   border-radius: $dd-radius-sm;
   text {
-    font-size: 20rpx;
+    font-size: $dd-font-size-caption;
     font-weight: 700;
     color: $dd-neutral-900;
     line-height: 1.6;
@@ -255,7 +255,7 @@ function onClick() {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4rpx;
+  gap: $dd-space-1;
 }
 
 .dd-room-card__list-head {

@@ -54,8 +54,8 @@ function onClick() {
   display: flex;
   align-items: center;
   height: 80rpx;
-  padding: 0 32rpx;
-  gap: 16rpx;
+  padding: 0 $dd-space-4;
+  gap: $dd-space-2;
   color: inherit;
   background: transparent;
   @include dd-transition(background 0.15s ease);
@@ -75,7 +75,7 @@ function onClick() {
   }
 
   &__icon {
-    font-size: 32rpx;
+    font-size: $dd-font-size-h4;
     line-height: 1;
   }
 

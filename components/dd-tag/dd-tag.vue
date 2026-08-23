@@ -7,6 +7,7 @@
       `dd-tag--${size}`,
       { 'dd-tag--round': round, 'dd-tag--closable': closable },
     ]"
+    :style="customStyle"
     @click="onClick"
   >
     <view v-if="type === 'dot'" class="dd-tag__dot"></view>
@@ -18,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
@@ -28,6 +29,8 @@ interface Props {
   round?: boolean
   closable?: boolean
   text?: string
+  bgColor?: string
+  color?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,6 +40,19 @@ const props = withDefaults(defineProps<Props>(), {
   round: false,
   closable: false,
   text: '',
+  bgColor: '',
+  color: '',
+})
+
+// 自定义配色：bgColor 覆盖背景（outlined 时覆盖边框），color 覆盖文字
+const customStyle = computed(() => {
+  const s: Record<string, string> = {}
+  if (props.bgColor) {
+    if (props.type === 'outlined') s.borderColor = props.bgColor
+    else s.background = props.bgColor
+  }
+  if (props.color) s.color = props.color
+  return s
 })
 
 const emit = defineEmits<{ (e: 'click', val: Event): void; (e: 'close', val: Event): void }>()

@@ -112,9 +112,9 @@ function toggleVisible() {
 .dd-input {
   display: flex;
   align-items: center;
-  gap: 16rpx;
+  gap: $dd-space-2;
   height: 88rpx;
-  padding: 0 32rpx;
+  padding: 0 $dd-space-4;
   background: $dd-neutral-800;
   border: 1px solid $dd-neutral-700;
   border-radius: $dd-radius-md;
@@ -125,7 +125,7 @@ function toggleVisible() {
     flex: 1;
     min-width: 0;
     height: 100%;
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
     color: $dd-neutral-100;
     background: transparent;
     border: none;
@@ -144,12 +144,12 @@ function toggleVisible() {
     border-radius: 50%;
     background: $dd-neutral-700;
     color: $dd-neutral-300;
-    font-size: 24rpx;
+    font-size: $dd-font-size-caption;
     line-height: 1;
   }
 
   &__toggle {
-    font-size: 32rpx;
+    font-size: $dd-font-size-h4;
     opacity: 0.7;
     line-height: 1;
   }

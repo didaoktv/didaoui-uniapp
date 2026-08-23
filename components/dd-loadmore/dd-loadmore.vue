@@ -130,14 +130,14 @@ function onClick() {
   }
 
   &__spinner {
-    border: 4rpx solid $dd-border-default;
+    border: $dd-space-1 solid $dd-border-default;
     border-radius: 50%;
     box-sizing: border-box;
     animation: dd-lm-spin 0.8s linear infinite;
   }
 
   &__text {
-    line-height: 1.5;
+    line-height: $dd-line-height-caption;
   }
 
   &__dot {

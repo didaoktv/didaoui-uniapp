@@ -155,7 +155,7 @@ $dd-text-glow: rgba(255, 255, 255, 0.3);
 $dd-font-display: 'Playfair Display', serif;
 $dd-font-heading: 'Noto Sans SC', sans-serif;
 $dd-font-body: 'Noto Sans SC', sans-serif;
-$dd-font-mono: 'JetBrains Mono', monospace;
+$dd-font-mono: 'Noto Sans SC', sans-serif;
 
 // === 字号 (from css.json font.size) ===
 $dd-font-size-display: 32px;
@@ -166,6 +166,7 @@ $dd-font-size-h4: 16px;
 $dd-font-size-body: 14px;
 $dd-font-size-lead: 16px;
 $dd-font-size-caption: 12px;
+$dd-font-size-overline: 10px;
 $dd-font-size-mono: 14px;
 
 // === 字重 (from css.json font.weight) ===
@@ -177,6 +178,7 @@ $dd-font-weight-h4: 700;
 $dd-font-weight-body: 500;
 $dd-font-weight-lead: 500;
 $dd-font-weight-caption: 500;
+$dd-font-weight-overline: 500;
 $dd-font-weight-mono: 600;
 
 // === 行高 (from css.json font.lineHeight) ===
@@ -188,6 +190,7 @@ $dd-line-height-h4: 1.4;
 $dd-line-height-body: 1.6;
 $dd-line-height-lead: 1.7;
 $dd-line-height-caption: 1.5;
+$dd-line-height-overline: 1.4;
 $dd-line-height-mono: 1.6;
 
 // === 间距 (from css.json spacing) ===

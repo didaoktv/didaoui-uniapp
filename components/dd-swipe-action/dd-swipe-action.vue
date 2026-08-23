@@ -213,7 +213,7 @@ defineExpose({ close })
     color: $dd-color-white;
     @include dd-flex-center;
     flex-direction: column;
-    gap: 8rpx;
+    gap: $dd-space-1;
     overflow: hidden;
   }
 

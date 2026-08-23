@@ -84,7 +84,7 @@ const visible = computed(() => {
   &__num {
     font-family: $dd-font-mono;
     font-weight: 600;
-    color: #ffffff;
+    color: $dd-color-white;
     line-height: 1;
     padding: 0 10rpx;
   }
@@ -118,7 +118,7 @@ const visible = computed(() => {
 .dd-badge__sup--text {
   height: 36rpx;
   border-radius: $dd-radius-full;
-  font-size: 20rpx;
+  font-size: $dd-font-size-caption;
 }
 
 // === 4 色变体 ===

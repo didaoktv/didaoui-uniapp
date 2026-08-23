@@ -122,9 +122,9 @@ function onSelect(opt: DropdownOption) {
 
   &__trigger {
     @include dd-flex-center;
-    gap: 8rpx;
+    gap: $dd-space-1;
     height: 96rpx;
-    padding: 0 16rpx;
+    padding: 0 $dd-space-2;
     color: $dd-text-primary;
     font-size: $dd-font-size-body;
     @include dd-transition(color 0.3s);
@@ -135,7 +135,7 @@ function onSelect(opt: DropdownOption) {
   }
 
   &__arrow {
-    font-size: 24rpx;
+    font-size: $dd-font-size-caption;
     line-height: 1;
     @include dd-transition(transform 0.3s);
 
@@ -192,8 +192,8 @@ function onSelect(opt: DropdownOption) {
   }
 
   &__option-icon {
-    width: 40rpx;
-    height: 40rpx;
+    width: $dd-size-icon-md;
+    height: $dd-size-icon-md;
   }
 
   &__option-text {

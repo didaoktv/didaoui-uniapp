@@ -107,7 +107,7 @@ function onAction() {
     margin-top: $dd-space-2;
     font-size: $dd-font-size-body;
     color: $dd-text-tertiary;
-    line-height: 1.5;
+    line-height: $dd-line-height-caption;
     max-width: 560rpx;
   }
 

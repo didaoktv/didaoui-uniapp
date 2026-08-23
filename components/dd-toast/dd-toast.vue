@@ -171,8 +171,8 @@ const iconName = computed(() => {
   }
 
   &__spinner {
-    width: 64rpx;
-    height: 64rpx;
+    width: $dd-size-icon-xl;
+    height: $dd-size-icon-xl;
     border: 6rpx solid $dd-border-default;
     border-top-color: $dd-primary-400;
     border-radius: 50%;

@@ -71,7 +71,7 @@ function onClick(e: Event) {
   display: flex;
   flex-direction: row;
   align-items: center;
-  min-height: 96rpx;
+  min-height: $dd-space-7;
   padding: 0 $dd-space-4;
   box-sizing: border-box;
   background: $dd-bg-elevated;
@@ -88,7 +88,7 @@ function onClick(e: Event) {
   }
 
   &__icon-text {
-    font-size: 40rpx;
+    font-size: $dd-font-size-h2;
     line-height: 1;
     color: $dd-primary-400;
   }
@@ -98,7 +98,7 @@ function onClick(e: Event) {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4rpx;
+    gap: $dd-space-1;
   }
 
   &__title {
@@ -129,7 +129,7 @@ function onClick(e: Event) {
   }
 
   &__arrow {
-    font-size: 36rpx;
+    font-size: $dd-font-size-h3;
     color: $dd-text-tertiary;
     line-height: 1;
     margin-left: $dd-space-1;

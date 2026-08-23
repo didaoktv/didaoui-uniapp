@@ -68,7 +68,7 @@ function onClick() {
   height: 100%;
   @include dd-flex-center;
   flex-direction: column;
-  gap: 4rpx;
+  gap: $dd-space-1;
   box-sizing: border-box;
   @include dd-transition(color 0.3s);
 
@@ -95,9 +95,9 @@ function onClick() {
     top: 0;
     right: 0;
     transform: translate(40%, -50%);
-    min-width: 32rpx;
-    height: 32rpx;
-    padding: 0 8rpx;
+    min-width: $dd-space-4;
+    height: $dd-space-4;
+    padding: 0 $dd-space-1;
     border-radius: $dd-radius-full;
     background: $dd-error;
     @include dd-flex-center;
@@ -111,10 +111,10 @@ function onClick() {
 
   &__dot {
     position: absolute;
-    top: -4rpx;
-    right: -4rpx;
-    width: 16rpx;
-    height: 16rpx;
+    top: -$dd-space-1;
+    right: -$dd-space-1;
+    width: $dd-space-2;
+    height: $dd-space-2;
     border-radius: 50%;
     background: $dd-error;
   }

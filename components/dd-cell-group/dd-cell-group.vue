@@ -1,27 +1,28 @@
 <template>
-  <view class="dd-cell-group">
-    <view v-if="title || $slots.title" class="dd-cell-group__title">
+  <view>
+    <view v-if="title || $slots.title" class="dd-cell-group__title" :class="{ 'dd-cell-group__title--inset': inset }">
       <slot name="title">{{ title }}</slot>
     </view>
-    <view class="dd-cell-group__body">
+    <view class="dd-cell-group" :class="{ 'dd-cell-group--inset': inset, 'dd-cell-group--border': border && !inset }">
       <slot></slot>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { useSlots } from 'vue'
-
 interface Props {
   title?: string
+  /** 默认通栏；inset = 圆角卡片内嵌模式 */
+  inset?: boolean
+  /** 通栏模式下的首尾外框发丝线 */
+  border?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   title: '',
+  inset: false,
+  border: true,
 })
-
-const slots = useSlots()
-void slots
 </script>
 
 <style lang="scss" scoped>
@@ -29,28 +30,34 @@ void slots
 @import '../../scss/mixins';
 
 .dd-cell-group {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  background: $dd-bg-elevated;
 
-  &__title {
-    padding: 32rpx 32rpx 16rpx;
-    font-size: $dd-font-size-caption;
-    color: $dd-text-tertiary;
+  :deep(.dd-cell:last-child),
+  :deep(.dd-list-cell:last-child) {
+    &::after {
+      display: none;
+    }
   }
 
-  &__body {
-    background: $dd-bg-elevated;
+  &--inset {
     border-radius: $dd-radius-lg;
     overflow: hidden;
+    margin: 0 24rpx;
+  }
 
-    // 去除最后一个子元素的底边框, 避免溢出到圆角外
-    :deep(.dd-cell:last-child),
-    :deep(.dd-list-cell:last-child) {
-      &::after {
-        display: none;
-      }
-    }
+  &--border {
+    @include dd-hairline-top($dd-border-subtle);
+    @include dd-hairline-bottom($dd-border-subtle);
+  }
+}
+
+.dd-cell-group__title {
+  padding: 32rpx 32rpx 16rpx;
+  font-size: $dd-font-size-caption;
+  color: $dd-text-tertiary;
+
+  &--inset {
+    padding: 32rpx 24rpx 16rpx;
   }
 }
 </style>

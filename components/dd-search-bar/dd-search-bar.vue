@@ -100,15 +100,15 @@ function onCancel() {
 .dd-search {
   display: flex;
   align-items: center;
-  gap: 16rpx;
+  gap: $dd-space-2;
 
   &__wrap {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 16rpx;
+    gap: $dd-space-2;
     height: 88rpx;
-    padding: 0 24rpx;
+    padding: 0 $dd-space-3;
     background: $dd-neutral-800;
     border: 1px solid $dd-neutral-700;
     border-radius: $dd-radius-full;
@@ -126,7 +126,7 @@ function onCancel() {
   }
 
   &__icon {
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
     color: $dd-neutral-400;
     line-height: 1;
     @include dd-transition(color 0.2s);
@@ -140,7 +140,7 @@ function onCancel() {
     flex: 1;
     min-width: 0;
     height: 100%;
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
     color: $dd-neutral-100;
     background: transparent;
     border: none;
@@ -153,14 +153,14 @@ function onCancel() {
     border-radius: 50%;
     background: $dd-neutral-800;
     color: $dd-neutral-300;
-    font-size: 24rpx;
+    font-size: $dd-font-size-caption;
     line-height: 1;
   }
 
   &__cancel {
     flex-shrink: 0;
-    padding: 0 8rpx;
-    font-size: 28rpx;
+    padding: 0 $dd-space-1;
+    font-size: $dd-font-size-body;
     font-weight: 500;
     color: $dd-primary-400;
   }

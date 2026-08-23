@@ -143,7 +143,7 @@ function onClick() {
   box-sizing: border-box;
 
   &--sm {
-    border-width: 4rpx;
+    border-width: $dd-space-1;
   }
 }
 
@@ -211,8 +211,8 @@ function onClick() {
   &--sm {
     position: static;
     transform: none;
-    width: 48rpx;
-    height: 48rpx;
+    width: $dd-size-icon-lg;
+    height: $dd-size-icon-lg;
     flex-shrink: 0;
   }
 }
@@ -229,7 +229,7 @@ function onClick() {
   font-weight: 800;
   color: #FFD700;
   flex-shrink: 0;
-  width: 48rpx;
+  width: $dd-size-icon-lg;
   text-align: center;
 }
 

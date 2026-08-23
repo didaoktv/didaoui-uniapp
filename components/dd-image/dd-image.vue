@@ -136,16 +136,16 @@ watch(
 }
 
 .dd-image__spinner {
-  width: 48rpx;
-  height: 48rpx;
-  border: 4rpx solid $dd-border-default;
+  width: $dd-size-icon-lg;
+  height: $dd-size-icon-lg;
+  border: $dd-space-1 solid $dd-border-default;
   border-top-color: $dd-primary-500;
   border-radius: 50%;
   animation: dd-image-spin 0.8s linear infinite;
 }
 
 .dd-image__error-icon {
-  font-size: 48rpx; // 24px
+  font-size: $dd-size-icon-lg; // 24px
   color: $dd-text-tertiary;
   line-height: 1;
 }

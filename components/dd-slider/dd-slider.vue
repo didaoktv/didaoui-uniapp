@@ -178,7 +178,7 @@ function onMouseDown(e: any) {
     top: 50%;
     width: 32rpx;
     height: 32rpx;
-    background: #ffffff;
+    background: $dd-color-white;
     border: 4rpx solid $dd-primary-400;
     border-radius: 50%;
     box-shadow: $dd-shadow-glow-gold-lg;
@@ -192,10 +192,10 @@ function onMouseDown(e: any) {
 
   &__tooltip {
     position: absolute;
-    bottom: calc(100% + 16rpx);
+    bottom: calc(100% + $dd-space-2);
     left: 50%;
     transform: translateX(-50%);
-    padding: 6rpx 16rpx;
+    padding: 6rpx $dd-space-2;
     @include dd-glass;
     border-radius: $dd-radius-sm;
     white-space: nowrap;
@@ -213,7 +213,7 @@ function onMouseDown(e: any) {
   }
 
   &__tooltip-text {
-    font-size: 24rpx;
+    font-size: $dd-font-size-caption;
     font-weight: 600;
     color: $dd-primary-300;
     line-height: 1.2;

@@ -105,13 +105,13 @@ const lineStyle = computed(() => ({
   &__head {
     position: relative;
     width: 100%;
-    height: 40rpx;
+    height: $dd-size-icon-md;
     display: flex;
     align-items: center;
     justify-content: center;
 
     &--vertical {
-      width: 40rpx;
+      width: $dd-size-icon-md;
       height: auto;
       flex-direction: column;
       align-self: stretch;
@@ -137,15 +137,15 @@ const lineStyle = computed(() => ({
       width: 1px;
       flex: 1;
       min-height: 32rpx;
-      margin: 8rpx 0;
+      margin: $dd-space-1 0;
     }
   }
 
   &__circle {
     position: relative;
     z-index: 1;
-    width: 40rpx;
-    height: 40rpx;
+    width: $dd-size-icon-md;
+    height: $dd-size-icon-md;
     border-radius: $dd-radius-full;
     @include dd-flex-center;
     flex-shrink: 0;
@@ -153,20 +153,20 @@ const lineStyle = computed(() => ({
   }
 
   &__circle-text {
-    font-size: 20rpx; // font-size-xs
+    font-size: $dd-font-size-caption;
     font-weight: 700;
     line-height: 1;
   }
 
   &__content {
     text-align: center;
-    margin-top: 8rpx;
+    margin-top: $dd-space-1;
 
     &--vertical {
       text-align: left;
       flex: 1;
-      padding-bottom: 32rpx;
-      padding-left: 8rpx;
+      padding-bottom: $dd-space-4;
+      padding-left: $dd-space-1;
       margin-top: 0;
     }
   }
@@ -179,8 +179,8 @@ const lineStyle = computed(() => ({
 
   &__desc {
     display: block;
-    margin-top: 4rpx;
-    font-size: 20rpx;
+    margin-top: $dd-space-1;
+    font-size: $dd-font-size-caption;
     color: $dd-text-tertiary;
     line-height: 1.4;
   }

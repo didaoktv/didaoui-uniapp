@@ -203,12 +203,12 @@ watch(
   &__head-inner {
     height: 100%;
     @include dd-flex-center;
-    gap: 16rpx;
+    gap: $dd-space-2;
   }
 
   &__spinner {
-    width: 32rpx;
-    height: 32rpx;
+    width: $dd-size-icon-sm;
+    height: $dd-size-icon-sm;
     border: 4rpx solid $dd-border-default;
     border-top-color: $dd-primary-500;
     border-radius: 50%;

@@ -56,7 +56,7 @@ function onMenu() {
 // 微信小程序标准 87×32px → 174×64rpx (ponytail: 固定尺寸，H5 降级同样尺寸)
 .dd-capsule-button {
   width: 174rpx;
-  height: 64rpx;
+  height: $dd-size-button-sm;
   border-radius: $dd-radius-full;
   @include dd-glass;
   display: flex;
@@ -78,14 +78,14 @@ function onMenu() {
   &__arrow {
     width: 20rpx;
     height: 20rpx;
-    border-left: 4rpx solid $dd-text-secondary;
-    border-bottom: 4rpx solid $dd-text-secondary;
+    border-left: $dd-space-1 solid $dd-text-secondary;
+    border-bottom: $dd-space-1 solid $dd-text-secondary;
     transform: rotate(45deg);
-    margin-left: 4rpx;
+    margin-left: $dd-space-1;
   }
 
   &__dots {
-    font-size: 36rpx;
+    font-size: $dd-font-size-h3;
     line-height: 1;
     color: $dd-text-secondary;
   }
@@ -93,7 +93,7 @@ function onMenu() {
   // 1px 竖向分隔线，仅 default 变体
   &__divider {
     width: 1px;
-    height: 32rpx;
+    height: $dd-space-4;
     align-self: center;
     background: $dd-border-default;
     flex-shrink: 0;

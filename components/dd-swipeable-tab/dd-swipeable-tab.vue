@@ -187,7 +187,7 @@ watch(() => props.options, measure)
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 4rpx;
+  height: $dd-space-1;
   background: $dd-gradient-primary-h;
   border-radius: $dd-radius-full;
   box-shadow: $dd-shadow-glow-gold-sm;

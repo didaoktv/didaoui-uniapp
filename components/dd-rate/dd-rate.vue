@@ -76,7 +76,7 @@ function select(val: number) {
 .dd-rate {
   display: inline-flex;
   align-items: center;
-  gap: 8rpx;
+  gap: $dd-space-1;
 
   &__item {
     position: relative;

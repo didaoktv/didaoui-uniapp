@@ -93,7 +93,7 @@ function onSelect(index: number) {
     height: 100%;
     @include dd-flex-center;
     flex-direction: column;
-    gap: 4rpx;
+    gap: $dd-space-1;
     color: $dd-text-tertiary;
     @include dd-transition(color 0.3s);
 
@@ -113,20 +113,20 @@ function onSelect(index: number) {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 48rpx;
-    height: 4rpx;
+    width: $dd-space-5;
+    height: $dd-space-1;
     border-radius: 0 0 $dd-radius-sm $dd-radius-sm;
     background: $dd-gradient-primary-h;
     box-shadow: $dd-shadow-glow-gold-sm;
   }
 
   &__icon {
-    font-size: 40rpx;
+    font-size: $dd-font-size-h2;
     line-height: 1;
   }
 
   &__label {
-    font-size: 24rpx;
+    font-size: $dd-font-size-caption;
     line-height: 1.2;
     @include dd-ellipsis(1);
   }

@@ -199,7 +199,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
     position: relative;
 
     &:last-child {
-      flex: 0 0 24rpx;
+      flex: 0 0 $dd-space-3;
     }
   }
 
@@ -224,8 +224,8 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
 
   &__connector {
     flex: 1;
-    height: 4rpx;
-    margin: 0 8rpx;
+    height: $dd-space-1;
+    margin: 0 $dd-space-1;
     background: #2a2a2a;
     @include dd-transition(background 0.3s ease);
 

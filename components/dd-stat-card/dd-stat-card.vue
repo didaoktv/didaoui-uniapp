@@ -88,27 +88,27 @@ function onClick(e: Event) {
   &__value-row {
     display: flex;
     align-items: baseline;
-    gap: 8rpx;
+    gap: $dd-space-1;
     margin-top: $dd-space-1;
   }
 
   &__prefix {
     font-size: $dd-font-size-h3;
     font-weight: 700;
-    color: #ffffff;
+    color: $dd-color-white;
   }
 
   &__value {
     font-size: $dd-font-size-h1;
     font-weight: 800;
-    color: #ffffff;
+    color: $dd-color-white;
     line-height: 1.2;
   }
 
   &__trend {
     display: inline-flex;
     align-items: baseline;
-    gap: 4rpx;
+    gap: $dd-space-1;
     font-size: $dd-font-size-caption;
     font-weight: 600;
     margin-left: $dd-space-1;
@@ -119,7 +119,7 @@ function onClick(e: Event) {
     }
 
     &--up {
-      color: #ffffff;
+      color: $dd-color-white;
     }
 
     &--down {

@@ -1,0 +1,26 @@
+// 行内标签列表（wxs 运行于视图层，无法用 ES Module）
+var inlineTags = {
+  abbr: true,
+  b: true,
+  big: true,
+  code: true,
+  del: true,
+  em: true,
+  i: true,
+  ins: true,
+  label: true,
+  q: true,
+  small: true,
+  span: true,
+  strong: true,
+  sub: true,
+  sup: true
+}
+/**
+ * @description 判断是否为行内标签
+ */
+module.exports = {
+  isInline: function (tagName, style) {
+    return inlineTags[tagName] || (style || '').indexOf('display:inline') !== -1
+  }
+}

@@ -5,7 +5,7 @@
       `dd-radio--${size}`,
       {
         'dd-radio--checked': isChecked,
-        'dd-radio--disabled': disabled,
+        'dd-radio--disabled': isDisabled,
       },
     ]"
     @click="onToggle"
@@ -20,36 +20,35 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 interface Props {
-  modelValue?: any
-  value?: any
+  /** 选项值，对应 dd-radio-group 的 modelValue */
+  value: any
   disabled?: boolean
   size?: 'md' | 'sm'
   label?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: null,
   value: null,
   disabled: false,
   size: 'md',
   label: '',
 })
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', val: any): void
-  (e: 'change', val: any): void
-}>()
+// 必须配合 dd-radio-group 使用（vant/uview 同款约定）
+const group = inject<{
+  props: { modelValue: any; disabled: boolean }
+  toggle: (value: any) => void
+} | null>('dd-radio-group', null)
 
-const isChecked = computed(() => props.modelValue === props.value)
+const isChecked = computed(() => group?.props.modelValue === props.value)
+const isDisabled = computed(() => props.disabled || !!group?.props.disabled)
 
 function onToggle() {
-  if (props.disabled) return
-  if (isChecked.value) return
-  emit('update:modelValue', props.value)
-  emit('change', props.value)
+  if (isDisabled.value || !group) return
+  group.toggle(props.value)
 }
 </script>
 
@@ -75,7 +74,7 @@ function onToggle() {
 
   &__inner {
     border-radius: 50%;
-    background: #ffffff;
+    background: $dd-color-white;
     transform: scale(0);
     opacity: 0;
     @include dd-transition(transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s);
@@ -105,8 +104,8 @@ function onToggle() {
 
 .dd-radio--md {
   .dd-radio__outer {
-    width: 40rpx;
-    height: 40rpx;
+    width: $dd-size-icon-md;
+    height: $dd-size-icon-md;
   }
   .dd-radio__inner {
     width: 20rpx;
@@ -115,15 +114,15 @@ function onToggle() {
 }
 .dd-radio--sm {
   .dd-radio__outer {
-    width: 32rpx;
-    height: 32rpx;
+    width: $dd-size-icon-sm;
+    height: $dd-size-icon-sm;
   }
   .dd-radio__inner {
     width: 14rpx;
     height: 14rpx;
   }
   .dd-radio__label {
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
   }
 }
 </style>

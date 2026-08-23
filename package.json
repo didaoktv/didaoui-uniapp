@@ -1,6 +1,6 @@
 {
   "name": "@didaoktv/didaoui-uniapp",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "帝到KTV UniApp 组件库",
   "main": "index.ts",
   "types": "index.ts",

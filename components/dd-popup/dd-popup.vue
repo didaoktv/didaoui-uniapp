@@ -154,7 +154,7 @@ onUnmounted(() => {
   &__overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: $dd-color-overlay-strong;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     opacity: 0;
@@ -230,10 +230,10 @@ onUnmounted(() => {
     @include dd-flex-center;
     z-index: 2;
 
-    &--top-left { top: 16rpx; left: 16rpx; }
-    &--top-right { top: 16rpx; right: 16rpx; }
-    &--bottom-left { bottom: 16rpx; left: 16rpx; }
-    &--bottom-right { bottom: 16rpx; right: 16rpx; }
+    &--top-left { top: $dd-space-2; left: $dd-space-2; }
+    &--top-right { top: $dd-space-2; right: $dd-space-2; }
+    &--bottom-left { bottom: $dd-space-2; left: $dd-space-2; }
+    &--bottom-right { bottom: $dd-space-2; right: $dd-space-2; }
   }
 
   &__safe-bottom {

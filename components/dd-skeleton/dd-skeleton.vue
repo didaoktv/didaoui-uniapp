@@ -119,7 +119,7 @@ const lineWidths = computed(() => {
     &--title {
       height: 36rpx;
       width: 50%;
-      margin-bottom: 24rpx;
+      margin-bottom: $dd-space-3;
     }
   }
 

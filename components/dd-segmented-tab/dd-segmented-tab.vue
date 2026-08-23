@@ -112,7 +112,7 @@ watch(() => props.options, measure)
   .dd-seg__track {
     position: relative;
     display: inline-flex;
-    padding: 8rpx;
+    padding: $dd-space-1;
     background: $dd-neutral-800;
     border: 1px solid $dd-border-default;
     border-radius: $dd-radius-full;
@@ -137,8 +137,8 @@ watch(() => props.options, measure)
 
   .dd-seg__indicator {
     position: absolute;
-    top: 8rpx;
-    bottom: 8rpx;
+    top: $dd-space-1;
+    bottom: $dd-space-1;
     left: 0;
     background: $dd-color-white;
     border-radius: $dd-radius-full;
@@ -152,11 +152,11 @@ watch(() => props.options, measure)
 .dd-seg--text {
   display: flex;
   flex-direction: row;
-  gap: 64rpx;
+  gap: $dd-space-6;
 
   .dd-seg-text__item {
     position: relative;
-    padding: 16rpx 0;
+    padding: $dd-space-2 0;
     color: $dd-text-tertiary;
     font-size: $dd-font-size-body;
     font-weight: 500;
@@ -174,7 +174,7 @@ watch(() => props.options, measure)
     bottom: 0;
     left: 20%;
     width: 60%;
-    height: 4rpx;
+    height: $dd-space-1;
     background: $dd-primary-400;
     border-radius: $dd-radius-full;
   }

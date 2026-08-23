@@ -145,7 +145,7 @@ function onCancel() {
   &__mask {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: $dd-color-overlay-strong;
     opacity: 0;
     visibility: hidden;
     z-index: 2000;

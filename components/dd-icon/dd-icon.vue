@@ -193,8 +193,8 @@ const iconStyle = computed(() => {
   &--dot::after {
     content: '';
     position: absolute;
-    top: -4rpx;
-    right: -4rpx;
+    top: -$dd-space-1;
+    right: -$dd-space-1;
     width: 12rpx;
     height: 12rpx;
     background: $dd-error-500;

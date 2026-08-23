@@ -6,7 +6,7 @@
       {
         'dd-checkbox--checked': isChecked,
         'dd-checkbox--indeterminate': indeterminate,
-        'dd-checkbox--disabled': disabled,
+        'dd-checkbox--disabled': isDisabled,
       },
     ]"
     @click="onToggle"
@@ -22,51 +22,42 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
-  modelValue?: boolean | any[]
-  value?: any
-  indeterminate?: boolean
+  /** 选项值，dd-checkbox-group 的 modelValue 数组成员 */
+  value: any
   disabled?: boolean
   size?: 'md' | 'sm'
   label?: string
+  /** 半选态（受控展示，不参与 group 数组逻辑） */
+  indeterminate?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
   value: null,
-  indeterminate: false,
   disabled: false,
   size: 'md',
   label: '',
+  indeterminate: false,
 })
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', val: boolean | any[]): void
-  (e: 'change', val: boolean | any[]): void
-}>()
+// 必须配合 dd-checkbox-group 使用（vant/uview 同款约定）
+const group = inject<{
+  props: { modelValue: any[]; disabled: boolean }
+  isMaxed: { value: boolean }
+  toggle: (value: any) => void
+} | null>('dd-checkbox-group', null)
 
-const isChecked = computed(() => {
-  if (Array.isArray(props.modelValue)) return props.modelValue.includes(props.value)
-  return !!props.modelValue
-})
+const isChecked = computed(() => !!group?.props.modelValue?.includes(props.value))
+const isDisabled = computed(
+  () => props.disabled || !!group?.props.disabled || (!!group?.isMaxed.value && !isChecked.value)
+)
 
 function onToggle() {
-  if (props.disabled) return
-  if (Array.isArray(props.modelValue)) {
-    const arr = props.modelValue.slice()
-    const idx = arr.indexOf(props.value)
-    if (idx >= 0) arr.splice(idx, 1)
-    else arr.push(props.value)
-    emit('update:modelValue', arr)
-    emit('change', arr)
-  } else {
-    const next = !props.modelValue
-    emit('update:modelValue', next)
-    emit('change', next)
-  }
+  if (isDisabled.value || !group) return
+  group.toggle(props.value)
 }
 </script>
 
@@ -77,7 +68,7 @@ function onToggle() {
 .dd-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 16rpx;
+  gap: $dd-space-2;
   user-select: none;
 
   &__box {
@@ -91,21 +82,21 @@ function onToggle() {
   }
 
   &__check {
-    color: #ffffff;
-    font-size: 24rpx;
+    color: $dd-color-white;
+    font-size: $dd-font-size-caption;
     font-weight: 700;
     line-height: 1;
   }
 
   &__dash {
     width: 60%;
-    height: 4rpx;
+    height: $dd-space-1;
     background: $dd-primary-500;
     border-radius: $dd-radius-full;
   }
 
   &__label {
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
     color: $dd-text-primary;
   }
 
@@ -127,19 +118,19 @@ function onToggle() {
 }
 
 .dd-checkbox--md .dd-checkbox__box {
-  width: 40rpx;
-  height: 40rpx;
+  width: $dd-size-icon-md;
+  height: $dd-size-icon-md;
 }
 .dd-checkbox--sm {
   .dd-checkbox__box {
-    width: 32rpx;
-    height: 32rpx;
+    width: $dd-size-icon-sm;
+    height: $dd-size-icon-sm;
   }
   .dd-checkbox__check {
-    font-size: 20rpx;
+    font-size: $dd-font-size-caption;
   }
   .dd-checkbox__label {
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
   }
 }
 </style>

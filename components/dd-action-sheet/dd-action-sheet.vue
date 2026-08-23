@@ -130,10 +130,10 @@ function onClose() {
 
   &__handle {
     width: 72rpx;
-    height: 8rpx;
+    height: $dd-space-1;
     border-radius: $dd-radius-full;
     background: rgba(255, 255, 255, 0.3);
-    margin: 8rpx auto 16rpx;
+    margin: $dd-space-1 auto $dd-space-2;
     opacity: 0.6;
   }
 
@@ -178,7 +178,7 @@ function onClose() {
   }
 
   &__name {
-    margin-top: 8rpx;
+    margin-top: $dd-space-1;
     font-size: $dd-font-size-caption;
     color: $dd-text-secondary;
     max-width: 128rpx;

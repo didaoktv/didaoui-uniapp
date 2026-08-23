@@ -54,14 +54,14 @@ const effectiveHairline = computed(() => props.hairline || props.dashed)
   display: flex;
   align-items: center;
   width: 100%;
-  height: 48rpx; // 24px
+  height: $dd-space-5; // 24px
 
   &__content {
     flex: none;
     padding: 0 $dd-space-2;
     color: $dd-text-tertiary;
     font-size: $dd-font-size-caption;
-    line-height: 1.5;
+    line-height: $dd-line-height-caption;
   }
 
   &__line {
@@ -89,7 +89,7 @@ const effectiveHairline = computed(() => props.hairline || props.dashed)
     }
 
     &:not(.dd-divider__line--hairline) {
-      border-top-width: 4rpx;
+      border-top-width: $dd-space-1;
     }
   }
 }

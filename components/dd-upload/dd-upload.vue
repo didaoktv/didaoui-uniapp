@@ -133,7 +133,7 @@ function onPreview(index: number) {
 .dd-upload {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: $dd-space-2;
 
   &__item {
     position: relative;
@@ -152,8 +152,8 @@ function onPreview(index: number) {
 
   &__delete {
     position: absolute;
-    top: 8rpx;
-    right: 8rpx;
+    top: $dd-space-1;
+    right: $dd-space-1;
     width: 36rpx;
     height: 36rpx;
     border-radius: 50%;
@@ -171,7 +171,7 @@ function onPreview(index: number) {
     border-radius: $dd-radius-md;
     background: $dd-neutral-800;
     color: $dd-text-tertiary;
-    font-size: 48rpx;
+    font-size: $dd-font-size-h1;
     box-sizing: border-box;
     @include dd-transition(background 0.2s);
 

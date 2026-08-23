@@ -155,29 +155,29 @@ provide('ddPopover', {
 
   &__arrow {
     position: absolute;
-    width: 16rpx;
-    height: 16rpx;
+    width: $dd-space-2;
+    height: $dd-space-2;
     transform: rotate(45deg);
 
     &--bottom {
-      top: -8rpx;
+      top: -$dd-space-1;
       left: 50%;
-      margin-left: -8rpx;
+      margin-left: -$dd-space-1;
     }
     &--top {
-      bottom: -8rpx;
+      bottom: -$dd-space-1;
       left: 50%;
-      margin-left: -8rpx;
+      margin-left: -$dd-space-1;
     }
     &--left {
-      right: -8rpx;
+      right: -$dd-space-1;
       top: 50%;
-      margin-top: -8rpx;
+      margin-top: -$dd-space-1;
     }
     &--right {
-      left: -8rpx;
+      left: -$dd-space-1;
       top: 50%;
-      margin-top: -8rpx;
+      margin-top: -$dd-space-1;
     }
   }
 

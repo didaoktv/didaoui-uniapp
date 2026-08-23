@@ -80,7 +80,7 @@ const coreStyle = computed(() => (props.color ? { '--dd-loading-color': props.co
   &__mask {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: $dd-color-overlay-strong;
     /* #ifdef H5 */
     backdrop-filter: blur(8rpx);
     -webkit-backdrop-filter: blur(8rpx);

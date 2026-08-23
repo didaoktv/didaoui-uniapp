@@ -170,23 +170,23 @@ function onSearchConfirm(e: any) {
 
   &__left {
     flex-shrink: 0;
-    min-width: 64rpx;
+    min-width: $dd-space-6;
   }
 
   &__back {
     display: flex;
     align-items: center;
     gap: 6rpx;
-    padding: 8rpx 12rpx;
+    padding: $dd-space-1 12rpx;
     border-radius: $dd-radius-md;
   }
 
   // CSS 返回箭头 "<" (无 SVG，MP 兼容)
   &__arrow {
-    width: 24rpx;
-    height: 24rpx;
-    border-left: 4rpx solid $dd-primary-400;
-    border-bottom: 4rpx solid $dd-primary-400;
+    width: $dd-space-3;
+    height: $dd-space-3;
+    border-left: $dd-space-1 solid $dd-primary-400;
+    border-bottom: $dd-space-1 solid $dd-primary-400;
     transform: rotate(45deg);
   }
 
@@ -213,17 +213,17 @@ function onSearchConfirm(e: any) {
 
   &__search {
     width: 100%;
-    height: 64rpx;
+    height: $dd-space-6;
     background: $dd-surface-container;
     border-radius: $dd-radius-full;
     display: flex;
     align-items: center;
-    padding: 0 24rpx;
+    padding: 0 $dd-space-3;
     gap: 12rpx;
   }
 
   &__search-icon {
-    font-size: 28rpx;
+    font-size: $dd-font-size-body;
     line-height: 1;
   }
 
