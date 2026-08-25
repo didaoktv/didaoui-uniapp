@@ -79,11 +79,11 @@ provide('ddTabbar', {
   align-items: center;
   width: 100%;
   height: 100rpx;
-  background: $dd-surface;
+  background: var(--dd-surface, #{$dd-surface});
   box-sizing: border-box;
 
   &--border {
-    @include dd-hairline-top($dd-border-default);
+    @include dd-hairline-top(var(--dd-border-default, #{$dd-border-default}));
   }
 
   &--safe {

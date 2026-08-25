@@ -93,7 +93,7 @@ const lineWidths = computed(() => {
   &__block {
     position: relative;
     overflow: hidden;
-    background: $dd-neutral-800; // var(--dd-skeleton-bg)
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high}); // var(--dd-skeleton-bg)
 
     &::after {
       content: '';
@@ -143,7 +143,7 @@ const lineWidths = computed(() => {
     align-items: center;
     gap: $dd-space-3;
     padding: $dd-space-3 0;
-    @include dd-hairline-bottom($dd-border-subtle);
+    @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
   }
 
   &__list-text {

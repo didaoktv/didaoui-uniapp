@@ -1,0 +1,36 @@
+// ============================================================
+// DidaoUI-uniapp 主题输出（消费者在 App.vue 全局样式中引入）
+//
+// 引入: App.vue <style lang="scss"> @import '@didaoktv/didaoui-uniapp/scss/theme';
+// 切换: 根节点挂 .dark / .light
+//   - H5:      document.documentElement.classList.add('light')
+//   - 小程序:   页面根节点 :class="themeClass"（变量沿节点树继承进组件）
+// 新主题: 全局样式中 .my-theme { @include dd-theme(( 'primary': #d32f2f, ... )); }
+//   只写 delta，未覆盖变量自动继承默认值；可与 .dark/.light 并列组合。
+//   （需 @import '@didaoktv/didaoui-uniapp/scss/theme-tokens' 引入 mixin，或直接写 --dd-* 原生变量）
+// 不引入本文件时，组件靠 var(--dd-x, #{$dd-x}) 的 SCSS 兜底值维持暗色默认。
+// ============================================================
+@import './variables';
+@import './theme-tokens';
+
+/* #ifdef H5 */
+:root {
+  @include dd-theme($dd-vars-base);
+  @include dd-theme($dd-theme-dark);
+}
+/* #endif */
+
+/* #ifndef H5 */
+page {
+  @include dd-theme($dd-vars-base);
+  @include dd-theme($dd-theme-dark);
+}
+/* #endif */
+
+.dark {
+  @include dd-theme($dd-theme-dark);
+}
+
+.light {
+  @include dd-theme($dd-theme-light);
+}

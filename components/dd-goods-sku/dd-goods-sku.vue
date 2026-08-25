@@ -310,7 +310,7 @@ defineExpose({ open, close, reset })
 @import '../../scss/mixins';
 
 .dd-goods-sku {
-  background-color: $dd-bg-elevated;
+  background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
   overflow: hidden;
 
   &__container {
@@ -347,26 +347,26 @@ defineExpose({ open, close, reset })
 
         &__symbol {
           font-size: 24rpx;
-          color: $dd-error-400;
+          color: var(--dd-error-400, #{$dd-error-400});
           margin-right: 4rpx;
         }
 
         &__value {
           font-size: 36rpx;
-          color: $dd-error-400;
+          color: var(--dd-error-400, #{$dd-error-400});
           font-weight: bold;
         }
       }
 
       &__stock {
         font-size: 26rpx;
-        color: $dd-text-tertiary;
+        color: var(--dd-text-tertiary, #{$dd-text-tertiary});
         margin-bottom: 20rpx;
       }
 
       &__selected {
         font-size: 26rpx;
-        color: $dd-text-primary;
+        color: var(--dd-text-primary, #{$dd-text-primary});
       }
     }
   }
@@ -380,7 +380,7 @@ defineExpose({ open, close, reset })
 
       &__title {
         font-size: 28rpx;
-        color: $dd-text-primary;
+        color: var(--dd-text-primary, #{$dd-text-primary});
         margin-bottom: 20rpx;
       }
 
@@ -391,22 +391,22 @@ defineExpose({ open, close, reset })
 
         &__item {
           padding: 10rpx 20rpx;
-          border: 2rpx solid $dd-border-default;
+          border: 2rpx solid var(--dd-border-default, #{$dd-border-default});
           border-radius: 10rpx;
           margin-right: 20rpx;
           margin-bottom: 20rpx;
           font-size: 26rpx;
-          color: $dd-text-primary;
-          background-color: $dd-bg-elevated;
+          color: var(--dd-text-primary, #{$dd-text-primary});
+          background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
 
           &--active {
-            border-color: $dd-error-400;
-            color: $dd-error-400;
+            border-color: var(--dd-error-400, #{$dd-error-400});
+            color: var(--dd-error-400, #{$dd-error-400});
           }
 
           &--disabled {
-            color: $dd-neutral-500;
-            border-color: $dd-border-default;
+            color: var(--dd-muted, #{$dd-muted});
+            border-color: var(--dd-border-default, #{$dd-border-default});
           }
         }
       }
@@ -421,7 +421,7 @@ defineExpose({ open, close, reset })
 
       &__title {
         font-size: 28rpx;
-        color: $dd-text-primary;
+        color: var(--dd-text-primary, #{$dd-text-primary});
       }
     }
   }

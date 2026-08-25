@@ -74,8 +74,8 @@ function onClick(e: Event) {
   min-height: $dd-space-7;
   padding: 0 $dd-space-4;
   box-sizing: border-box;
-  background: $dd-bg-elevated;
-  @include dd-hairline-bottom($dd-border-default);
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
 
   &__icon {
     flex-shrink: 0;
@@ -90,7 +90,7 @@ function onClick(e: Event) {
   &__icon-text {
     font-size: $dd-font-size-h2;
     line-height: 1;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__content {
@@ -104,13 +104,13 @@ function onClick(e: Event) {
   &__title {
     font-size: $dd-font-size-body;
     font-weight: 500;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 
   &__subtitle {
     font-size: $dd-font-size-caption;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-ellipsis(1);
   }
 
@@ -125,12 +125,12 @@ function onClick(e: Event) {
   &__value {
     font-size: $dd-font-size-body;
     font-weight: 500;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__arrow {
     font-size: $dd-font-size-h3;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     line-height: 1;
     margin-left: $dd-space-1;
   }
@@ -146,7 +146,7 @@ function onClick(e: Event) {
   }
 
   &--active {
-    background: $dd-surface-container-highest;
+    background: var(--dd-surface-container-highest, #{$dd-surface-container-highest});
   }
 }
 </style>

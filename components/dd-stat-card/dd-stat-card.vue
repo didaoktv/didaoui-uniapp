@@ -142,33 +142,33 @@ function onClick(e: Event) {
 
 // === 6 渐变变体 ===
 .dd-stat-card--primary {
-  background: $dd-gradient-primary;
+  background: var(--dd-gradient-primary, #{$dd-gradient-primary});
   &:active {
-    box-shadow: $dd-shadow-glow-gold-lg;
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 }
 
 .dd-stat-card--accent {
-  background: $dd-gradient-accent-wide;
+  background: var(--dd-gradient-accent-wide, #{$dd-gradient-accent-wide});
   &:active {
-    box-shadow: $dd-shadow-glow-blue-lg;
+    box-shadow: var(--dd-shadow-glow-blue-lg, #{$dd-shadow-glow-blue-lg});
   }
 }
 
 .dd-stat-card--success {
-  background: $dd-gradient-success;
+  background: var(--dd-gradient-success, #{$dd-gradient-success});
 }
 
 .dd-stat-card--warning {
-  background: $dd-gradient-warning;
+  background: var(--dd-gradient-warning, #{$dd-gradient-warning});
 }
 
 .dd-stat-card--error {
-  background: $dd-gradient-error;
+  background: var(--dd-gradient-error, #{$dd-gradient-error});
 }
 
 .dd-stat-card--neutral {
-  background: $dd-gradient-neutral;
-  border: 1px solid $dd-neutral-600;
+  background: var(--dd-gradient-neutral, #{$dd-gradient-neutral});
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
 }
 </style>

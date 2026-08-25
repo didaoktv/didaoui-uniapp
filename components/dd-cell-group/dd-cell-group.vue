@@ -30,7 +30,7 @@ withDefaults(defineProps<Props>(), {
 @import '../../scss/mixins';
 
 .dd-cell-group {
-  background: $dd-bg-elevated;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
 
   :deep(.dd-cell:last-child),
   :deep(.dd-list-cell:last-child) {
@@ -46,15 +46,15 @@ withDefaults(defineProps<Props>(), {
   }
 
   &--border {
-    @include dd-hairline-top($dd-border-subtle);
-    @include dd-hairline-bottom($dd-border-subtle);
+    @include dd-hairline-top(var(--dd-border-subtle, #{$dd-border-subtle}));
+    @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
   }
 }
 
 .dd-cell-group__title {
   padding: 32rpx 32rpx 16rpx;
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 
   &--inset {
     padding: 32rpx 24rpx 16rpx;

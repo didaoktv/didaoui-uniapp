@@ -154,7 +154,7 @@ onUnmounted(() => {
   &__overlay {
     position: fixed;
     inset: 0;
-    background: $dd-color-overlay-strong;
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     opacity: 0;
@@ -167,8 +167,8 @@ onUnmounted(() => {
 
   &__panel {
     position: fixed;
-    background: $dd-bg-elevated;
-    box-shadow: $dd-shadow-3;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    box-shadow: var(--dd-shadow-3, #{$dd-shadow-3});
     transition: transform var(--dd-popup-duration, 0.3s) ease,
                 opacity var(--dd-popup-duration, 0.3s) ease;
 
@@ -225,7 +225,7 @@ onUnmounted(() => {
     position: absolute;
     width: 56rpx;
     height: 56rpx;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: 44rpx;
     @include dd-flex-center;
     z-index: 2;

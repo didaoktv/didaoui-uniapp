@@ -150,21 +150,21 @@ function onClick(e: Event) {
 }
 
 .dd-btn--primary {
-  background: $dd-primary-500;
+  background: var(--dd-primary, #{$dd-primary});
   color: $dd-neutral-50;
 }
 .dd-btn--secondary {
-  background: $dd-neutral-800;
-  color: $dd-primary-400;
-  border-color: $dd-neutral-700;
+  background: var(--dd-surface-container, #{$dd-surface-container});
+  color: var(--dd-primary-400, #{$dd-primary-400});
+  border-color: var(--dd-border-default, #{$dd-border-default});
 }
 .dd-btn--ghost {
   background: transparent;
-  color: $dd-neutral-300;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
 }
 .dd-btn--text {
   background: transparent;
-  color: $dd-primary-400;
+  color: var(--dd-primary-400, #{$dd-primary-400});
   border-color: transparent;
   border-radius: 0;
   height: auto;
@@ -178,16 +178,16 @@ function onClick(e: Event) {
   }
 }
 .dd-btn--success {
-  background: $dd-success-500;
-  color: $dd-success-contrast;
+  background: var(--dd-success, #{$dd-success});
+  color: var(--dd-success-contrast, #{$dd-success-contrast});
 }
 .dd-btn--warning {
-  background: $dd-warning-500;
-  color: $dd-warning-contrast;
+  background: var(--dd-warning, #{$dd-warning});
+  color: var(--dd-warning-contrast, #{$dd-warning-contrast});
 }
 .dd-btn--danger {
-  background: $dd-error-500;
-  color: $dd-error-contrast;
+  background: var(--dd-error, #{$dd-error});
+  color: var(--dd-error-contrast, #{$dd-error-contrast});
 }
 
 .dd-btn--round {

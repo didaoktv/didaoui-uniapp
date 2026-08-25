@@ -1,0 +1,183 @@
+// ============================================================
+// DidaoUI-uniapp Theme — base + delta 架构
+//
+// 一个主题 = 一份 SCSS map + 一个 class：
+//   .my-theme { @include dd-theme(( 'primary': #d32f2f, ... )); }
+// 只声明与默认值的差异（delta），未声明的变量沿 CSS 级联继承默认值。
+// 明暗主题（.dark/.light）与品牌主题类可并列组合（如 class="light cny-red"）。
+//
+// 数据源: scss/_variables.scss（$dd-* 暗色默认 / $dd-light-* 浅色）
+// 输出入口: scss/theme.scss（消费者在 App.vue 全局样式中引入）
+// ============================================================
+
+// 把 map 展开为 --dd-* 自定义属性（#{} 插值保证渐变/阴影/rgba 原样输出）
+@mixin dd-theme($map) {
+  @each $key, $value in $map {
+    --dd-#{$key}: #{$value};
+  }
+}
+
+// === base：主题无关层（品牌基色/对比色/渐变/发光阴影）——品牌换肤的 delta 覆盖入口 ===
+// 明暗主题下值不变；自定义品牌主题按需覆盖其中几个变量
+$dd-vars-base: (
+  // 品牌基色
+  'primary': $dd-primary,
+  'accent': $dd-accent,
+  'success': $dd-success,
+  'warning': $dd-warning,
+  'error': $dd-error,
+  'info': $dd-info,
+  'vip': $dd-vip-500,
+  // 对比色（明暗不翻转；品牌主题可覆盖，如红金主题配白字）
+  'primary-contrast': $dd-primary-contrast,
+  'accent-contrast': $dd-accent-contrast,
+  'success-contrast': $dd-success-contrast,
+  'warning-contrast': $dd-warning-contrast,
+  'error-contrast': $dd-error-contrast,
+  'info-contrast': $dd-info-contrast,
+  // 组件实际使用的品牌色阶步（hover/描边/浅底）
+  'primary-300': $dd-primary-300,
+  'primary-400': $dd-primary-400,
+  'accent-300': $dd-accent-300,
+  'accent-400': $dd-accent-400,
+  'error-400': $dd-error-400,
+  'warning-400': $dd-warning-400,
+  'success-400': $dd-success-400,
+  'info-400': $dd-info-400,
+  // 品牌渐变（opaque 值，换主题时整条覆盖）
+  'gradient-primary': $dd-gradient-primary,
+  'gradient-primary-wide': $dd-gradient-primary-wide,
+  'gradient-primary-h': $dd-gradient-primary-h,
+  'gradient-primary-v': $dd-gradient-primary-v,
+  'gradient-primary-triple': $dd-gradient-primary-triple,
+  'gradient-accent': $dd-gradient-accent,
+  'gradient-accent-h': $dd-gradient-accent-h,
+  'gradient-accent-wide': $dd-gradient-accent-wide,
+  'gradient-success': $dd-gradient-success,
+  'gradient-warning': $dd-gradient-warning,
+  'gradient-error': $dd-gradient-error,
+  'gradient-info': $dd-gradient-info,
+  'gradient-vip': $dd-gradient-vip,
+  'gradient-text-gold': $dd-gradient-text-gold,
+  'gradient-text-blue': $dd-gradient-text-blue,
+  'gradient-sheen-top': $dd-gradient-sheen-top,
+  'gradient-sheen-diagonal': $dd-gradient-sheen-diagonal,
+  // 发光阴影（dd-glow mixin 动态拼名，全量就绪）
+  'shadow-glow-gold-sm': $dd-shadow-glow-gold-sm,
+  'shadow-glow-gold-md': $dd-shadow-glow-gold-md,
+  'shadow-glow-gold-lg': $dd-shadow-glow-gold-lg,
+  'shadow-glow-blue-sm': $dd-shadow-glow-blue-sm,
+  'shadow-glow-blue-md': $dd-shadow-glow-blue-md,
+  'shadow-glow-blue-lg': $dd-shadow-glow-blue-lg,
+  'shadow-glow-success-sm': $dd-shadow-glow-success-sm,
+  'shadow-glow-success-md': $dd-shadow-glow-success-md,
+  'shadow-glow-success-lg': $dd-shadow-glow-success-lg,
+  'shadow-glow-warning-sm': $dd-shadow-glow-warning-sm,
+  'shadow-glow-warning-md': $dd-shadow-glow-warning-md,
+  'shadow-glow-warning-lg': $dd-shadow-glow-warning-lg,
+  'shadow-glow-error-sm': $dd-shadow-glow-error-sm,
+  'shadow-glow-error-md': $dd-shadow-glow-error-md,
+  'shadow-glow-error-lg': $dd-shadow-glow-error-lg,
+  'shadow-glow-info-sm': $dd-shadow-glow-info-sm,
+  'shadow-glow-info-md': $dd-shadow-glow-info-md,
+  'shadow-glow-info-lg': $dd-shadow-glow-info-lg,
+  'shadow-glow-vip-sm': $dd-shadow-glow-vip-sm,
+  'shadow-glow-vip-md': $dd-shadow-glow-vip-md,
+  'shadow-glow-vip-lg': $dd-shadow-glow-vip-lg,
+) !default;
+
+// === 明暗翻转层：暗色（默认）——44 个 delta ===
+$dd-theme-dark: (
+  'bg': $dd-bg,
+  'fg': $dd-fg,
+  'muted': $dd-muted,
+  'rule': $dd-rule,
+  'link': $dd-link,
+  'surface': $dd-surface,
+  'surface-dim': $dd-surface-dim,
+  'surface-container-low': $dd-surface-container-low,
+  'surface-container': $dd-surface-container,
+  'surface-container-high': $dd-surface-container-high,
+  'surface-container-highest': $dd-surface-container-highest,
+  'bg-section': $dd-bg-section,
+  'bg-card': $dd-bg-card,
+  'bg-elevated': $dd-bg-elevated,
+  'text-primary': $dd-text-primary,
+  'text-secondary': $dd-text-secondary,
+  'text-tertiary': $dd-text-tertiary,
+  'border-default': $dd-border-default,
+  'border-subtle': $dd-border-subtle,
+  'border-strong': $dd-border-strong,
+  'interactive-hover': $dd-interactive-hover,
+  'interactive-focus': $dd-interactive-focus,
+  'interactive-press': $dd-interactive-press,
+  'color-overlay': $dd-color-overlay,
+  'color-overlay-strong': $dd-color-overlay-strong,
+  'color-overlay-soft': $dd-color-overlay-soft,
+  'surface-hover': $dd-surface-hover,
+  'surface-press': $dd-surface-press,
+  'sheen': $dd-sheen,
+  'text-glow': $dd-text-glow,
+  'shadow-1': $dd-shadow-1,
+  'shadow-2': $dd-shadow-2,
+  'shadow-3': $dd-shadow-3,
+  'shadow-4': $dd-shadow-4,
+  'shadow-5': $dd-shadow-5,
+  'glass-bg': $dd-glass-bg,
+  'glass-bg-strong': $dd-glass-bg-strong,
+  'glass-bg-solid': $dd-glass-bg-solid,
+  'glass-border': $dd-glass-border,
+  'step-inactive-color': $dd-step-inactive-color,
+  'gradient-neutral': $dd-gradient-neutral,
+  'gradient-text-gold-light': $dd-gradient-text-gold-light,
+  'gradient-spot-gold': $dd-gradient-spot-gold,
+  'gradient-spot-blue': $dd-gradient-spot-blue,
+) !default;
+
+// === 明暗翻转层：浅色——与 $dd-theme-dark 同键，值取 $dd-light-* ===
+$dd-theme-light: (
+  'bg': $dd-light-bg,
+  'fg': $dd-light-fg,
+  'muted': $dd-light-muted,
+  'rule': $dd-light-rule,
+  'link': $dd-light-link,
+  'surface': $dd-light-surface,
+  'surface-dim': $dd-light-surface-dim,
+  'surface-container-low': $dd-light-surface-container-low,
+  'surface-container': $dd-light-surface-container,
+  'surface-container-high': $dd-light-surface-container-high,
+  'surface-container-highest': $dd-light-surface-container-highest,
+  'bg-section': $dd-light-bg-section,
+  'bg-card': $dd-light-bg-card,
+  'bg-elevated': $dd-light-bg-elevated,
+  'text-primary': $dd-light-text-primary,
+  'text-secondary': $dd-light-text-secondary,
+  'text-tertiary': $dd-light-text-tertiary,
+  'border-default': $dd-light-border-default,
+  'border-subtle': $dd-light-border-subtle,
+  'border-strong': $dd-light-border-strong,
+  'interactive-hover': $dd-light-interactive-hover,
+  'interactive-focus': $dd-light-interactive-focus,
+  'interactive-press': $dd-light-interactive-press,
+  'color-overlay': $dd-light-color-overlay,
+  'color-overlay-strong': $dd-light-color-overlay-strong,
+  'color-overlay-soft': $dd-light-color-overlay-soft,
+  'surface-hover': $dd-light-surface-hover,
+  'surface-press': $dd-light-surface-press,
+  'sheen': $dd-light-sheen,
+  'text-glow': $dd-light-text-glow,
+  'shadow-1': $dd-light-shadow-1,
+  'shadow-2': $dd-light-shadow-2,
+  'shadow-3': $dd-light-shadow-3,
+  'shadow-4': $dd-light-shadow-4,
+  'shadow-5': $dd-light-shadow-5,
+  'glass-bg': $dd-light-glass-bg,
+  'glass-bg-strong': $dd-light-glass-bg-strong,
+  'glass-bg-solid': $dd-light-glass-bg-solid,
+  'glass-border': $dd-light-glass-border,
+  'step-inactive-color': $dd-light-step-inactive-color,
+  'gradient-neutral': $dd-light-gradient-neutral,
+  'gradient-text-gold-light': $dd-light-gradient-text-gold-light,
+  'gradient-spot-gold': $dd-light-gradient-spot-gold,
+  'gradient-spot-blue': $dd-light-gradient-spot-blue,
+) !default;

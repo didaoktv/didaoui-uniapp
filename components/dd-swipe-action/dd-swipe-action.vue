@@ -75,7 +75,7 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-// 默认操作色用 error 红 ($dd-error-500)
+// 默认操作色用 error 红 ($dd-error)
 const defaultActionColor = '#E53935'
 
 const translateX = ref(0)
@@ -174,7 +174,7 @@ defineExpose({ close })
 .dd-swipe-action {
   position: relative;
   overflow: hidden;
-  background: $dd-bg-elevated;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
 
   &--disabled {
     .dd-swipe-action__content {
@@ -236,7 +236,7 @@ defineExpose({ close })
     position: relative;
     z-index: 1;
     width: 100%;
-    background: $dd-bg-elevated;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
     transform: translateX(0);
 
     &--anim {

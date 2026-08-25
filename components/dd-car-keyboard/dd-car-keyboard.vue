@@ -222,25 +222,25 @@
 <style lang="scss" scoped>
 @import '../../scss/variables';
 @import '../../scss/dd-shared';
-	$dd-car-keyboard-background-color: $dd-bg-section !default;
+	$dd-car-keyboard-background-color: var(--dd-bg-section, #{$dd-bg-section}) !default;
 	$dd-car-keyboard-padding:6px 0 6px !default;
 	$dd-car-keyboard-button-inner-width:64rpx !default;
-	$dd-car-keyboard-button-inner-background-color:$dd-surface-container-high !default;
+	$dd-car-keyboard-button-inner-background-color:var(--dd-surface-container-high, #{$dd-surface-container-high}) !default;
 	$dd-car-keyboard-button-height:80rpx !default;
-	$dd-car-keyboard-button-inner-box-shadow:0 1px 0px $dd-bg !default;
+	$dd-car-keyboard-button-inner-box-shadow:0 1px 0px var(--dd-bg, #{$dd-bg}) !default;
 	$dd-car-keyboard-button-border-radius:4px !default;
 	$dd-car-keyboard-button-inner-margin:8rpx 5rpx !default;
 	$dd-car-keyboard-button-text-font-size:16px !default;
-	$dd-car-keyboard-button-text-color:$dd-text-primary !default;
+	$dd-car-keyboard-button-text-color:var(--dd-text-primary, #{$dd-text-primary}) !default;
 	$dd-car-keyboard-center-inner-margin: 0 4rpx !default;
 	$dd-car-keyboard-special-button-width:134rpx !default;
 	$dd-car-keyboard-lang-font-size:16px !default;
-	$dd-car-keyboard-lang-color:$dd-text-primary !default;
-	$dd-car-keyboard-active-color:$dd-primary-400 !default;
+	$dd-car-keyboard-lang-color:var(--dd-text-primary, #{$dd-text-primary}) !default;
+	$dd-car-keyboard-active-color:var(--dd-primary-400, #{$dd-primary-400}) !default;
 	$dd-car-keyboard-line-font-size:15px !default;
-	$dd-car-keyboard-line-color:$dd-text-primary !default;
+	$dd-car-keyboard-line-color:var(--dd-text-primary, #{$dd-text-primary}) !default;
 	$dd-car-keyboard-line-margin:0 1px !default;
-	$dd-car-keyboard-dd-keyboard-hover-background-color:$dd-surface-hover !default;
+	$dd-car-keyboard-dd-keyboard-hover-background-color:var(--dd-surface-hover, #{$dd-surface-hover}) !default;
 
 	.dd-keyboard {
 		@include flex(column);

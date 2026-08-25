@@ -99,7 +99,7 @@ function onClick() {
     height: $dd-space-4;
     padding: 0 $dd-space-1;
     border-radius: $dd-radius-full;
-    background: $dd-error;
+    background: var(--dd-error, #{$dd-error});
     @include dd-flex-center;
   }
 
@@ -116,7 +116,7 @@ function onClick() {
     width: $dd-space-2;
     height: $dd-space-2;
     border-radius: 50%;
-    background: $dd-error;
+    background: var(--dd-error, #{$dd-error});
   }
 }
 </style>

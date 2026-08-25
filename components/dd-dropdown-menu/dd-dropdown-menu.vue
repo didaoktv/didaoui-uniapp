@@ -153,15 +153,15 @@ onUnmounted(() => {
   flex-direction: row;
   align-items: center;
   height: 96rpx;
-  background: $dd-surface;
-  @include dd-hairline-bottom($dd-border-subtle);
+  background: var(--dd-surface, #{$dd-surface});
+  @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
 }
 
 .dd-dropdown__overlay {
   position: fixed;
   left: 0;
   right: 0;
-  background: $dd-glass-bg;
+  background: var(--dd-glass-bg, #{$dd-glass-bg});
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 9;

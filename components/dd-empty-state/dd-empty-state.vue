@@ -99,14 +99,14 @@ function onAction() {
   &__title {
     font-size: $dd-font-size-h3;
     font-weight: $dd-font-weight-h3;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     line-height: $dd-line-height-h3;
   }
 
   &__desc {
     margin-top: $dd-space-2;
     font-size: $dd-font-size-body;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     line-height: $dd-line-height-caption;
     max-width: 560rpx;
   }
@@ -116,15 +116,15 @@ function onAction() {
     padding: 0 $dd-space-5;
     height: $dd-size-button-md;
     border-radius: $dd-radius-full;
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     @include dd-flex-center;
-    box-shadow: $dd-shadow-glow-gold-md;
+    box-shadow: var(--dd-shadow-glow-gold-md, #{$dd-shadow-glow-gold-md});
   }
 
   &__btn-text {
     font-size: $dd-font-size-body;
     font-weight: $dd-font-weight-body;
-    color: $dd-neutral-900;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   }
 }
 

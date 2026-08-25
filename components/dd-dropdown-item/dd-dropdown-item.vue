@@ -125,7 +125,7 @@ function onSelect(opt: DropdownOption) {
     gap: $dd-space-1;
     height: 96rpx;
     padding: 0 $dd-space-2;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     font-size: $dd-font-size-body;
     @include dd-transition(color 0.3s);
   }
@@ -147,7 +147,7 @@ function onSelect(opt: DropdownOption) {
   &__panel {
     position: fixed;
     z-index: 10;
-    background: $dd-surface;
+    background: var(--dd-surface, #{$dd-surface});
     max-height: 50vh;
     overflow: hidden;
     opacity: 0;
@@ -183,7 +183,7 @@ function onSelect(opt: DropdownOption) {
     height: 80rpx;
     padding: 0 32rpx;
     font-size: $dd-font-size-body;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-transition(color 0.2s);
 
     &--active {

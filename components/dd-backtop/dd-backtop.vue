@@ -51,9 +51,9 @@ function onClick() {
   width: 80rpx;
   height: 80rpx;
   border-radius: $dd-radius-full;
-  background: $dd-surface;
-  color: $dd-text-primary;
-  box-shadow: $dd-shadow-2;
+  background: var(--dd-surface, #{$dd-surface});
+  color: var(--dd-text-primary, #{$dd-text-primary});
+  box-shadow: var(--dd-shadow-2, #{$dd-shadow-2});
   @include dd-flex-center;
   opacity: 0;
   transform: scale(0);

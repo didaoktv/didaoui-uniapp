@@ -139,7 +139,7 @@ function onClick() {
   overflow: hidden;
   border-width: 6rpx;
   border-style: solid;
-  background: $dd-surface-container-high;
+  background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   box-sizing: border-box;
 
   &--sm {
@@ -161,7 +161,7 @@ function onClick() {
 .dd-champ__name {
   font-size: $dd-font-size-body;
   font-weight: 600;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-ellipsis(1);
 
   &--inline {
@@ -173,7 +173,7 @@ function onClick() {
 
 .dd-champ__score {
   font-size: $dd-font-size-caption;
-  color: $dd-primary-400;
+  color: var(--dd-primary-400, #{$dd-primary-400});
 
   &--inline {
     flex-shrink: 0;
@@ -220,7 +220,7 @@ function onClick() {
 .dd-champ__rank-num {
   font-size: $dd-font-size-caption;
   font-weight: 800;
-  color: $dd-neutral-900;
+  color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   line-height: 1;
 }
 
@@ -239,8 +239,8 @@ function onClick() {
   flex-direction: row;
   align-items: center;
   gap: $dd-space-2;
-  background: $dd-bg-elevated;
-  border: 1px solid $dd-border-default;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
   border-radius: $dd-radius-lg;
   padding: $dd-space-3 $dd-space-4;
 }
@@ -251,8 +251,8 @@ function onClick() {
   flex-direction: row;
   align-items: center;
   gap: $dd-space-2;
-  background: $dd-bg-elevated;
-  border-bottom: 1px solid $dd-border-default;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  border-bottom: 1px solid var(--dd-border-default, #{$dd-border-default});
   padding: $dd-space-3 $dd-space-4;
 }
 </style>

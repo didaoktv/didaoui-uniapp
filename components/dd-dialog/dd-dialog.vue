@@ -145,7 +145,7 @@ function onCancel() {
   &__mask {
     position: fixed;
     inset: 0;
-    background: $dd-color-overlay-strong;
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
     z-index: 2000;
@@ -165,10 +165,10 @@ function onCancel() {
     opacity: 0;
     visibility: hidden;
     z-index: 2001;
-    background: $dd-bg-elevated;
-    border: 1px solid $dd-border-default;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-lg;
-    box-shadow: $dd-shadow-4;
+    box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});
     overflow: hidden;
     @include dd-transition(transform 0.3s ease, opacity 0.3s ease, visibility 0.3s);
 
@@ -187,7 +187,7 @@ function onCancel() {
   &__title {
     font-size: $dd-font-size-h4;
     font-weight: $dd-font-weight-h4;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     line-height: 1.3;
   }
 
@@ -202,14 +202,14 @@ function onCancel() {
 
   &__message {
     font-size: $dd-font-size-body;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     line-height: $dd-line-height-body;
   }
 
   &__footer {
     &--default {
       display: flex;
-      border-top: 1px solid $dd-border-subtle;
+      border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
     }
 
     &--round-button {
@@ -226,14 +226,14 @@ function onCancel() {
     height: 96rpx;
 
     &--cancel {
-      border-right: 1px solid $dd-border-subtle;
+      border-right: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
     }
   }
 
   &__btn-text {
     font-size: $dd-font-size-body;
     font-weight: 500;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
 
   &__pill {
@@ -243,18 +243,18 @@ function onCancel() {
     @include dd-transition(background 0.2s ease);
 
     &--cancel {
-      background: $dd-surface-container;
+      background: var(--dd-surface-container, #{$dd-surface-container});
     }
 
     &--confirm {
-      background: $dd-primary-500;
+      background: var(--dd-primary, #{$dd-primary});
     }
   }
 
   &__pill-text {
     font-size: $dd-font-size-body;
     font-weight: 600;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
 
     &--confirm {
       color: $dd-color-white;

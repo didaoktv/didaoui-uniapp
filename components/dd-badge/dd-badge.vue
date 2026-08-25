@@ -121,28 +121,28 @@ const visible = computed(() => {
 
 // === 4 色变体 ===
 .dd-badge__sup--primary {
-  background: $dd-gradient-primary;
-  box-shadow: $dd-shadow-glow-gold-sm;
+  background: var(--dd-gradient-primary, #{$dd-gradient-primary});
+  box-shadow: var(--dd-shadow-glow-gold-sm, #{$dd-shadow-glow-gold-sm});
 }
 
 .dd-badge__sup--error {
-  background: $dd-error-500;
-  box-shadow: $dd-shadow-glow-error-sm;
+  background: var(--dd-error, #{$dd-error});
+  box-shadow: var(--dd-shadow-glow-error-sm, #{$dd-shadow-glow-error-sm});
 }
 
 .dd-badge__sup--success {
-  background: $dd-success-500;
-  box-shadow: $dd-shadow-glow-success-sm;
+  background: var(--dd-success, #{$dd-success});
+  box-shadow: var(--dd-shadow-glow-success-sm, #{$dd-shadow-glow-success-sm});
 }
 
 .dd-badge__sup--warning {
-  background: $dd-warning-500;
-  color: $dd-warning-contrast;
-  box-shadow: $dd-shadow-glow-warning-md;
+  background: var(--dd-warning, #{$dd-warning});
+  color: var(--dd-warning-contrast, #{$dd-warning-contrast});
+  box-shadow: var(--dd-shadow-glow-warning-md, #{$dd-shadow-glow-warning-md});
 }
 
 // text 变体强制反色字
 .dd-badge__sup--text.dd-badge__sup--warning .dd-badge__txt {
-  color: $dd-warning-contrast;
+  color: var(--dd-warning-contrast, #{$dd-warning-contrast});
 }
 </style>

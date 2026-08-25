@@ -99,10 +99,10 @@ onMounted(() => {
 @import '../../scss/mixins';
 
 .dd-collapse-item {
-  background: $dd-surface;
+  background: var(--dd-surface, #{$dd-surface});
 
   &--border {
-    @include dd-hairline-bottom($dd-border-subtle);
+    @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
   }
 
   &--disabled {
@@ -120,19 +120,19 @@ onMounted(() => {
   &__title {
     flex: 1;
     font-size: $dd-font-size-lead;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 
   &__value {
     font-size: $dd-font-size-body;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-ellipsis(1);
   }
 
   &__arrow {
     font-size: 28rpx;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-transition(transform 0.3s);
   }
 
@@ -148,7 +148,7 @@ onMounted(() => {
   &__content {
     padding: 0 32rpx 24rpx;
     font-size: $dd-font-size-body;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
 }
 </style>

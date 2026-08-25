@@ -131,8 +131,8 @@ function handleClick() {
   position: relative;
   overflow: hidden;
   border-radius: $dd-radius-lg;
-  background: $dd-bg-elevated;
-  color: $dd-text-primary;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  color: var(--dd-text-primary, #{$dd-text-primary});
   width: 100%;
 
   // === 形状 ===
@@ -146,7 +146,7 @@ function handleClick() {
       transform: translateY(-50%);
       width: 48rpx;
       height: 48rpx;
-      background: $dd-bg;
+      background: var(--dd-bg, #{$dd-bg});
       border-radius: 50%;
       z-index: 1;
     }
@@ -159,7 +159,7 @@ function handleClick() {
       transform: translateY(-50%);
       width: 48rpx;
       height: 48rpx;
-      background: $dd-bg;
+      background: var(--dd-bg, #{$dd-bg});
       border-radius: 50%;
       z-index: 1;
     }
@@ -212,7 +212,7 @@ function handleClick() {
     align-items: flex-start;
     min-width: 144rpx;
     padding: $dd-space-2 $dd-space-4 $dd-space-2 0;
-    border-right: 1px dashed $dd-border-strong;
+    border-right: 1px dashed var(--dd-border-strong, #{$dd-border-strong});
 
     &-main {
       display: flex;
@@ -223,21 +223,21 @@ function handleClick() {
     &-unit {
       font-size: $dd-font-size-h3;
       font-weight: $dd-font-weight-h4;
-      color: $dd-error-400;
+      color: var(--dd-error-400, #{$dd-error-400});
       line-height: 1;
     }
 
     &-value {
       font-size: 56rpx;
       font-weight: $dd-font-weight-display;
-      color: $dd-error-400;
+      color: var(--dd-error-400, #{$dd-error-400});
       line-height: 1;
     }
 
     &-limit {
       margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      color: $dd-text-tertiary;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
       line-height: $dd-line-height-caption;
     }
   }
@@ -253,7 +253,7 @@ function handleClick() {
     &-title {
       font-size: $dd-font-size-h4;
       font-weight: $dd-font-weight-h4;
-      color: $dd-text-primary;
+      color: var(--dd-text-primary, #{$dd-text-primary});
       line-height: $dd-line-height-h4;
       @include dd-ellipsis(1);
     }
@@ -261,7 +261,7 @@ function handleClick() {
     &-desc {
       margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      color: $dd-text-secondary;
+      color: var(--dd-text-secondary, #{$dd-text-secondary});
       line-height: $dd-line-height-caption;
       @include dd-ellipsis(1);
     }
@@ -269,7 +269,7 @@ function handleClick() {
     &-time {
       margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      color: $dd-text-tertiary;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
       line-height: $dd-line-height-caption;
       @include dd-ellipsis(1);
     }
@@ -292,8 +292,8 @@ function handleClick() {
     height: 56rpx;
     padding: 0 $dd-space-5;
     border-radius: $dd-radius-full;
-    background: $dd-error-500;
-    color: $dd-error-contrast;
+    background: var(--dd-error, #{$dd-error});
+    color: var(--dd-error-contrast, #{$dd-error-contrast});
     font-size: $dd-font-size-caption;
     font-weight: $dd-font-weight-caption;
   }
@@ -307,10 +307,10 @@ function handleClick() {
     height: 20rpx;
     background: repeating-linear-gradient(
       -45deg,
-      $dd-primary-300,
-      $dd-primary-300 10rpx,
-      $dd-primary-500 10rpx,
-      $dd-primary-500 20rpx
+      var(--dd-primary-300, #{$dd-primary-300}),
+      var(--dd-primary-300, #{$dd-primary-300}) 10rpx,
+      var(--dd-primary, #{$dd-primary}) 10rpx,
+      var(--dd-primary, #{$dd-primary}) 20rpx
     );
     z-index: 1;
   }
@@ -321,142 +321,142 @@ function handleClick() {
 
   // === 内置渐变主题（$dd-gradient-* token + 各主题 contrast 文字） ===
   &--primary {
-    background: $dd-gradient-primary;
-    color: $dd-primary-contrast;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
 
     .dd-coupon__amount {
-      border-right-color: $dd-border-subtle;
+      border-right-color: var(--dd-border-subtle, #{$dd-border-subtle});
     }
 
     .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-primary-contrast;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     }
 
     .dd-coupon__amount-limit {
-      color: $dd-primary-contrast;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
       opacity: 0.75;
     }
 
     .dd-coupon__info-title {
-      color: $dd-primary-contrast;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     }
 
     .dd-coupon__info-desc,
     .dd-coupon__info-time {
-      color: $dd-primary-contrast;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
       opacity: 0.8;
     }
 
     .dd-coupon__action-btn {
       background: transparent;
-      border: 1px solid $dd-primary-contrast;
-      color: $dd-primary-contrast;
+      border: 1px solid var(--dd-primary-contrast, #{$dd-primary-contrast});
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     }
   }
 
   &--success {
-    background: $dd-gradient-success;
-    color: $dd-success-contrast;
+    background: var(--dd-gradient-success, #{$dd-gradient-success});
+    color: var(--dd-success-contrast, #{$dd-success-contrast});
 
     .dd-coupon__amount {
-      border-right-color: $dd-border-subtle;
+      border-right-color: var(--dd-border-subtle, #{$dd-border-subtle});
     }
 
     .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-success-contrast;
+      color: var(--dd-success-contrast, #{$dd-success-contrast});
     }
 
     .dd-coupon__amount-limit {
-      color: $dd-success-contrast;
+      color: var(--dd-success-contrast, #{$dd-success-contrast});
       opacity: 0.75;
     }
 
     .dd-coupon__info-title {
-      color: $dd-success-contrast;
+      color: var(--dd-success-contrast, #{$dd-success-contrast});
     }
 
     .dd-coupon__info-desc,
     .dd-coupon__info-time {
-      color: $dd-success-contrast;
+      color: var(--dd-success-contrast, #{$dd-success-contrast});
       opacity: 0.8;
     }
 
     .dd-coupon__action-btn {
       background: transparent;
-      border: 1px solid $dd-success-contrast;
-      color: $dd-success-contrast;
+      border: 1px solid var(--dd-success-contrast, #{$dd-success-contrast});
+      color: var(--dd-success-contrast, #{$dd-success-contrast});
     }
   }
 
   &--warning {
-    background: $dd-gradient-warning;
-    color: $dd-warning-contrast;
+    background: var(--dd-gradient-warning, #{$dd-gradient-warning});
+    color: var(--dd-warning-contrast, #{$dd-warning-contrast});
 
     .dd-coupon__amount {
-      border-right-color: $dd-border-subtle;
+      border-right-color: var(--dd-border-subtle, #{$dd-border-subtle});
     }
 
     .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-warning-contrast;
+      color: var(--dd-warning-contrast, #{$dd-warning-contrast});
     }
 
     .dd-coupon__amount-limit {
-      color: $dd-warning-contrast;
+      color: var(--dd-warning-contrast, #{$dd-warning-contrast});
       opacity: 0.75;
     }
 
     .dd-coupon__info-title {
-      color: $dd-warning-contrast;
+      color: var(--dd-warning-contrast, #{$dd-warning-contrast});
     }
 
     .dd-coupon__info-desc,
     .dd-coupon__info-time {
-      color: $dd-warning-contrast;
+      color: var(--dd-warning-contrast, #{$dd-warning-contrast});
       opacity: 0.8;
     }
 
     .dd-coupon__action-btn {
       background: transparent;
-      border: 1px solid $dd-warning-contrast;
-      color: $dd-warning-contrast;
+      border: 1px solid var(--dd-warning-contrast, #{$dd-warning-contrast});
+      color: var(--dd-warning-contrast, #{$dd-warning-contrast});
     }
   }
 
   &--error {
-    background: $dd-gradient-error;
-    color: $dd-error-contrast;
+    background: var(--dd-gradient-error, #{$dd-gradient-error});
+    color: var(--dd-error-contrast, #{$dd-error-contrast});
 
     .dd-coupon__amount {
-      border-right-color: $dd-border-subtle;
+      border-right-color: var(--dd-border-subtle, #{$dd-border-subtle});
     }
 
     .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-error-contrast;
+      color: var(--dd-error-contrast, #{$dd-error-contrast});
     }
 
     .dd-coupon__amount-limit {
-      color: $dd-error-contrast;
+      color: var(--dd-error-contrast, #{$dd-error-contrast});
       opacity: 0.75;
     }
 
     .dd-coupon__info-title {
-      color: $dd-error-contrast;
+      color: var(--dd-error-contrast, #{$dd-error-contrast});
     }
 
     .dd-coupon__info-desc,
     .dd-coupon__info-time {
-      color: $dd-error-contrast;
+      color: var(--dd-error-contrast, #{$dd-error-contrast});
       opacity: 0.8;
     }
 
     .dd-coupon__action-btn {
       background: transparent;
-      border: 1px solid $dd-error-contrast;
-      color: $dd-error-contrast;
+      border: 1px solid var(--dd-error-contrast, #{$dd-error-contrast});
+      color: var(--dd-error-contrast, #{$dd-error-contrast});
     }
   }
 }

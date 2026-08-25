@@ -58,6 +58,6 @@ provide('ddCollapse', { isExpanded, toggle })
 @import '../../scss/mixins';
 
 .dd-collapse {
-  background: $dd-surface;
+  background: var(--dd-surface, #{$dd-surface});
 }
 </style>

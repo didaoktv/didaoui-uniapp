@@ -112,7 +112,7 @@ function onItemClick(item: FeatureItem, index: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: $dd-gradient-primary-wide;
+  background: var(--dd-gradient-primary-wide, #{$dd-gradient-primary-wide});
 }
 
 .dd-feature-grid__item--circle .dd-feature-grid__icon {
@@ -125,13 +125,13 @@ function onItemClick(item: FeatureItem, index: number) {
 
 .dd-feature-grid__icon-text {
   font-size: $dd-font-size-h2;
-  color: $dd-neutral-900;
+  color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   line-height: 1;
 }
 
 .dd-feature-grid__label {
   font-size: $dd-font-size-caption;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
   text-align: center;
   @include dd-ellipsis(1);
   max-width: 100%;

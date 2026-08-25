@@ -109,8 +109,8 @@ function onCancel() {
     gap: $dd-space-2;
     height: 88rpx;
     padding: 0 $dd-space-3;
-    background: $dd-neutral-800;
-    border: 1px solid $dd-neutral-700;
+    background: var(--dd-surface-container-low, #{$dd-surface-container-low});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-full;
     box-sizing: border-box;
     @include dd-transition(border-color 0.2s, box-shadow 0.2s);
@@ -120,19 +120,19 @@ function onCancel() {
     }
 
     &--focus {
-      border-color: $dd-primary-500;
-      box-shadow: $dd-shadow-glow-gold-lg;
+      border-color: var(--dd-primary, #{$dd-primary});
+      box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
     }
   }
 
   &__icon {
     font-size: $dd-font-size-body;
-    color: $dd-neutral-400;
+    color: var(--dd-muted, #{$dd-muted});
     line-height: 1;
     @include dd-transition(color 0.2s);
 
     &--focus {
-      color: $dd-primary-400;
+      color: var(--dd-primary-400, #{$dd-primary-400});
     }
   }
 
@@ -141,7 +141,7 @@ function onCancel() {
     min-width: 0;
     height: 100%;
     font-size: $dd-font-size-body;
-    color: $dd-neutral-100;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     background: transparent;
     border: none;
   }
@@ -151,8 +151,8 @@ function onCancel() {
     width: 36rpx;
     height: 36rpx;
     border-radius: 50%;
-    background: $dd-neutral-800;
-    color: $dd-neutral-300;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     font-size: $dd-font-size-caption;
     line-height: 1;
   }
@@ -162,14 +162,14 @@ function onCancel() {
     padding: 0 $dd-space-1;
     font-size: $dd-font-size-body;
     font-weight: 500;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &--disabled {
     opacity: 0.4;
     @include dd-no-touch;
     .dd-search__icon {
-      color: $dd-neutral-600;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     }
   }
 }

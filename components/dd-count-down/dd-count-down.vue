@@ -155,7 +155,7 @@ onUnmounted(() => {
 
 .dd-count-down__text {
   font-size: $dd-font-size-body;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   font-variant-numeric: tabular-nums;
   font-weight: $dd-font-weight-body;
   line-height: 1;

@@ -97,7 +97,7 @@ function onMaskClick() {
   &__mask {
     position: fixed;
     inset: 0;
-    background: $dd-color-overlay-strong;
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
     z-index: 1000;
@@ -118,10 +118,10 @@ function onMaskClick() {
     visibility: hidden;
     z-index: 1001;
     width: 560rpx;
-    background: $dd-bg-elevated;
-    border: 1px solid $dd-border-default;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-xl;
-    box-shadow: $dd-shadow-4;
+    box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});
     padding: $dd-space-5 $dd-space-5 $dd-space-4;
     display: flex;
     flex-direction: column;
@@ -143,27 +143,27 @@ function onMaskClick() {
     margin-bottom: $dd-space-3;
 
     &--info {
-      background: $dd-gradient-accent;
+      background: var(--dd-gradient-accent, #{$dd-gradient-accent});
       box-shadow: 0 0 40rpx rgba(45, 75, 160, 0.4);
     }
 
     &--success {
-      background: $dd-gradient-success;
+      background: var(--dd-gradient-success, #{$dd-gradient-success});
       box-shadow: 0 0 40rpx rgba(76, 175, 80, 0.4);
     }
 
     &--warning {
-      background: $dd-gradient-warning;
+      background: var(--dd-gradient-warning, #{$dd-gradient-warning});
       box-shadow: 0 0 40rpx rgba(249, 168, 37, 0.4);
     }
 
     &--error {
-      background: $dd-gradient-error;
+      background: var(--dd-gradient-error, #{$dd-gradient-error});
       box-shadow: 0 0 40rpx rgba(229, 57, 53, 0.4);
     }
 
     &--confirm {
-      background: $dd-gradient-primary-wide;
+      background: var(--dd-gradient-primary-wide, #{$dd-gradient-primary-wide});
       @include dd-glow(gold);
     }
   }
@@ -178,7 +178,7 @@ function onMaskClick() {
   &__title {
     font-size: $dd-font-size-h4;
     font-weight: $dd-font-weight-h4;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     text-align: center;
     line-height: $dd-line-height-h4;
   }
@@ -186,7 +186,7 @@ function onMaskClick() {
   &__message {
     margin-top: $dd-space-2;
     font-size: $dd-font-size-body;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     text-align: center;
     line-height: $dd-line-height-body;
   }
@@ -209,13 +209,13 @@ function onMaskClick() {
 
     &--cancel {
       height: 88rpx;
-      background: $dd-neutral-700;
-      border: 1px solid $dd-border-strong;
+      background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+      border: 1px solid var(--dd-border-strong, #{$dd-border-strong});
     }
 
     &--confirm {
       height: 88rpx;
-      background: $dd-gradient-primary;
+      background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     }
   }
 
@@ -228,11 +228,11 @@ function onMaskClick() {
     font-weight: $dd-font-weight-body;
 
     &--cancel {
-      color: $dd-text-secondary;
+      color: var(--dd-text-secondary, #{$dd-text-secondary});
     }
 
     &--confirm {
-      color: $dd-neutral-900;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
       font-weight: 700;
     }
   }

@@ -66,7 +66,7 @@ function onToggle() {
     @include dd-flex-center;
     flex-shrink: 0;
     border-radius: $dd-radius-full;
-    border: 3rpx solid $dd-neutral-700;
+    border: 3rpx solid var(--dd-border-default, #{$dd-border-default});
     background: transparent;
     box-sizing: border-box;
     @include dd-transition(all 0.2s);
@@ -82,13 +82,13 @@ function onToggle() {
 
   &__label {
     font-size: 28rpx;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &--checked .dd-radio__outer {
-    background: $dd-gradient-primary;
-    border-color: $dd-primary-500;
-    box-shadow: $dd-shadow-glow-gold-lg;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
+    border-color: var(--dd-primary, #{$dd-primary});
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 
   &--checked .dd-radio__inner {

@@ -93,8 +93,8 @@ function onPlus() {
   justify-content: center;
   gap: $dd-space-1;
   padding: $dd-space-1;
-  background: $dd-neutral-800;
-  border: 1px solid $dd-neutral-700;
+  background: var(--dd-surface-container-low, #{$dd-surface-container-low});
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
   border-radius: $dd-radius-full;
   box-sizing: border-box;
 
@@ -102,7 +102,7 @@ function onPlus() {
     @include dd-flex-center;
     flex-shrink: 0;
     border-radius: 50%;
-    background: $dd-gradient-primary-wide;
+    background: var(--dd-gradient-primary-wide, #{$dd-gradient-primary-wide});
     @include dd-transition(transform 0.1s ease, opacity 0.2s);
 
     &--active {
@@ -110,24 +110,24 @@ function onPlus() {
     }
 
     &--disabled {
-      background: $dd-neutral-800;
+      background: var(--dd-surface-container-low, #{$dd-surface-container-low});
       @include dd-no-touch;
       .dd-stepper__icon {
-        color: $dd-neutral-500;
+        color: var(--dd-muted, #{$dd-muted});
         opacity: 0.4;
       }
     }
   }
 
   &__icon {
-    color: $dd-neutral-900;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     font-weight: 700;
     line-height: 1;
   }
 
   &__value {
     text-align: center;
-    color: $dd-neutral-50;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     font-weight: 700;
     line-height: 1;
     @include dd-ellipsis(1);

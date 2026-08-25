@@ -130,7 +130,7 @@ function onClick() {
   }
 
   &__spinner {
-    border: $dd-space-1 solid $dd-border-default;
+    border: $dd-space-1 solid var(--dd-border-default, #{$dd-border-default});
     border-radius: 50%;
     box-sizing: border-box;
     animation: dd-lm-spin 0.8s linear infinite;

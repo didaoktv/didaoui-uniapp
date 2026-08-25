@@ -59,14 +59,14 @@ const effectiveHairline = computed(() => props.hairline || props.dashed)
   &__content {
     flex: none;
     padding: 0 $dd-space-2;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: $dd-font-size-caption;
     line-height: $dd-line-height-caption;
   }
 
   &__line {
     flex: 1;
-    border-top-color: $dd-border-default;
+    border-top-color: var(--dd-border-default, #{$dd-border-default});
 
     &--left {
       flex: 1;

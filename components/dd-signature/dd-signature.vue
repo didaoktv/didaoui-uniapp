@@ -425,7 +425,7 @@
 		flex-direction: column;
 		
 		&__canvas-wrap {
-			border: 1px solid $dd-border-default;
+			border: 1px solid var(--dd-border-default, #{$dd-border-default});
 			border-radius: 4px;
 			overflow: hidden;
 		}
@@ -437,7 +437,7 @@
 		
 		&__toolbar {
 			margin-top: 5px;
-            background-color: $dd-bg-elevated;
+            background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
 		}
 		
 		&__toolbar-icons {
@@ -466,7 +466,7 @@
 				display: block;
 				margin-bottom: 10px;
 				font-size: 14px;
-				color: $dd-text-tertiary;
+				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 			}
 		}
 		
@@ -478,7 +478,7 @@
 			display: block;
 			margin-bottom: 10px;
 			font-size: 14px;
-			color: $dd-text-tertiary;
+			color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 		}
 		
 		&__colors {
@@ -492,11 +492,11 @@
 			width: 30px;
 			height: 30px;
 			border-radius: 50%;
-			border: 2px solid $dd-border-default;
+			border: 2px solid var(--dd-border-default, #{$dd-border-default});
 			cursor: pointer;
 			
 			&--active {
-				border-color: $dd-primary-400;
+				border-color: var(--dd-primary-400, #{$dd-primary-400});
 				transform: scale(1.1);
 			}
 		}

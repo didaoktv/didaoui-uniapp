@@ -198,52 +198,52 @@ export default {
 
     &__price {
         font-size: 14px;
-        color: $dd-text-secondary;
+        color: var(--dd-text-secondary, #{$dd-text-secondary});
     }
 
     &__value {
         font-size: 14px;
         @include flex;
-        color: $dd-text-secondary;
+        color: var(--dd-text-secondary, #{$dd-text-secondary});
         flex-wrap: wrap;
         // flex: 1;
         text-overflow: ellipsis;
         align-items: center;
 
         &--primary {
-            color: $dd-primary-400;
+            color: var(--dd-primary-400, #{$dd-primary-400});
         }
 
         &--warning {
-            color: $dd-warning-400;
+            color: var(--dd-warning-400, #{$dd-warning-400});
         }
 
         &--success {
-            color: $dd-success-400;
+            color: var(--dd-success-400, #{$dd-success-400});
         }
 
         &--info {
-            color: $dd-info-400;
+            color: var(--dd-info-400, #{$dd-info-400});
         }
 
         &--error {
-            color: $dd-error-400;
+            color: var(--dd-error-400, #{$dd-error-400});
         }
 
         &--main {
-            color: $dd-text-primary;
+            color: var(--dd-text-primary, #{$dd-text-primary});
         }
 
         &--content {
-            color: $dd-text-secondary;
+            color: var(--dd-text-secondary, #{$dd-text-secondary});
         }
 
         &--tips {
-            color: $dd-text-tertiary;
+            color: var(--dd-text-tertiary, #{$dd-text-tertiary});
         }
 
         &--light {
-            color: $dd-text-tertiary;
+            color: var(--dd-text-tertiary, #{$dd-text-tertiary});
         }
     }
 }

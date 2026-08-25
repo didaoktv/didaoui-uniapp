@@ -139,7 +139,7 @@ defineExpose({ jumpTo, current })
     @include dd-transition(background 0.3s ease);
 
     &--active {
-      background: $dd-primary-500;
+      background: var(--dd-primary, #{$dd-primary});
     }
   }
 }

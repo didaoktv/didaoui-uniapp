@@ -95,14 +95,14 @@ function onClick() {
 
 .dd-room-card {
   box-sizing: border-box;
-  background: $dd-bg-elevated;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
   @include dd-transition(transform 0.2s ease);
 }
 
 // === GRID ===
 .dd-room-card--grid {
   position: relative;
-  border: 1px solid $dd-border-default;
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
   border-radius: $dd-radius-lg;
   overflow: hidden;
   aspect-ratio: 1 / 1;
@@ -113,7 +113,7 @@ function onClick() {
 .dd-room-card__topbar {
   height: 12rpx;
   width: 100%;
-  background: $dd-surface-container-highest;
+  background: var(--dd-surface-container-highest, #{$dd-surface-container-highest});
   flex-shrink: 0;
 }
 
@@ -130,7 +130,7 @@ function onClick() {
 .dd-room-card__no {
   font-size: $dd-font-size-h1;
   font-weight: $dd-font-weight-h1;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   line-height: 1.2;
 }
 
@@ -148,17 +148,17 @@ function onClick() {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background: $dd-neutral-500;
+  background: var(--dd-muted, #{$dd-muted});
 }
 
 .dd-room-card__status-text {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 }
 
 .dd-room-card__capacity {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 
   &--inline {
     font-size: $dd-font-size-caption;
@@ -171,12 +171,12 @@ function onClick() {
   right: 12rpx;
   z-index: 2;
   padding: 2rpx 12rpx;
-  background: $dd-gradient-primary;
+  background: var(--dd-gradient-primary, #{$dd-gradient-primary});
   border-radius: $dd-radius-sm;
   text {
     font-size: $dd-font-size-caption;
     font-weight: 700;
-    color: $dd-neutral-900;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     line-height: 1.6;
   }
 }
@@ -184,33 +184,33 @@ function onClick() {
 // === 顶部栏/状态色: occupied=gold, reserved=accent, idle=neutral ===
 .dd-room-card--occupied.dd-room-card--grid {
   .dd-room-card__topbar {
-    background: $dd-gradient-primary-h;
+    background: var(--dd-gradient-primary-h, #{$dd-gradient-primary-h});
   }
   .dd-room-card__dot {
-    background: $dd-primary-400;
+    background: var(--dd-primary-400, #{$dd-primary-400});
     box-shadow: 0 0 12rpx rgba(245, 166, 35, 0.6);
   }
   .dd-room-card__status-text {
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 }
 
 .dd-room-card--reserved.dd-room-card--grid {
   .dd-room-card__topbar {
-    background: $dd-gradient-accent-h;
+    background: var(--dd-gradient-accent-h, #{$dd-gradient-accent-h});
   }
   .dd-room-card__dot {
-    background: $dd-accent-400;
+    background: var(--dd-accent-400, #{$dd-accent-400});
     box-shadow: 0 0 12rpx rgba(45, 75, 160, 0.6);
   }
   .dd-room-card__status-text {
-    color: $dd-accent-300;
+    color: var(--dd-accent-300, #{$dd-accent-300});
   }
 }
 
 .dd-room-card--idle.dd-room-card--grid {
   .dd-room-card__topbar {
-    background: $dd-surface-container-highest;
+    background: var(--dd-surface-container-highest, #{$dd-surface-container-highest});
   }
 }
 
@@ -221,7 +221,7 @@ function onClick() {
   align-items: center;
   gap: $dd-space-3;
   padding: $dd-space-3 $dd-space-4;
-  border: 1px solid $dd-border-default;
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
   border-radius: $dd-radius-md;
 }
 
@@ -233,7 +233,7 @@ function onClick() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: $dd-gradient-accent;
+  background: var(--dd-gradient-accent, #{$dd-gradient-accent});
 
   &-text {
     font-size: $dd-font-size-body;
@@ -243,11 +243,11 @@ function onClick() {
 }
 
 .dd-room-card--vip .dd-room-card__avatar {
-  background: $dd-gradient-primary;
+  background: var(--dd-gradient-primary, #{$dd-gradient-primary});
 }
 
 .dd-room-card--theme .dd-room-card__avatar {
-  background: $dd-gradient-accent;
+  background: var(--dd-gradient-accent, #{$dd-gradient-accent});
 }
 
 .dd-room-card__list-info {
@@ -266,7 +266,7 @@ function onClick() {
 .dd-room-card__name {
   font-size: $dd-font-size-body;
   font-weight: 600;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-ellipsis(1);
 }
 
@@ -278,27 +278,27 @@ function onClick() {
 
 .dd-room-card__time {
   font-size: $dd-font-size-caption;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
 }
 
 // list 状态色
 .dd-room-card--occupied.dd-room-card--list {
   .dd-room-card__dot {
-    background: $dd-primary-400;
+    background: var(--dd-primary-400, #{$dd-primary-400});
     box-shadow: 0 0 12rpx rgba(245, 166, 35, 0.6);
   }
   .dd-room-card__status-text {
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 }
 
 .dd-room-card--reserved.dd-room-card--list {
   .dd-room-card__dot {
-    background: $dd-accent-400;
+    background: var(--dd-accent-400, #{$dd-accent-400});
     box-shadow: 0 0 12rpx rgba(45, 75, 160, 0.6);
   }
   .dd-room-card__status-text {
-    color: $dd-accent-300;
+    color: var(--dd-accent-300, #{$dd-accent-300});
   }
 }
 

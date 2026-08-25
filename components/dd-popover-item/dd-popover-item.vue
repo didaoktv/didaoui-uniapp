@@ -62,11 +62,11 @@ function onClick() {
 
   // 首项不显示顶部分隔线，其余项之间用 hairline 分隔
   &:not(:first-child) {
-    @include dd-hairline-top($dd-border-default);
+    @include dd-hairline-top(var(--dd-border-default, #{$dd-border-default}));
   }
 
   &:active {
-    background: $dd-surface-container;
+    background: var(--dd-surface-container, #{$dd-surface-container});
   }
 
   &--disabled {

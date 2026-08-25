@@ -144,7 +144,7 @@ function onSearchConfirm(e: any) {
 .dd-mp-navbar {
   width: 100%;
   @include dd-glass;
-  border-bottom: 1px solid $dd-glass-border;
+  border-bottom: 1px solid var(--dd-glass-border, #{$dd-glass-border});
   position: relative;
   z-index: $dd-z-index-fixed;
 
@@ -185,15 +185,15 @@ function onSearchConfirm(e: any) {
   &__arrow {
     width: $dd-space-3;
     height: $dd-space-3;
-    border-left: $dd-space-1 solid $dd-primary-400;
-    border-bottom: $dd-space-1 solid $dd-primary-400;
+    border-left: $dd-space-1 solid var(--dd-primary-400, #{$dd-primary-400});
+    border-bottom: $dd-space-1 solid var(--dd-primary-400, #{$dd-primary-400});
     transform: rotate(45deg);
   }
 
   &__back-text {
     font-size: $dd-font-size-body;
     font-weight: 500;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__center {
@@ -205,7 +205,7 @@ function onSearchConfirm(e: any) {
   &__title {
     font-size: $dd-font-size-h4;
     font-weight: 600;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     max-width: 60vw;
     @include dd-ellipsis(1);
     text-align: center;
@@ -214,7 +214,7 @@ function onSearchConfirm(e: any) {
   &__search {
     width: 100%;
     height: $dd-space-6;
-    background: $dd-surface-container;
+    background: var(--dd-surface-container, #{$dd-surface-container});
     border-radius: $dd-radius-full;
     display: flex;
     align-items: center;
@@ -230,7 +230,7 @@ function onSearchConfirm(e: any) {
   &__search-input {
     flex: 1;
     font-size: $dd-font-size-body;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &__right {

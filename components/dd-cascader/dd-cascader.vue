@@ -382,18 +382,18 @@ function toFatherIndex(index: number) {
     height: 100%;
     padding: 10rpx;
     box-sizing: border-box;
-    background-color: $dd-bg-section;
+    background-color: var(--dd-bg-section, #{$dd-bg-section});
   }
 
   &__check {
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__action {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    border-top: 1px solid $dd-border-default;
+    border-top: 1px solid var(--dd-border-default, #{$dd-border-default});
   }
 
   &__action-item {

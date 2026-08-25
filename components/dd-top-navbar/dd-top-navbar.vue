@@ -130,7 +130,7 @@ function onBack() {
   }
 
   &--border &__content {
-    @include dd-hairline-bottom($dd-border-subtle);
+    @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
   }
 
   &__left {
@@ -148,13 +148,13 @@ function onBack() {
     display: flex;
     align-items: center;
     font-size: 56rpx;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
     text-shadow: 0 0 8px rgba(245, 166, 35, 0.4);
   }
 
   &__back-text {
     font-size: $dd-font-size-body;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__title {
@@ -165,7 +165,7 @@ function onBack() {
     max-width: 50%;
     font-size: $dd-font-size-lead;
     font-weight: 700;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 

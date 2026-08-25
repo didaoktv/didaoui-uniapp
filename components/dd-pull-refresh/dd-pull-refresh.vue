@@ -183,7 +183,7 @@ watch(
     position: relative;
     height: 100%;
     z-index: 1;
-    background: $dd-bg;
+    background: var(--dd-bg, #{$dd-bg});
 
     &--anim {
       transition: transform 300ms ease;
@@ -209,15 +209,15 @@ watch(
   &__spinner {
     width: $dd-size-icon-sm;
     height: $dd-size-icon-sm;
-    border: 4rpx solid $dd-border-default;
-    border-top-color: $dd-primary-500;
+    border: 4rpx solid var(--dd-border-default, #{$dd-border-default});
+    border-top-color: var(--dd-primary, #{$dd-primary});
     border-radius: 50%;
     animation: dd-pr-spin 0.8s linear infinite;
   }
 
   &__text {
     font-size: $dd-font-size-body;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__scroll {

@@ -115,8 +115,8 @@ function onClick(item: BillItem, index: number) {
   padding: $dd-space-3 $dd-space-4;
   font-size: $dd-font-size-body;
   font-weight: $dd-font-weight-lead;
-  color: $dd-text-primary;
-  border-bottom: 1px solid $dd-border-subtle;
+  color: var(--dd-text-primary, #{$dd-text-primary});
+  border-bottom: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
 }
 
 .dd-bill-detail__goods {
@@ -130,7 +130,7 @@ function onClick(item: BillItem, index: number) {
   padding: $dd-space-2 0;
 
   &--press {
-    background: $dd-interactive-hover;
+    background: var(--dd-interactive-hover, #{$dd-interactive-hover});
   }
 }
 
@@ -152,13 +152,13 @@ function onClick(item: BillItem, index: number) {
 
 .dd-bill-detail__name {
   font-size: $dd-font-size-body;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-ellipsis(1);
 }
 
 .dd-bill-detail__price {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 }
 
 .dd-bill-detail__gcount {
@@ -167,7 +167,7 @@ function onClick(item: BillItem, index: number) {
 
 .dd-bill-detail__count {
   font-size: $dd-font-size-caption;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
 }
 
 .dd-bill-detail__gamount {
@@ -177,7 +177,7 @@ function onClick(item: BillItem, index: number) {
 .dd-bill-detail__amount {
   font-size: $dd-font-size-body;
   font-weight: $dd-font-weight-lead;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   font-family: $dd-font-mono;
 }
 
@@ -187,12 +187,12 @@ function onClick(item: BillItem, index: number) {
 
   &-text {
     font-size: $dd-font-size-body;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 }
 
 .dd-bill-detail__summary {
-  border-top: 1px solid $dd-border-subtle;
+  border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   padding: $dd-space-2 $dd-space-4 $dd-space-3;
 }
 
@@ -205,18 +205,18 @@ function onClick(item: BillItem, index: number) {
   &--total {
     margin-top: $dd-space-1;
     padding-top: $dd-space-2;
-    border-top: 1px solid $dd-border-subtle;
+    border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   }
 }
 
 .dd-bill-detail__sum-label {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 }
 
 .dd-bill-detail__sum-value {
   font-size: $dd-font-size-caption;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
   font-family: $dd-font-mono;
 }
 
@@ -229,13 +229,13 @@ function onClick(item: BillItem, index: number) {
 .dd-bill-detail__total-label {
   font-size: $dd-font-size-body;
   font-weight: $dd-font-weight-lead;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
 }
 
 .dd-bill-detail__total {
   font-size: $dd-font-size-h4;
   font-weight: $dd-font-weight-h3;
-  color: $dd-primary-400;
+  color: var(--dd-primary-400, #{$dd-primary-400});
   font-family: $dd-font-mono;
 }
 
@@ -244,16 +244,16 @@ function onClick(item: BillItem, index: number) {
   padding: 2rpx 12rpx;
   border-radius: $dd-radius-sm;
 
-  &--unpaid { color: $dd-warning-400; background: rgba(249, 168, 37, 0.12); }
-  &--paid { color: $dd-success-400; background: rgba(76, 175, 80, 0.12); }
-  &--refunding { color: $dd-info-400; background: rgba(0, 188, 212, 0.12); }
-  &--refunded { color: $dd-warning-400; background: rgba(249, 168, 37, 0.12); }
-  &--cancelled { color: $dd-text-tertiary; background: rgba(255, 255, 255, 0.08); }
+  &--unpaid { color: var(--dd-warning-400, #{$dd-warning-400}); background: rgba(249, 168, 37, 0.12); }
+  &--paid { color: var(--dd-success-400, #{$dd-success-400}); background: rgba(76, 175, 80, 0.12); }
+  &--refunding { color: var(--dd-info-400, #{$dd-info-400}); background: rgba(0, 188, 212, 0.12); }
+  &--refunded { color: var(--dd-warning-400, #{$dd-warning-400}); background: rgba(249, 168, 37, 0.12); }
+  &--cancelled { color: var(--dd-text-tertiary, #{$dd-text-tertiary}); background: rgba(255, 255, 255, 0.08); }
 }
 
 .dd-bill-detail__actions {
   padding: $dd-space-3 $dd-space-4;
-  border-top: 1px solid $dd-border-subtle;
+  border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   display: flex;
   justify-content: flex-end;
   gap: $dd-space-3;

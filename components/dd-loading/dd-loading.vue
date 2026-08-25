@@ -61,7 +61,7 @@ const coreStyle = computed(() => (props.color ? { '--dd-loading-color': props.co
 @import '../../scss/mixins';
 
 .dd-loading {
-  --dd-loading-color: #{$dd-primary-400};
+  --dd-loading-color: var(--dd-primary-400, #{$dd-primary-400});
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -80,7 +80,7 @@ const coreStyle = computed(() => (props.color ? { '--dd-loading-color': props.co
   &__mask {
     position: absolute;
     inset: 0;
-    background: $dd-color-overlay-strong;
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     /* #ifdef H5 */
     backdrop-filter: blur(8rpx);
     -webkit-backdrop-filter: blur(8rpx);
@@ -163,11 +163,11 @@ const coreStyle = computed(() => (props.color ? { '--dd-loading-color': props.co
     height: 24rpx;
     border-radius: 50%;
     background: var(--dd-loading-color);
-    box-shadow: $dd-shadow-glow-gold-lg;
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 
   &__text {
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     font-size: $dd-font-size-body;
     line-height: 1.4;
   }

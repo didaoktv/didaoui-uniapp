@@ -140,7 +140,7 @@ function onPreview(index: number) {
     width: 160rpx;
     height: 160rpx;
     border-radius: $dd-radius-md;
-    background: $dd-neutral-800;
+    background: var(--dd-surface-container-low, #{$dd-surface-container-low});
     overflow: hidden;
   }
 
@@ -157,7 +157,7 @@ function onPreview(index: number) {
     width: 36rpx;
     height: 36rpx;
     border-radius: 50%;
-    background: $dd-error;
+    background: var(--dd-error, #{$dd-error});
     color: $dd-color-white;
     font-size: $dd-font-size-caption;
     @include dd-flex-center;
@@ -167,16 +167,16 @@ function onPreview(index: number) {
     @include dd-flex-center;
     width: 160rpx;
     height: 160rpx;
-    border: 1px dashed $dd-border-default;
+    border: 1px dashed var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-md;
-    background: $dd-neutral-800;
-    color: $dd-text-tertiary;
+    background: var(--dd-surface-container-low, #{$dd-surface-container-low});
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: $dd-font-size-h1;
     box-sizing: border-box;
     @include dd-transition(background 0.2s);
 
     &--active {
-      background: $dd-border-default;
+      background: var(--dd-border-default, #{$dd-border-default});
     }
   }
 

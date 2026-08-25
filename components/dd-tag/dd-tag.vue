@@ -130,62 +130,62 @@ function onClose(e: Event) {
 // === Filled: 渐变背景 + 反色文字 ===
 .dd-tag--filled {
   &.dd-tag--primary {
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     color: $dd-color-white;
   }
   &.dd-tag--accent {
-    background: $dd-gradient-accent;
-    color: $dd-accent-contrast;
+    background: var(--dd-gradient-accent, #{$dd-gradient-accent});
+    color: var(--dd-accent-contrast, #{$dd-accent-contrast});
   }
   &.dd-tag--success {
-    background: $dd-success-500;
-    color: $dd-success-contrast;
+    background: var(--dd-success, #{$dd-success});
+    color: var(--dd-success-contrast, #{$dd-success-contrast});
   }
   &.dd-tag--warning {
-    background: $dd-warning-500;
-    color: $dd-warning-contrast;
+    background: var(--dd-warning, #{$dd-warning});
+    color: var(--dd-warning-contrast, #{$dd-warning-contrast});
   }
   &.dd-tag--error {
-    background: $dd-error-500;
-    color: $dd-error-contrast;
+    background: var(--dd-error, #{$dd-error});
+    color: var(--dd-error-contrast, #{$dd-error-contrast});
   }
   &.dd-tag--info {
-    background: $dd-info-500;
-    color: $dd-info-contrast;
+    background: var(--dd-info, #{$dd-info});
+    color: var(--dd-info-contrast, #{$dd-info-contrast});
   }
   &.dd-tag--default {
-    background: $dd-neutral-700;
-    color: $dd-text-secondary;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
 }
 
 // === Outlined: 透明背景 + 1px 边框 + 语义色 ===
 .dd-tag--outlined {
   background: transparent;
-  border: 1px solid $dd-border-strong;
+  border: 1px solid var(--dd-border-strong, #{$dd-border-strong});
 
-  &.dd-tag--primary { color: $dd-primary-400; border-color: $dd-primary-500; }
-  &.dd-tag--accent { color: $dd-accent-300; border-color: $dd-accent-500; }
-  &.dd-tag--success { color: $dd-success-400; border-color: $dd-success-500; }
-  &.dd-tag--warning { color: $dd-warning-400; border-color: $dd-warning-500; }
-  &.dd-tag--error { color: $dd-error-400; border-color: $dd-error-500; }
-  &.dd-tag--info { color: $dd-info-400; border-color: $dd-info-500; }
-  &.dd-tag--default { color: $dd-text-secondary; border-color: $dd-border-strong; }
+  &.dd-tag--primary { color: var(--dd-primary-400, #{$dd-primary-400}); border-color: var(--dd-primary, #{$dd-primary}); }
+  &.dd-tag--accent { color: var(--dd-accent-300, #{$dd-accent-300}); border-color: var(--dd-accent, #{$dd-accent}); }
+  &.dd-tag--success { color: var(--dd-success-400, #{$dd-success-400}); border-color: var(--dd-success, #{$dd-success}); }
+  &.dd-tag--warning { color: var(--dd-warning-400, #{$dd-warning-400}); border-color: var(--dd-warning, #{$dd-warning}); }
+  &.dd-tag--error { color: var(--dd-error-400, #{$dd-error-400}); border-color: var(--dd-error, #{$dd-error}); }
+  &.dd-tag--info { color: var(--dd-info-400, #{$dd-info-400}); border-color: var(--dd-info, #{$dd-info}); }
+  &.dd-tag--default { color: var(--dd-text-secondary, #{$dd-text-secondary}); border-color: var(--dd-border-strong, #{$dd-border-strong}); }
 }
 
 // === Dot: elevated 背景 + 彩色点 + 次级色文字 ===
 .dd-tag--dot {
-  background: $dd-bg-elevated;
-  border: 1px solid $dd-border-default;
-  color: $dd-text-secondary;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
 
-  &.dd-tag--primary .dd-tag__dot { background: $dd-primary-500; }
-  &.dd-tag--accent .dd-tag__dot { background: $dd-accent-500; }
-  &.dd-tag--success .dd-tag__dot { background: $dd-success-500; }
-  &.dd-tag--warning .dd-tag__dot { background: $dd-warning-500; }
-  &.dd-tag--error .dd-tag__dot { background: $dd-error-500; }
-  &.dd-tag--info .dd-tag__dot { background: $dd-info-500; }
-  &.dd-tag--default .dd-tag__dot { background: $dd-neutral-400; }
+  &.dd-tag--primary .dd-tag__dot { background: var(--dd-primary, #{$dd-primary}); }
+  &.dd-tag--accent .dd-tag__dot { background: var(--dd-accent, #{$dd-accent}); }
+  &.dd-tag--success .dd-tag__dot { background: var(--dd-success, #{$dd-success}); }
+  &.dd-tag--warning .dd-tag__dot { background: var(--dd-warning, #{$dd-warning}); }
+  &.dd-tag--error .dd-tag__dot { background: var(--dd-error, #{$dd-error}); }
+  &.dd-tag--info .dd-tag__dot { background: var(--dd-info, #{$dd-info}); }
+  &.dd-tag--default .dd-tag__dot { background: var(--dd-muted, #{$dd-muted}); }
 }
 
 .dd-tag--closable {

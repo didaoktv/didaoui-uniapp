@@ -135,7 +135,7 @@
 <style lang="scss" scoped>
 @import '../../scss/variables';
 @import '../../scss/dd-shared';
-	$dd-number-keyboard-background-color: $dd-bg-section !default;
+	$dd-number-keyboard-background-color: var(--dd-bg-section, #{$dd-bg-section}) !default;
 	$dd-number-keyboard-padding:8px 10rpx 8px 10rpx !default;
 	$dd-number-keyboard-button-width:222rpx !default;
 	$dd-number-keyboard-button-margin:4px 6rpx !default;
@@ -144,13 +144,13 @@
 	$dd-number-keyboard-button-border-bottom-left-radius:4px !default;
 	$dd-number-keyboard-button-border-bottom-right-radius:4px !default;
 	$dd-number-keyboard-button-height: 90rpx!default;
-	$dd-number-keyboard-button-background-color:$dd-surface-container-high !default;
-	$dd-number-keyboard-button-box-shadow:0 2px 0px $dd-bg !default;
+	$dd-number-keyboard-button-background-color:var(--dd-surface-container-high, #{$dd-surface-container-high}) !default;
+	$dd-number-keyboard-button-box-shadow:0 2px 0px var(--dd-bg, #{$dd-bg}) !default;
 	$dd-number-keyboard-text-font-size:20px !default;
 	$dd-number-keyboard-text-font-weight:500 !default;
-	$dd-number-keyboard-text-color:$dd-text-primary !default;
-	$dd-number-keyboard-gray-background-color:$dd-surface-container-highest !default;
-	$dd-number-keyboard-dd-keyboard-hover-background-color: $dd-surface-hover !default;
+	$dd-number-keyboard-text-color:var(--dd-text-primary, #{$dd-text-primary}) !default;
+	$dd-number-keyboard-gray-background-color:var(--dd-surface-container-highest, #{$dd-surface-container-highest}) !default;
+	$dd-number-keyboard-dd-keyboard-hover-background-color: var(--dd-surface-hover, #{$dd-surface-hover}) !default;
 
 	.dd-keyboard {
 		@include flex;

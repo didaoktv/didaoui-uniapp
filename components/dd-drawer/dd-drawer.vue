@@ -98,7 +98,7 @@ function onMaskClick() {
 .dd-drawer__mask {
   position: fixed;
   inset: 0;
-  background: $dd-glass-bg;
+  background: var(--dd-glass-bg, #{$dd-glass-bg});
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
@@ -118,7 +118,7 @@ function onMaskClick() {
   bottom: 0;
   display: flex;
   flex-direction: column;
-  background: $dd-surface;
+  background: var(--dd-surface, #{$dd-surface});
   overflow: hidden;
   z-index: 1001;
   // ponytail: cubic-bezier 取 iOS 标准滑出曲线，遮罩淡入同期 0.3s，合上略快收尾
@@ -144,7 +144,7 @@ function onMaskClick() {
 
   &--vip {
     padding: 64rpx 32rpx 32rpx;
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     display: flex;
     align-items: center;
     gap: 24rpx;
@@ -169,7 +169,7 @@ function onMaskClick() {
 
 .dd-drawer__avatar-fallback {
   font-size: 40rpx;
-  color: $dd-neutral-900;
+  color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   font-weight: 700;
 }
 
@@ -189,13 +189,13 @@ function onMaskClick() {
 .dd-drawer__username {
   font-size: $dd-font-size-h3;
   font-weight: 700;
-  color: $dd-neutral-900;
+  color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   @include dd-ellipsis(1);
 }
 
 .dd-drawer__vip-badge {
-  background: $dd-surface;
-  color: $dd-primary-400;
+  background: var(--dd-surface, #{$dd-surface});
+  color: var(--dd-primary-400, #{$dd-primary-400});
   font-size: 20rpx;
   font-weight: 700;
   padding: 2rpx 10rpx;

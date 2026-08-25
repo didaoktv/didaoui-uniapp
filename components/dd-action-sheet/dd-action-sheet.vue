@@ -98,7 +98,7 @@ function onClose() {
   &__mask {
     position: fixed;
     inset: 0;
-    background: $dd-color-overlay-strong;
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
     z-index: 1000;
@@ -145,7 +145,7 @@ function onClose() {
   &__title-text {
     font-size: $dd-font-size-h4;
     font-weight: $dd-font-weight-h4;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &__grid {
@@ -165,7 +165,7 @@ function onClose() {
     width: 96rpx;
     height: 96rpx;
     border-radius: 50%;
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     @include dd-flex-center;
     @include dd-glow(gold);
   }
@@ -180,7 +180,7 @@ function onClose() {
   &__name {
     margin-top: $dd-space-1;
     font-size: $dd-font-size-caption;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     max-width: 128rpx;
     @include dd-ellipsis(1);
   }
@@ -189,14 +189,14 @@ function onClose() {
     margin-top: $dd-space-3;
     height: 96rpx;
     border-radius: $dd-radius-xl;
-    background: $dd-surface-container-high;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     @include dd-flex-center;
-    @include dd-hairline-top($dd-border-strong);
+    @include dd-hairline-top(var(--dd-border-strong, #{$dd-border-strong}));
   }
 
   &__cancel-text {
     font-size: $dd-font-size-body;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     font-weight: $dd-font-weight-body;
   }
 

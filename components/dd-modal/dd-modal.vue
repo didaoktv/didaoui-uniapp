@@ -170,7 +170,7 @@ onUnmounted(() => {
   &__mask {
     position: fixed;
     inset: 0;
-    background: $dd-glass-bg;
+    background: var(--dd-glass-bg, #{$dd-glass-bg});
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     opacity: 0;
@@ -192,10 +192,10 @@ onUnmounted(() => {
     z-index: 1001;
     max-width: 720rpx; // 360px 上限
     max-height: 80vh;
-    background: $dd-bg-elevated;
-    border: 1px solid $dd-border-default;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-xl;
-    box-shadow: $dd-shadow-4;
+    box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});
     padding: $dd-space-4 $dd-space-5;
     display: flex;
     flex-direction: column;
@@ -216,10 +216,10 @@ onUnmounted(() => {
     transform: translateY(100%);
     z-index: 1001;
     max-height: 85vh;
-    background: $dd-bg-elevated;
-    border: 1px solid $dd-border-default;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-xl $dd-radius-xl 0 0;
-    box-shadow: $dd-shadow-4;
+    box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease-out;
@@ -233,7 +233,7 @@ onUnmounted(() => {
     width: 72rpx;
     height: 8rpx;
     border-radius: $dd-radius-full;
-    background: $dd-neutral-700;
+    background: var(--dd-border-default, #{$dd-border-default});
     margin: 16rpx auto 8rpx;
     flex-shrink: 0;
   }
@@ -250,7 +250,7 @@ onUnmounted(() => {
   &__title {
     font-size: $dd-font-size-h4;
     font-weight: $dd-font-weight-h4;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &__close {
@@ -261,8 +261,8 @@ onUnmounted(() => {
     width: 64rpx;
     height: 64rpx;
     border-radius: $dd-radius-full;
-    background: $dd-gradient-primary;
-    color: $dd-neutral-900;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     font-size: 36rpx;
     @include dd-flex-center;
   }

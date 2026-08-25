@@ -116,14 +116,14 @@ provide('ddPopover', {
     min-width: 240rpx;
     max-width: 480rpx;
     border-radius: $dd-radius-lg;
-    box-shadow: $dd-shadow-2;
+    box-shadow: var(--dd-shadow-2, #{$dd-shadow-2});
     overflow: visible;
     z-index: 2000;
 
     &--light {
-      background: $dd-bg-elevated;
-      color: $dd-text-primary;
-      .dd-popover__arrow { background: $dd-bg-elevated; }
+      background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+      color: var(--dd-text-primary, #{$dd-text-primary});
+      .dd-popover__arrow { background: var(--dd-bg-elevated, #{$dd-bg-elevated}); }
     }
     &--dark {
       background: $dd-neutral-700;

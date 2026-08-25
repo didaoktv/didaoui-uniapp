@@ -163,14 +163,14 @@ watch(() => props.options, measure)
   @include dd-flex-center;
   height: 100%;
   padding: 0 $dd-space-4;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   font-size: $dd-font-size-body;
   font-weight: 500;
   box-sizing: border-box;
   @include dd-transition(color 0.3s);
 
   &--active {
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
     font-weight: 600;
     .dd-swipe__label {
       text-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
@@ -188,15 +188,15 @@ watch(() => props.options, measure)
   bottom: 0;
   left: 0;
   height: $dd-space-1;
-  background: $dd-gradient-primary-h;
+  background: var(--dd-gradient-primary-h, #{$dd-gradient-primary-h});
   border-radius: $dd-radius-full;
-  box-shadow: $dd-shadow-glow-gold-sm;
+  box-shadow: var(--dd-shadow-glow-gold-sm, #{$dd-shadow-glow-gold-sm});
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dd-swipe__divider {
   height: 1px;
-  background: $dd-neutral-800;
+  background: var(--dd-rule, #{$dd-rule});
 }
 </style>

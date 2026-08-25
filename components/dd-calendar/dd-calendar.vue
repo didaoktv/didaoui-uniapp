@@ -217,20 +217,20 @@ function onConfirm() {
   width: 56rpx;
   height: 56rpx;
   border-radius: $dd-radius-md;
-  background: $dd-surface-container-high;
+  background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   @include dd-flex-center;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
   font-size: $dd-font-size-h4;
 
   &--press {
-    background: $dd-surface-press;
+    background: var(--dd-surface-press, #{$dd-surface-press});
   }
 }
 
 .dd-calendar__title {
   font-size: $dd-font-size-body;
   font-weight: $dd-font-weight-lead;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
 }
 
 .dd-calendar__week {
@@ -242,7 +242,7 @@ function onConfirm() {
 .dd-calendar__week-item {
   text-align: center;
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 }
 
 .dd-calendar__grid {
@@ -257,13 +257,13 @@ function onConfirm() {
   border-radius: $dd-radius-md;
 
   &--press:not(.dd-calendar__cell--disabled, .dd-calendar__cell--blank) {
-    background: $dd-surface-hover;
+    background: var(--dd-surface-hover, #{$dd-surface-hover});
   }
 }
 
 .dd-calendar__day {
   font-size: $dd-font-size-body;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
 }
 
 .dd-calendar__cell--blank .dd-calendar__day {
@@ -271,19 +271,19 @@ function onConfirm() {
 }
 
 .dd-calendar__cell--disabled .dd-calendar__day {
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   opacity: 0.4;
 }
 
 .dd-calendar__cell--today .dd-calendar__day {
-  color: $dd-primary-400;
+  color: var(--dd-primary-400, #{$dd-primary-400});
   font-weight: 700;
 }
 
 .dd-calendar__cell--selected {
-  background: $dd-gradient-primary;
+  background: var(--dd-gradient-primary, #{$dd-gradient-primary});
   .dd-calendar__day {
-    color: $dd-neutral-900;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     font-weight: 700;
   }
 }
@@ -295,13 +295,13 @@ function onConfirm() {
 
 .dd-calendar__slots {
   margin-top: $dd-space-3;
-  border-top: 1px solid $dd-border-subtle;
+  border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   padding-top: $dd-space-3;
 }
 
 .dd-calendar__slots-title {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   margin-bottom: $dd-space-2;
 }
 
@@ -314,13 +314,13 @@ function onConfirm() {
 .dd-calendar__slot {
   padding: $dd-space-1 $dd-space-3;
   font-size: $dd-font-size-caption;
-  color: $dd-text-secondary;
-  background: $dd-surface-container-high;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
+  background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   border-radius: $dd-radius-md;
 
   &--active {
-    color: $dd-neutral-900;
-    background: $dd-gradient-primary;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     font-weight: 700;
   }
 
@@ -334,19 +334,19 @@ function onConfirm() {
   justify-content: flex-end;
   gap: $dd-space-3;
   margin-top: $dd-space-3;
-  border-top: 1px solid $dd-border-subtle;
+  border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   padding-top: $dd-space-3;
 }
 
 .dd-calendar__footer-btn {
   padding: $dd-space-2 $dd-space-4;
   font-size: $dd-font-size-body;
-  color: $dd-text-secondary;
+  color: var(--dd-text-secondary, #{$dd-text-secondary});
   border-radius: $dd-radius-md;
 
   &--primary {
-    color: $dd-neutral-900;
-    background: $dd-gradient-primary;
+    color: var(--dd-primary-contrast, #{$dd-primary-contrast});
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     font-weight: 700;
   }
 

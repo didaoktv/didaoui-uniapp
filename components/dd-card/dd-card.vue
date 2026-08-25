@@ -57,9 +57,9 @@ function onClick(e: Event) {
 
 .dd-card {
   box-sizing: border-box;
-  background: $dd-bg-elevated;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
   border-radius: $dd-radius-lg;
-  box-shadow: $dd-shadow-1;
+  box-shadow: var(--dd-shadow-1, #{$dd-shadow-1});
   overflow: hidden;
   @include dd-transition(all 0.3s ease);
 
@@ -67,7 +67,7 @@ function onClick(e: Event) {
     @include dd-flex-between;
     padding: $dd-space-4 $dd-space-5;
     box-sizing: border-box;
-    @include dd-hairline-bottom($dd-border-default);
+    @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
 
     &-inner {
       flex: 1;
@@ -88,22 +88,22 @@ function onClick(e: Event) {
   &__footer {
     padding: $dd-space-4 $dd-space-5;
     box-sizing: border-box;
-    @include dd-hairline-top($dd-border-default);
+    @include dd-hairline-top(var(--dd-border-default, #{$dd-border-default}));
   }
 
   &--border {
-    border: 1px solid $dd-border-default;
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
   }
 
   &--hover,
   &--hover-state {
     transform: translateY(-4rpx);
-    box-shadow: $dd-shadow-2;
+    box-shadow: var(--dd-shadow-2, #{$dd-shadow-2});
   }
 
   &--active {
-    border: 2px solid $dd-primary-500;
-    box-shadow: $dd-shadow-glow-gold-lg;
+    border: 2px solid var(--dd-primary, #{$dd-primary});
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 }
 
@@ -150,6 +150,6 @@ function onClick(e: Event) {
 }
 
 .dd-card--horizontal.dd-card--active {
-  border: 2px solid $dd-primary-500;
+  border: 2px solid var(--dd-primary, #{$dd-primary});
 }
 </style>

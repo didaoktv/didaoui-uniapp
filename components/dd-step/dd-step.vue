@@ -173,7 +173,7 @@ const lineStyle = computed(() => ({
 
   &__title {
     font-size: $dd-font-size-caption;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     line-height: $dd-line-height-caption;
   }
 
@@ -181,7 +181,7 @@ const lineStyle = computed(() => ({
     display: block;
     margin-top: $dd-space-1;
     font-size: $dd-font-size-caption;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     line-height: 1.4;
   }
 }

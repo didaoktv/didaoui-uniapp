@@ -8,8 +8,8 @@
   @if $intensity == sm { $blur: $dd-glass-blur-sm; }
   @else if $intensity == md { $blur: $dd-glass-blur-md; }
   @else if $intensity == lg { $blur: $dd-glass-blur-lg; }
-  background: $dd-glass-bg;
-  border: 1px solid $dd-glass-border;
+  background: var(--dd-glass-bg, #{$dd-glass-bg});
+  border: 1px solid var(--dd-glass-border, #{$dd-glass-border});
   /* #ifdef H5 */
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
@@ -17,15 +17,15 @@
 }
 
 @mixin dd-glass-strong {
-  background: $dd-glass-bg-strong;
-  border: 1px solid $dd-glass-border;
+  background: var(--dd-glass-bg-strong, #{$dd-glass-bg-strong});
+  border: 1px solid var(--dd-glass-border, #{$dd-glass-border});
   /* #ifdef H5 */
   backdrop-filter: blur($dd-glass-blur);
   -webkit-backdrop-filter: blur($dd-glass-blur);
   /* #endif */
 }
 
-// 发光阴影 — 支持 size: sm / md / lg
+// 发光阴影 — 支持 size: sm / md / lg（动态拼 --dd-shadow-glow-* 变量名，主题可覆盖）
 @mixin dd-glow($color: gold, $size: md) {
   $shadows: (
     gold-sm: $dd-shadow-glow-gold-sm,
@@ -51,17 +51,17 @@
     vip-lg: $dd-shadow-glow-vip-lg,
   );
   $key: $color + '-' + $size;
-  box-shadow: map-get($shadows, $key);
+  box-shadow: var(--dd-shadow-glow-#{$key}, #{map-get($shadows, $key)});
 }
 
-// 文字渐变
+// 文字渐变（动态拼 --dd-gradient-text-* 变量名，主题可覆盖）
 @mixin dd-text-gradient($color: gold) {
   $gradients: (
     gold: $dd-gradient-text-gold,
     'gold-light': $dd-gradient-text-gold-light,
     blue: $dd-gradient-text-blue,
   );
-  background: map-get($gradients, $color);
+  background: var(--dd-gradient-text-#{$color}, #{map-get($gradients, $color)});
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -91,8 +91,8 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-// 1px 边框 (retina)
-@mixin dd-hairline-bottom($color: $dd-border-default) {
+// 1px 边框 (retina)——默认色走主题变量，浅色下自动翻转
+@mixin dd-hairline-bottom($color: var(--dd-border-default, #{$dd-border-default})) {
   position: relative;
   &::after {
     content: '';
@@ -107,7 +107,7 @@
   }
 }
 
-@mixin dd-hairline-top($color: $dd-border-default) {
+@mixin dd-hairline-top($color: var(--dd-border-default, #{$dd-border-default})) {
   position: relative;
   &::before {
     content: '';

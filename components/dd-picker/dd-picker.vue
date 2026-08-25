@@ -132,7 +132,7 @@ function onConfirm() {
     right: 0;
     bottom: 0;
     z-index: $dd-z-index-popup;
-    background: $dd-neutral-800;
+    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
     border-radius: $dd-radius-lg $dd-radius-lg 0 0;
     transform: translateY(100%);
     @include dd-transition(transform 0.3s);
@@ -151,24 +151,24 @@ function onConfirm() {
     @include dd-flex-between;
     height: 96rpx;
     padding: 0 32rpx;
-    @include dd-hairline-bottom($dd-border-default);
+    @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
   }
   &__cancel {
     font-size: 28rpx;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
   &__title {
     flex: 1;
     text-align: center;
     font-size: 32rpx;
     font-weight: 600;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
   &__confirm {
     font-size: 28rpx;
     font-weight: 600;
-    color: $dd-primary-500;
+    color: var(--dd-primary, #{$dd-primary});
   }
 
   &__body {
@@ -185,7 +185,7 @@ function onConfirm() {
   }
   &__item-text {
     font-size: 28rpx;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 
@@ -193,11 +193,11 @@ function onConfirm() {
     position: absolute;
     inset: 0;
     @include dd-flex-center;
-    background: rgba($dd-neutral-800, 0.6);
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
   }
   &__layer-text {
     font-size: 24rpx;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 }
 </style>

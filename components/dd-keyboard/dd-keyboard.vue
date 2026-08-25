@@ -150,11 +150,11 @@
 		&__tooltip {
 			@include flex;
 			justify-content: space-between;
-			background-color: $dd-bg-elevated;
+			background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
 			padding: 14px 12px;
 
 			&__item {
-				color: $dd-text-primary;
+				color: var(--dd-text-primary, #{$dd-text-primary});
 				flex: 1;
 				text-align: center;
 				font-size: 15px;
@@ -162,16 +162,16 @@
 
 			&__submit {
 				text-align: right;
-				color: $dd-primary-400;
+				color: var(--dd-primary-400, #{$dd-primary-400});
 			}
 
 			&__cancel {
 				text-align: left;
-				color: $dd-text-tertiary;
+				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 			}
 
 			&__tips {
-				color: $dd-text-tertiary;
+				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 			}
 		}
 	}

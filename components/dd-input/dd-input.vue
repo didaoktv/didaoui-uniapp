@@ -115,8 +115,8 @@ function toggleVisible() {
   gap: $dd-space-2;
   height: 88rpx;
   padding: 0 $dd-space-4;
-  background: $dd-neutral-800;
-  border: 1px solid $dd-neutral-700;
+  background: var(--dd-surface-container-low, #{$dd-surface-container-low});
+  border: 1px solid var(--dd-border-default, #{$dd-border-default});
   border-radius: $dd-radius-md;
   box-sizing: border-box;
   @include dd-transition(border-color 0.2s, box-shadow 0.2s);
@@ -126,7 +126,7 @@ function toggleVisible() {
     min-width: 0;
     height: 100%;
     font-size: $dd-font-size-body;
-    color: $dd-neutral-100;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     background: transparent;
     border: none;
   }
@@ -142,8 +142,8 @@ function toggleVisible() {
     width: 36rpx;
     height: 36rpx;
     border-radius: 50%;
-    background: $dd-neutral-700;
-    color: $dd-neutral-300;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     font-size: $dd-font-size-caption;
     line-height: 1;
   }
@@ -155,13 +155,13 @@ function toggleVisible() {
   }
 
   &--focus {
-    border-color: $dd-primary-500;
-    box-shadow: $dd-shadow-glow-gold-lg;
+    border-color: var(--dd-primary, #{$dd-primary});
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 
   &--error {
-    border-color: $dd-error-500;
-    box-shadow: $dd-shadow-glow-error-md;
+    border-color: var(--dd-error, #{$dd-error});
+    box-shadow: var(--dd-shadow-glow-error-md, #{$dd-shadow-glow-error-md});
   }
 
   &--disabled {

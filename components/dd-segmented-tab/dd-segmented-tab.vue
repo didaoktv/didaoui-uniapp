@@ -113,8 +113,8 @@ watch(() => props.options, measure)
     position: relative;
     display: inline-flex;
     padding: $dd-space-1;
-    background: $dd-neutral-800;
-    border: 1px solid $dd-border-default;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+    border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-full;
   }
 
@@ -124,13 +124,13 @@ watch(() => props.options, measure)
     min-width: 120rpx;
     padding: 12rpx $dd-space-4;
     @include dd-flex-center;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: $dd-font-size-body;
     font-weight: 500;
     @include dd-transition(color 0.3s);
 
     &--active {
-      color: $dd-neutral-900;
+      color: var(--dd-primary-contrast, #{$dd-primary-contrast});
       font-weight: 600;
     }
   }
@@ -157,14 +157,14 @@ watch(() => props.options, measure)
   .dd-seg-text__item {
     position: relative;
     padding: $dd-space-2 0;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: $dd-font-size-body;
     font-weight: 500;
     @include dd-flex-center;
     @include dd-transition(color 0.3s);
 
     &--active {
-      color: $dd-primary-400;
+      color: var(--dd-primary-400, #{$dd-primary-400});
       font-weight: 600;
     }
   }
@@ -175,7 +175,7 @@ watch(() => props.options, measure)
     left: 20%;
     width: 60%;
     height: $dd-space-1;
-    background: $dd-primary-400;
+    background: var(--dd-primary-400, #{$dd-primary-400});
     border-radius: $dd-radius-full;
   }
 }

@@ -66,7 +66,7 @@ function onMenu() {
   &__btn {
     flex: 1;
     @include dd-flex-center;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     @include dd-transition(background 0.2s ease);
 
     &:active {
@@ -78,8 +78,8 @@ function onMenu() {
   &__arrow {
     width: 20rpx;
     height: 20rpx;
-    border-left: $dd-space-1 solid $dd-text-secondary;
-    border-bottom: $dd-space-1 solid $dd-text-secondary;
+    border-left: $dd-space-1 solid var(--dd-text-secondary, #{$dd-text-secondary});
+    border-bottom: $dd-space-1 solid var(--dd-text-secondary, #{$dd-text-secondary});
     transform: rotate(45deg);
     margin-left: $dd-space-1;
   }
@@ -87,7 +87,7 @@ function onMenu() {
   &__dots {
     font-size: $dd-font-size-h3;
     line-height: 1;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
 
   // 1px 竖向分隔线，仅 default 变体
@@ -95,7 +95,7 @@ function onMenu() {
     width: 1px;
     height: $dd-space-4;
     align-self: center;
-    background: $dd-border-default;
+    background: var(--dd-border-default, #{$dd-border-default});
     flex-shrink: 0;
   }
 

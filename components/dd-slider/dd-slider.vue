@@ -160,7 +160,7 @@ function onMouseDown(e: any) {
     width: 100%;
     height: 6rpx;
     border-radius: $dd-radius-full;
-    background: $dd-neutral-800;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   }
 
   &__fill {
@@ -169,7 +169,7 @@ function onMouseDown(e: any) {
     left: 0;
     height: 100%;
     border-radius: $dd-radius-full;
-    background: $dd-gradient-primary-h;
+    background: var(--dd-gradient-primary-h, #{$dd-gradient-primary-h});
     box-shadow: 0 0 8rpx rgba($dd-primary-400, 0.6);
   }
 
@@ -179,9 +179,9 @@ function onMouseDown(e: any) {
     width: 32rpx;
     height: 32rpx;
     background: $dd-color-white;
-    border: 4rpx solid $dd-primary-400;
+    border: 4rpx solid var(--dd-primary-400, #{$dd-primary-400});
     border-radius: 50%;
-    box-shadow: $dd-shadow-glow-gold-lg;
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
     transform: translate(-50%, -50%);
     @include dd-transition(transform 0.1s ease, box-shadow 0.2s ease);
 
@@ -207,7 +207,7 @@ function onMouseDown(e: any) {
       left: 50%;
       transform: translateX(-50%);
       border: 6rpx solid transparent;
-      border-top-color: $dd-glass-border;
+      border-top-color: var(--dd-glass-border, #{$dd-glass-border});
       border-bottom: 0;
     }
   }
@@ -215,7 +215,7 @@ function onMouseDown(e: any) {
   &__tooltip-text {
     font-size: $dd-font-size-caption;
     font-weight: 600;
-    color: $dd-primary-300;
+    color: var(--dd-primary-300, #{$dd-primary-300});
     line-height: 1.2;
   }
 

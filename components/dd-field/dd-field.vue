@@ -439,8 +439,8 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   overflow: hidden;
   font-size: $dd-font-size-body;
   line-height: $dd-line-height-lead;
-  color: $dd-text-primary;
-  background: $dd-bg-elevated;
+  color: var(--dd-text-primary, #{$dd-text-primary});
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
 
   // vant 式发丝线：两侧缩进 32rpx
   &::after {
@@ -451,7 +451,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     right: $dd-space-4;
     bottom: 0;
     left: $dd-space-4;
-    border-bottom: 1px solid $dd-border-subtle;
+    border-bottom: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
     transform: scaleY(0.5);
   }
 
@@ -480,7 +480,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     box-sizing: border-box;
     width: 6.2em;
     margin-right: $dd-space-3;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     text-align: left;
     word-wrap: break-word;
 
@@ -494,7 +494,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
 
   &__required-mark {
     margin-right: 4rpx;
-    color: $dd-error-500;
+    color: var(--dd-error, #{$dd-error});
   }
 
   &__label-text {
@@ -529,17 +529,17 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     border: 0;
     resize: none;
     background: transparent;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     font-size: inherit;
     line-height: inherit;
 
     &::placeholder {
-      color: $dd-text-tertiary;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     }
 
     // readonly（原生 disabled 拦输入但无禁用样式）：保持正常文本色
     &:disabled {
-      color: $dd-text-primary;
+      color: var(--dd-text-primary, #{$dd-text-primary});
       opacity: 1;
     }
   }
@@ -554,7 +554,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     flex-shrink: 0;
     margin-right: $dd-space-1;
     font-size: $dd-font-size-h4;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &__clear {
@@ -565,7 +565,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     margin-left: $dd-space-1;
     padding: $dd-space-1 0 $dd-space-1 $dd-space-2;
     font-size: $dd-font-size-h4;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__right-icon {
@@ -574,7 +574,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     flex-shrink: 0;
     margin-left: $dd-space-1;
     font-size: $dd-font-size-h4;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__arrow {
@@ -583,7 +583,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     flex-shrink: 0;
     margin-left: $dd-space-1;
     font-size: $dd-font-size-h4;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 
     &--left {
       transform: rotate(180deg);
@@ -606,7 +606,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   &__error-message {
     font-size: $dd-font-size-caption;
     line-height: 32rpx;
-    color: $dd-error-500;
+    color: var(--dd-error, #{$dd-error});
     text-align: left;
 
     &--center {
@@ -622,7 +622,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     margin-top: $dd-space-1;
     font-size: $dd-font-size-caption;
     line-height: 32rpx;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     text-align: right;
   }
 
@@ -630,7 +630,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   &--error {
     .dd-field__control,
     .dd-field__control::placeholder {
-      color: $dd-error-500;
+      color: var(--dd-error, #{$dd-error});
     }
   }
 
@@ -638,12 +638,12 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   &--disabled {
     .dd-field__label,
     .dd-field__left-icon {
-      color: $dd-text-tertiary;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     }
 
     .dd-field__control,
     .dd-field__control::placeholder {
-      color: $dd-text-tertiary;
+      color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     }
   }
 
@@ -654,7 +654,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   }
 
   &--active {
-    background: $dd-surface-container-high;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   }
 
   &__extra {

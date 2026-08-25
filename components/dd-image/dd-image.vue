@@ -114,7 +114,7 @@ watch(
   position: relative;
   display: inline-block;
   overflow: hidden;
-  background: $dd-neutral-800; // var(--dd-bg-inset) 占位底色
+  background: var(--dd-surface-container-low, #{$dd-surface-container-low}); // var(--dd-bg-inset) 占位底色
   vertical-align: middle;
 
   &--round {
@@ -132,21 +132,21 @@ watch(
   position: absolute;
   inset: 0;
   @include dd-flex-center;
-  background: $dd-neutral-800;
+  background: var(--dd-surface-container-low, #{$dd-surface-container-low});
 }
 
 .dd-image__spinner {
   width: $dd-size-icon-lg;
   height: $dd-size-icon-lg;
-  border: $dd-space-1 solid $dd-border-default;
-  border-top-color: $dd-primary-500;
+  border: $dd-space-1 solid var(--dd-border-default, #{$dd-border-default});
+  border-top-color: var(--dd-primary, #{$dd-primary});
   border-radius: 50%;
   animation: dd-image-spin 0.8s linear infinite;
 }
 
 .dd-image__error-icon {
   font-size: $dd-size-icon-lg; // 24px
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   line-height: 1;
 }
 

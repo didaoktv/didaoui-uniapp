@@ -111,7 +111,7 @@ function onClick() {
 
   &--press {
     transform: scale(0.99);
-    background: $dd-surface-hover;
+    background: var(--dd-surface-hover, #{$dd-surface-hover});
   }
 }
 
@@ -127,7 +127,7 @@ function onClick() {
   min-width: 0;
   font-size: $dd-font-size-body;
   font-weight: $dd-font-weight-lead;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-ellipsis(1);
 }
 
@@ -137,11 +137,11 @@ function onClick() {
   padding: 2rpx 14rpx;
   border-radius: $dd-radius-sm;
 
-  &--service { color: $dd-primary-400; background: rgba(245, 166, 35, 0.12); }
-  &--repair { color: $dd-error-400; background: rgba(229, 57, 53, 0.12); }
-  &--feedback { color: $dd-accent-300; background: rgba(45, 75, 160, 0.2); }
-  &--decoration { color: $dd-vip-500; background: rgba(156, 39, 176, 0.14); }
-  &--todo { color: $dd-text-secondary; background: $dd-glass-border; }
+  &--service { color: var(--dd-primary-400, #{$dd-primary-400}); background: rgba(245, 166, 35, 0.12); }
+  &--repair { color: var(--dd-error-400, #{$dd-error-400}); background: rgba(229, 57, 53, 0.12); }
+  &--feedback { color: var(--dd-accent-300, #{$dd-accent-300}); background: rgba(45, 75, 160, 0.2); }
+  &--decoration { color: var(--dd-vip, #{$dd-vip-500}); background: rgba(156, 39, 176, 0.14); }
+  &--todo { color: var(--dd-text-secondary, #{$dd-text-secondary}); background: var(--dd-glass-border, #{$dd-glass-border}); }
 }
 
 .dd-workorder-card__checklist {
@@ -166,28 +166,28 @@ function onClick() {
   height: 40rpx;
   flex-shrink: 0;
   border-radius: $dd-radius-sm;
-  border: 2rpx solid $dd-border-strong;
+  border: 2rpx solid var(--dd-border-strong, #{$dd-border-strong});
   @include dd-flex-center;
 
   &--on {
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     border-color: transparent;
   }
 }
 
 .dd-workorder-card__box-check {
   font-size: $dd-font-size-caption;
-  color: $dd-neutral-900;
+  color: var(--dd-primary-contrast, #{$dd-primary-contrast});
   line-height: 1;
 }
 
 .dd-workorder-card__check-text {
   flex: 1;
   font-size: $dd-font-size-body;
-  color: $dd-text-primary;
+  color: var(--dd-text-primary, #{$dd-text-primary});
 
   &--done {
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     text-decoration: line-through;
   }
 }
@@ -202,28 +202,28 @@ function onClick() {
 .dd-workorder-card__progress-track {
   flex: 1;
   height: $dd-space-1;
-  background: $dd-surface-container-high;
+  background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   border-radius: $dd-radius-full;
   overflow: hidden;
 }
 
 .dd-workorder-card__progress-bar {
   height: 100%;
-  background: $dd-gradient-primary-h;
+  background: var(--dd-gradient-primary-h, #{$dd-gradient-primary-h});
   border-radius: $dd-radius-full;
   transition: width 0.3s ease;
 }
 
 .dd-workorder-card__progress-text {
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   font-family: $dd-font-mono;
 }
 
 .dd-workorder-card__time {
   margin-top: $dd-space-1;
   font-size: $dd-font-size-caption;
-  color: $dd-text-tertiary;
+  color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 }
 
 .dd-workorder-card__actions {
@@ -231,7 +231,7 @@ function onClick() {
   justify-content: flex-end;
   gap: $dd-space-3;
   margin-top: $dd-space-2;
-  border-top: 1px solid $dd-border-subtle;
+  border-top: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
   padding-top: $dd-space-2;
 }
 </style>

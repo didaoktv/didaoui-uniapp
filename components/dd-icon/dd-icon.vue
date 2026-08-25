@@ -197,7 +197,7 @@ const iconStyle = computed(() => {
     right: -$dd-space-1;
     width: 12rpx;
     height: 12rpx;
-    background: $dd-error-500;
+    background: var(--dd-error, #{$dd-error});
     border-radius: 50%;
   }
 

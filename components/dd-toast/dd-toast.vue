@@ -158,23 +158,23 @@ const iconName = computed(() => {
     font-weight: 700;
 
     &--success {
-      color: $dd-success-400;
+      color: var(--dd-success-400, #{$dd-success-400});
     }
 
     &--error {
-      color: $dd-error-400;
+      color: var(--dd-error-400, #{$dd-error-400});
     }
 
     &--warning {
-      color: $dd-warning-400;
+      color: var(--dd-warning-400, #{$dd-warning-400});
     }
   }
 
   &__spinner {
     width: $dd-size-icon-xl;
     height: $dd-size-icon-xl;
-    border: 6rpx solid $dd-border-default;
-    border-top-color: $dd-primary-400;
+    border: 6rpx solid var(--dd-border-default, #{$dd-border-default});
+    border-top-color: var(--dd-primary-400, #{$dd-primary-400});
     border-radius: 50%;
     animation: dd-toast-spin 0.8s linear infinite;
   }

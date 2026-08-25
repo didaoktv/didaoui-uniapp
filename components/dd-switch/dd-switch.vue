@@ -63,15 +63,15 @@ function onToggle() {
   }
 
   // off
-  background: $dd-neutral-800;
-  border: 1px solid $dd-glass-border;
+  background: var(--dd-surface-container-high, #{$dd-surface-container-high});
+  border: 1px solid var(--dd-glass-border, #{$dd-glass-border});
   box-shadow: inset 0 2rpx 6rpx rgba(0, 0, 0, 0.3);
 
   // on
   &--on {
-    background: $dd-gradient-primary;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     border-color: rgba($dd-primary-300, 0.5);
-    box-shadow: $dd-shadow-glow-gold-lg, inset 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg}), inset 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
   }
 
   &--disabled {

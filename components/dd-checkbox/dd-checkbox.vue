@@ -75,7 +75,7 @@ function onToggle() {
     @include dd-flex-center;
     flex-shrink: 0;
     border-radius: $dd-radius-sm;
-    border: 3rpx solid $dd-neutral-700;
+    border: 3rpx solid var(--dd-border-default, #{$dd-border-default});
     background: transparent;
     box-sizing: border-box;
     @include dd-transition(all 0.2s);
@@ -91,24 +91,24 @@ function onToggle() {
   &__dash {
     width: 60%;
     height: $dd-space-1;
-    background: $dd-primary-500;
+    background: var(--dd-primary, #{$dd-primary});
     border-radius: $dd-radius-full;
   }
 
   &__label {
     font-size: $dd-font-size-body;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
   }
 
   &--checked .dd-checkbox__box {
-    background: $dd-gradient-primary;
-    border-color: $dd-primary-500;
-    box-shadow: $dd-shadow-glow-gold-lg;
+    background: var(--dd-gradient-primary, #{$dd-gradient-primary});
+    border-color: var(--dd-primary, #{$dd-primary});
+    box-shadow: var(--dd-shadow-glow-gold-lg, #{$dd-shadow-glow-gold-lg});
   }
 
   &--indeterminate .dd-checkbox__box {
-    background: rgba($dd-primary-500, 0.1);
-    border-color: $dd-primary-500;
+    background: rgba($dd-primary, 0.1);
+    border-color: var(--dd-primary, #{$dd-primary});
   }
 
   &--disabled {

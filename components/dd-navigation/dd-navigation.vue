@@ -71,11 +71,11 @@ function onSelect(index: number) {
   align-items: center;
   width: 100%;
   height: 112rpx;
-  background: $dd-surface;
+  background: var(--dd-surface, #{$dd-surface});
   box-sizing: border-box;
 
   &--border {
-    @include dd-hairline-top($dd-border-subtle);
+    @include dd-hairline-top(var(--dd-border-subtle, #{$dd-border-subtle}));
   }
 
   &--fixed {
@@ -94,11 +94,11 @@ function onSelect(index: number) {
     @include dd-flex-center;
     flex-direction: column;
     gap: $dd-space-1;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-transition(color 0.3s);
 
     &--active {
-      color: $dd-primary-400;
+      color: var(--dd-primary-400, #{$dd-primary-400});
       .dd-nav__icon {
         text-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
       }
@@ -116,8 +116,8 @@ function onSelect(index: number) {
     width: $dd-space-5;
     height: $dd-space-1;
     border-radius: 0 0 $dd-radius-sm $dd-radius-sm;
-    background: $dd-gradient-primary-h;
-    box-shadow: $dd-shadow-glow-gold-sm;
+    background: var(--dd-gradient-primary-h, #{$dd-gradient-primary-h});
+    box-shadow: var(--dd-shadow-glow-gold-sm, #{$dd-shadow-glow-gold-sm});
   }
 
   &__icon {

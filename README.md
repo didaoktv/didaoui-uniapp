@@ -82,6 +82,65 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 
 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px (8pt 基础网格)
 
+### 主题与浅色模式（v1.3.0+）
+
+默认主题为暗色（dark-first）。主题机制分三层，**新增任何主题都不需要改动组件**：
+
+| 层 | 机制 | 适用场景 |
+|----|------|---------|
+| SCSS 编译期 | `_variables.scss` 全量 `!default`，消费者先声明变量再引入即可覆盖 | 整个 App 固定品牌换肤 |
+| CSS 变量运行时 | 组件消费 `var(--dd-x, #{$dd-x})`，SCSS 值为兜底（不引入主题文件时与旧版渲染一致） | 明暗切换、多主题共存 |
+| delta 级联 | `:root`/`page` 发射全量默认值（base 59 + 暗色 44），主题类只声明与默认不同的变量，未声明自动继承 | 快速配置新主题 |
+
+**启用运行时主题**：在 `App.vue` 全局样式引入：
+
+```scss
+@import '@didaoktv/didaoui-uniapp/scss/theme';
+```
+
+**切换明暗**（默认暗色，`.light` 为 opt-in）：
+
+```ts
+// H5
+document.documentElement.classList.toggle('light')
+// 小程序：页面根节点挂类（自定义属性沿节点树继承进组件）
+<view :class="isLight ? 'light' : 'dark'">…</view>
+```
+
+**明暗核心对照**（翻转 delta 共 44 个，完整清单见 `scss/_theme-tokens.scss`）：
+
+| Token | Dark（默认） | Light |
+|---|---|---|
+| `--dd-bg` / `--dd-fg` | `#0A0A0A` / `#F5F5F5` | `#FAFAFA` / `#0A0A0A` |
+| `--dd-surface` / `--dd-bg-card` | `#0A0A0A` / `#171717` | `#FFFFFF` |
+| `--dd-border-default` / `--dd-rule` | `#2A2A2A` | `#BDBDBD` |
+| `--dd-muted` | `#757575` | `#616161` |
+| 品牌色 `--dd-primary` 等 | 不随明暗翻转 | 同暗色 |
+
+**快速配置新主题**（两法互补）：
+
+```scss
+// 法一（编译期）：uni.scss 中一行换品牌色，全库（含 var 兜底值）生效
+$dd-primary: #d32f2f;
+@import '@didaoktv/didaoui-uniapp/scss/variables';
+
+// 法二（运行时）：全局样式中声明 delta 类，页面根节点挂类即生效；可与 .light 并列
+.cny-red {
+  @include dd-theme((
+    'primary': #d32f2f,
+    'primary-contrast': #ffffff,
+    'gradient-primary': linear-gradient(135deg, #f44336, #b71c1c),
+  ));
+}
+```
+
+注意事项：
+
+- `$dd-primary-contrast`（金底文字）刻意**不随明暗翻转**（保持 `#0A0A0A`）：品牌金不翻转，白字在金底对比度不可用；品牌主题可覆盖。
+- 少数 `rgba($dd-brand, a)` 包裹处（checkbox/switch/slider 各 1 处）为编译期值，不跟随运行时品牌换肤（明暗无碍）。
+- nvue 不支持 CSS 变量，不在主题机制支持范围内。
+- 自检：`npx tsc scripts/theme-selfcheck.ts --module commonjs --target es2020 --lib "es2020,dom" --outDir .check --skipLibCheck; node .check/theme-selfcheck.js`
+
 ## 新增业务组件（2026-08-22 纳入设计系统）
 
 > 新组件统一以主流组件库（Vant 等）同名/同类组件为 API 设计基准，符合 uni-app 多端规范，只消费上层 `scss/_variables.scss` 既有 token。

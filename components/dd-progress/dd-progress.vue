@@ -159,7 +159,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
 
   &__text {
     font-size: $dd-font-size-caption;
-    color: $dd-text-secondary;
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
   }
@@ -174,14 +174,14 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
 
   &__circle-mask {
     border-radius: 50%;
-    background: $dd-surface;
+    background: var(--dd-surface, #{$dd-surface});
     @include dd-flex-center;
   }
 
   &__circle-text {
     font-size: $dd-font-size-lead;
     font-weight: 700;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     font-variant-numeric: tabular-nums;
   }
 
@@ -213,7 +213,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
 
     &--done,
     &--current {
-      background: $dd-gradient-primary;
+      background: var(--dd-gradient-primary, #{$dd-gradient-primary});
       box-shadow: 0 0 12rpx rgba(245, 166, 35, 0.5);
     }
 
@@ -230,7 +230,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
     @include dd-transition(background 0.3s ease);
 
     &--done {
-      background: $dd-primary-500;
+      background: var(--dd-primary, #{$dd-primary});
     }
   }
 }

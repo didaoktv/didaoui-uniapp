@@ -122,10 +122,10 @@ function handleClick(e: Event) {
   box-sizing: border-box;
   width: 100%;
   padding: 0 24rpx 0 $dd-space-4;
-  background: $dd-bg-elevated;
+  background: var(--dd-bg-elevated, #{$dd-bg-elevated});
   font-size: $dd-font-size-body;
-  color: $dd-text-primary;
-  @include dd-hairline-bottom($dd-border-subtle);
+  color: var(--dd-text-primary, #{$dd-text-primary});
+  @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
 
   &--normal {
     min-height: 96rpx;
@@ -146,7 +146,7 @@ function handleClick(e: Event) {
   }
 
   &--active {
-    background: $dd-surface-container-high;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   }
 
   &__icon {
@@ -160,11 +160,11 @@ function handleClick(e: Event) {
   &__icon-text {
     font-size: 36rpx;
     line-height: 1;
-    color: $dd-primary-400;
+    color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__required {
-    color: $dd-error-500;
+    color: var(--dd-error, #{$dd-error});
     font-size: $dd-font-size-body;
     margin-right: 4rpx;
     line-height: $dd-line-height-caption;
@@ -184,14 +184,14 @@ function handleClick(e: Event) {
 
   &__title {
     font-size: $dd-font-size-body;
-    color: $dd-text-primary;
+    color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 
   &__label {
     margin-top: 4rpx;
     font-size: $dd-font-size-caption;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-ellipsis(1);
   }
 
@@ -205,7 +205,7 @@ function handleClick(e: Event) {
 
   &__value {
     font-size: $dd-font-size-body;
-    color: $dd-text-tertiary;
+    color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__arrow {

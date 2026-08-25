@@ -1,12 +1,13 @@
 {
   "name": "@didaoktv/didaoui-uniapp",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "帝到KTV UniApp 组件库",
   "main": "index.ts",
   "types": "index.ts",
   "exports": {
     ".": "./index.ts",
     "./uni.scss": "./uni.scss",
+    "./scss/theme": "./scss/theme.scss",
     "./scss/variables": "./scss/_variables.scss",
     "./scss/mixins": "./scss/_mixins.scss",
     "./scss/functions": "./scss/_functions.scss",
