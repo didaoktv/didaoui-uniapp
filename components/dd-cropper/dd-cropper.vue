@@ -1,6 +1,5 @@
 <template>
 	<view class="dd-cropper">
-		<!-- <image :src="imgSrc.imgSrc" @click="select" :style="[ imgStyle ]" class="my-avatar"></image> -->
 		<dd-canvas ref="avatarCanvas" :canvas-id="'avatar-canvas-' + instanceId" class="my-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight }" bg-color="transparent"></dd-canvas>
 		<dd-canvas ref="operCanvas" :canvas-id="'oper-canvas-' + instanceId" class="oper-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight }" bg-color="transparent" @touchstart="start" @touchmove="move" @touchend="end"></dd-canvas>
 		<dd-canvas ref="prvCanvas" :canvas-id="'prv-canvas-' + instanceId" class="prv-canvas" :width="windowWidth || 0" :height="windowHeight || 0" bg-color="transparent" @touchstart="hideImg" :style="{ height: cvsStyleHeight, top: prvTop }"></dd-canvas>
@@ -8,65 +7,154 @@
 			<view class="oper">
 				<view class="btn-wrapper" v-if="showOper">
 					<view @click="select" hover-class="hover" :style="{ width: btnWidth }">
-						<text>{{ t("dd.common.re-select") }}</text>
+						<text>重选</text>
 					</view>
 					<view @click="close" hover-class="hover" :style="{ width: btnWidth }">
-						<text>{{ t("dd.common.close") }}</text>
+						<text>关闭</text>
 					</view>
 					<view @click="rotate" hover-class="hover" :style="{ width: btnWidth, display: btnDsp }">
-						<text>{{ t("dd.common.rotate") }}</text>
+						<text>旋转</text>
 					</view>
 					<view @click="preview" hover-class="hover" :style="{ width: btnWidth }">
-						<text>{{ t("dd.common.preview") }}</text>
+						<text>预览</text>
 					</view>
 					<view @click="confirm" hover-class="hover" :style="{ width: btnWidth }">
-						<text>{{ t("dd.common.confirm") }}</text>
+						<text>确定</text>
 					</view>
 				</view>
 				<view class="clr-wrapper" v-else>
 					<slider class="my-slider" @change="colorChange" block-size="25" value="0" min="-100" max="100" activeColor="red" backgroundColor="green" block-color="grey" show-value></slider>
 					<view @click="prvUpload" hover-class="hover" :style="{ width: btnWidth }">
-						<text>{{ t("dd.common.confirm") }}</text>
+						<text>确定</text>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view @click="chooseImage(0, {})" v-if="styleDisplay == 'none'">
-			<slot>
-
-			</slot>
+			<slot></slot>
 		</view>
 	</view>
 </template>
 
 <script>
-	import { t } from '../../libs/i18n'
+	// 画布系组件（dd-canvas / dd-signature / dd-qrcode 同族）统一采用 Options API，
+	// 命令式 canvas 状态挂在 this 上不走响应式，避免触摸高频重绘的代理开销。
+
+	// 底部操作条高度（px），与样式 .oper-wrapper 的 height 保持一致
 	const tabHeight = 50;
+
 	export default {
 		name: "dd-cropper",
+		emits: ['avtinit', 'confirm', 'cancel'],
+		props: {
+			// 最小缩放倍数
+			minScale: {
+				type: [Number, String],
+				default: 0.3
+			},
+			// 最大缩放倍数
+			maxScale: {
+				type: [Number, String],
+				default: 4
+			},
+			// 是否允许双指缩放
+			canScale: {
+				type: Boolean,
+				default: true
+			},
+			// 是否允许旋转（inner 模式下不可用）
+			canRotate: {
+				type: Boolean,
+				default: true
+			},
+			lockWidth: {
+				type: String,
+				default: ''
+			},
+			lockHeight: {
+				type: String,
+				default: ''
+			},
+			// 拉伸模式：x / y / long / short / longSel / shortSel
+			stretch: {
+				type: String,
+				default: ''
+			},
+			// 锁定模式：x / y / long / short / longSel / shortSel
+			lock: {
+				type: String,
+				default: ''
+			},
+			// 页面无底部 tabbar 时保持 true
+			noTab: {
+				type: Boolean,
+				default: true
+			},
+			// 内部模式：隐藏旋转按钮、按钮加宽
+			inner: {
+				type: Boolean,
+				default: false
+			},
+			// 导出图片质量（0-1），仅对压缩格式生效
+			quality: {
+				type: [Number, String],
+				default: 0.9
+			},
+			// 实例标识，confirm 事件原样回传
+			index: {
+				type: [Number, String],
+				default: ''
+			},
+			// 是否允许拖拽四角控制点调整裁剪框大小
+			canChangeSize: {
+				type: Boolean,
+				default: false
+			},
+			// 裁剪区域宽度，如 '300rpx'
+			areaWidth: {
+				type: String,
+				default: '300rpx'
+			},
+			// 裁剪区域高度，如 '300rpx'
+			areaHeight: {
+				type: String,
+				default: '300rpx'
+			},
+			// 导出图片宽度，如 '260rpx'
+			exportWidth: {
+				type: String,
+				default: '260rpx'
+			},
+			// 导出图片高度，如 '260rpx'
+			exportHeight: {
+				type: String,
+				default: '260rpx'
+			},
+			// 画布填充色，默认透明，可传 'black'、'#ffffff' 等
+			fillColor: {
+				type: String,
+				default: 'transparent'
+			},
+		},
 		data() {
 			return {
-				// 添加实例ID用于区分不同实例
-				instanceId: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+				// 实例ID用于区分不同实例的 canvas-id
+				instanceId: Date.now() + '-' + Math.random().toString(36).substring(2, 11),
 				cvsStyleHeight: '0px',
 				styleDisplay: 'none',
 				styleTop: '-10000px',
 				prvTop: '-10000px',
-				imgStyle: {},
 				selStyle: {},
 				showOper: true,
+				// confirm 回载荷（avatar 字段）
 				imgSrc: {
 					imgSrc: ''
 				},
 				btnWidth: '19%',
 				btnDsp: 'flex',
-				// 裁剪区域宽度，用于设置选择区域的宽度
-				arWidth: '',
-				// 裁剪区域高度，用于设置选择区域的高度
-				arHeight: '',
-				// 导出图片宽度，用于设置最终导出图片的宽度
+				// 导出图片宽度（px，经 rpx 换算）
 				expWidth: '',
-				// 导出图片高度，用于设置最终导出图片的高度
+				// 导出图片高度（px，经 rpx 换算）
 				expHeight: '',
 				// 是否允许调整裁剪框大小
 				letChangeSize: false,
@@ -74,48 +162,13 @@
 				safeAreaInsetsBottom: 0,
 			};
 		},
-		watch: {
-			avatarSrc() {
-				this.imgSrc.imgSrc = this.avatarSrc;
-			}
-		},
-		emits: ['avtinit', 'confirm'],
-		props: {
-			minScale: '',
-			maxScale: '',
-			canScale: true,
-			canRotate: true,
-			lockWidth: '',
-			lockHeight: '',
-			stretch: '',
-			lock: '',
-			noTab: true,
-			inner: false,
-			quality: '',
-			index: '',
-			canChangeSize: false,
-			areaWidth: '300rpx',
-			// 裁剪区域高度，用于设置选择区域的高度
-			areaHeight: '300rpx',
-			// 导出图片宽度，用于设置最终导出图片的宽度
-			exportWidth: '260rpx',
-			// 导出图片高度，用于设置最终导出图片的高度
-			exportHeight: '260rpx',
-			// 画布填充色，默认透明，可传 'black'、'#ffffff' 等
-			fillColor: {
-				type: String,
-				default: 'transparent'
-			},
-		},
 		created() {
 			this.ctxCanvas = null;
 			this.ctxCanvasOper = null;
 			this.ctxCanvasPrv = null;
 			this.qlty = parseInt(this.quality) || 0.9;
-			this.imgSrc.imgSrc = this.imageSrc;
 			this.letRotate = (this.canRotate === false || this.inner === true) ? 0 : 1;
 			this.letScale = this.canScale === false ? 0 : 1;
-			// 是否允许调整裁剪框大小，false表示不允许，其他值表示允许
 			this.letChangeSize = this.canChangeSize;
 			this.isin = this.inner === true ? 1 : 0;
 			this.indx = this.index || undefined;
@@ -148,7 +201,6 @@
 			this.initCanvasRefs(true);
 		},
 		methods: {
-			t,
 			async initCanvasRefs(force = false) {
 				await this.$nextTick();
 				const avatarCanvas = this.$refs.avatarCanvas;
@@ -191,28 +243,6 @@
 				// #endif
 				this.pxRatio = this.windowWidth / 750;
 
-				let style = this.avatarStyle;
-				if (style && style !== true && (style = style.trim())) {
-					style = style.split(';');
-					let obj = {};
-					for (let v of style) {
-						if (!v) continue;
-						v = v.trim().split(':');
-						if (v[1].indexOf('rpx') >= 0) {
-							let arr = v[1].trim().split(' ');
-							for (let k in arr) {
-								if (!arr[k]) continue;
-								if (arr[k].indexOf('rpx') >= 0) {
-									arr[k] = parseFloat(arr[k]) * this.pxRatio + 'px';
-								}
-							}
-							v[1] = arr.join(' ');
-						}
-						obj[v[0].trim()] = v[1].trim();
-					}
-					this.imgStyle = obj;
-				}
-
 				this.expWidth && (this.expWidth = this.expWidth.indexOf('rpx') >= 0 ? parseInt(this.expWidth) * this.pxRatio : parseInt(this.expWidth));
 				this.expHeight && (this.expHeight = this.expHeight.indexOf('rpx') >= 0 ? parseInt(this.expHeight) * this.pxRatio : parseInt(this.expHeight));
 
@@ -225,7 +255,6 @@
 				if (this.fSelecting) return;
 				this.fSelecting = true;
 				setTimeout(() => { this.fSelecting = false; }, 500);
-				const self = this
 				uni.chooseImage({
 					count: 1,
 					sizeType: ['original', 'compressed'],
@@ -241,16 +270,16 @@
 								this.path = path;
 								if (!this.hasSel) {
 									let style = this.selStyle || {};
-									if (this.arWidth && this.arHeight) {
-										let areaWidth = this.arWidth.indexOf('rpx') >= 0 ? parseInt(this.arWidth) * this.pxRatio : parseInt(this.arWidth),
-											areaHeight = this.arHeight.indexOf('rpx') >= 0 ? parseInt(this.arHeight) * this.pxRatio : parseInt(this.arHeight);
+									if (this.areaWidth && this.areaHeight) {
+										let areaWidth = this.areaWidth.indexOf('rpx') >= 0 ? parseInt(this.areaWidth) * this.pxRatio : parseInt(this.areaWidth),
+											areaHeight = this.areaHeight.indexOf('rpx') >= 0 ? parseInt(this.areaHeight) * this.pxRatio : parseInt(this.areaHeight);
 										style.width = areaWidth + 'px';
 										style.height = areaHeight + 'px';
 										style.top = (this.windowHeight - areaHeight - tabHeight) / 2 + 'px';
 										style.left = (this.windowWidth - areaWidth) / 2 + 'px';
 									} else {
 										uni.showModal({
-											title: t("dd.cropper.emptyWidhtOrHeight"),
+											title: "裁剪框的宽或高没有设置",
 											showCancel: false
 										})
 										return;
@@ -270,7 +299,7 @@
 							},
 							fail: () => {
 								uni.showToast({
-									title: "error3",
+									title: "读取图片失败",
 									duration: 2000,
 								})
 							},
@@ -278,8 +307,9 @@
 								uni.hideLoading();
 							}
 						});
-					}, fail(err) {
-						self.$emit('cancel')
+					},
+					fail: () => {
+						this.$emit('cancel')
 					}
 				})
 			},
@@ -297,8 +327,6 @@
 					expHeight = this.expHeight || height;
 
 				// #ifdef H5
-				// x *= this.pixelRatio;
-				// y *= this.pixelRatio;
 				expWidth = width;
 				expHeight = height;
 				// #endif
@@ -346,7 +374,7 @@
 										},
 										fail: () => {
 											uni.showToast({
-												title: "error0",
+												title: "导出图片失败",
 												duration: 2000,
 											})
 										}
@@ -361,9 +389,9 @@
 						this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
 						// #endif
 					},
-					fail: (res) => {
+					fail: () => {
 						uni.showToast({
-							title: "error1",
+							title: "导出图片失败",
 							duration: 2000,
 						})
 					},
@@ -373,16 +401,13 @@
 					}
 				});
 			},
-			// 用户点击"预览"模式下的"确认"按钮时被调用，用于将预览的裁剪结果上传
+			// 预览模式下点击"确认"：将预览画布的裁剪结果导出
 			async prvUpload() {
 				if (this.fPrvUploading) return;
 				this.fPrvUploading = true;
 				setTimeout(() => { this.fPrvUploading = false; }, 1000)
 
-				let style = this.selStyle,
-					destWidth = parseInt(style.width),
-					destHeight = parseInt(style.height),
-					prvX = this.prvX,
+				let prvX = this.prvX,
 					prvY = this.prvY,
 					prvWidth = this.prvWidth,
 					prvHeight = this.prvHeight,
@@ -390,8 +415,6 @@
 					expHeight = this.expHeight || prvHeight;
 
 				// #ifdef H5
-				// prvX *= this.pixelRatio;
-				// prvY *= this.pixelRatio;
 				expWidth = prvWidth;
 				expHeight = prvHeight;
 				// #endif
@@ -440,7 +463,7 @@
 										},
 										fail: () => {
 											uni.showToast({
-												title: "error0",
+												title: "导出图片失败",
 												duration: 2000,
 											})
 										}
@@ -457,7 +480,7 @@
 					},
 					fail: () => {
 						uni.showToast({
-							title: "error_prv",
+							title: "导出图片失败",
 							duration: 2000,
 						})
 					},
@@ -476,7 +499,6 @@
 					imgRadio = imgWidth / imgHeight,
 					useWidth = allWidth - 40,
 					useHeight = allHeight - tabHeight - 80,
-					pixelRatio = this.pixelRatio,
 					selWidth = parseInt(this.selStyle.width),
 					selHeight = parseInt(this.selStyle.height);
 
@@ -492,13 +514,8 @@
 					case 'longSel': if (selWidth > selHeight) this.fixWidth = 1; else this.fixHeight = 1; break;
 					case 'shortSel': if (selWidth > selHeight) this.fixHeight = 1; else this.fixWidth = 1; break;
 				}
-				// lck 用于控制裁剪框的宽度和高度锁定行为
-				// 'x': 锁定宽度，不允许水平方向调整
-				// 'y': 锁定高度，不允许垂直方向调整
-				// 'long': 根据图片长边锁定，如果图片横向较长则锁定宽度，否则锁定高度
-				// 'short': 根据图片短边锁定，如果图片横向较长则锁定高度，否则锁定宽度
-				// 'longSel': 根据选择框的长边锁定，如果选择框宽度大于高度则锁定宽度，否则锁定高度
-				// 'shortSel': 根据选择框的短边锁定，如果选择框宽度大于高度则锁定高度，否则锁定宽度
+				// lck 锁定裁剪框的宽/高调整方向：
+				// 'x' 锁宽 / 'y' 锁高 / 'long'/'short' 按图片长短边 / 'longSel'/'shortSel' 按选择框长短边
 				switch (this.lck) {
 					case 'x': this.lckWidth = 1; break;
 					case 'y': this.lckHeight = 1; break;
@@ -557,8 +574,6 @@
 					top = parseInt(style.top),
 					width = parseInt(style.width),
 					height = parseInt(style.height),
-					canvas = this.canvas,
-					canvasOper = this.canvasOper,
 					ctxCanvas = this.ctxCanvas,
 					ctxCanvasOper = this.ctxCanvasOper;
 
@@ -577,21 +592,17 @@
 				ctxCanvasOper.moveTo(left + 20, top + height); ctxCanvasOper.lineTo(left, top + height); ctxCanvasOper.lineTo(left, top + height - 20);
 				ctxCanvasOper.moveTo(left + width - 20, top + height); ctxCanvasOper.lineTo(left + width, top + height); ctxCanvasOper.lineTo(left + width, top + height - 20);
 
-				// 绘制控制点（四个角）
+				// 四角控制点（canChangeSize 时可拖拽调整裁剪框）
 				const controlPointSize = 10;
 				ctxCanvasOper.setFillStyle('white');
 				ctxCanvasOper.setStrokeStyle('grey');
 				ctxCanvasOper.setLineWidth(1);
-				// 左上角
 				ctxCanvasOper.fillRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
 				ctxCanvasOper.strokeRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				// 右上角
 				ctxCanvasOper.fillRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
 				ctxCanvasOper.strokeRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				// 左下角
 				ctxCanvasOper.fillRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
 				ctxCanvasOper.strokeRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
-				// 右下角
 				ctxCanvasOper.fillRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
 				ctxCanvasOper.strokeRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
 
@@ -640,8 +651,6 @@
 				this.target = null;
 			},
 			close() {
-				console.log('up-cropper close');
-
 				this.styleDisplay = 'none';
 				this.styleTop = '-10000px';
 				this.hasSel = false;
@@ -660,7 +669,6 @@
 					height = parseInt(style.height);
 
 				uni.showLoading({ mask: true });
-				// console.log('size', x, y, width, height)
 				await this.initCanvasRefs();
 				this.ctxCanvas.toTempFilePath({
 					x: x,
@@ -670,7 +678,6 @@
 					fileType: 'png',
 					quality: this.qlty,
 					success: async (r) => {
-						// console.log(r)
 						this.prvImgTmp = r = r.tempFilePath;
 
 						let ctxCanvasPrv = this.ctxCanvasPrv,
@@ -702,7 +709,7 @@
 						await ctxCanvasPrv.drawImage(r, prvX, prvY, prvWidth, prvHeight);
 						ctxCanvasPrv.draw(false, () => {
 							// #ifdef H5
-							this.btop(this.prvImgTmp).then((r) => {
+							this.btop(this.prvImgTmp).then(() => {
 								this.showOper = false;
 								this.prvTop = this.drawTop + 'px';
 							})
@@ -717,7 +724,7 @@
 					},
 					fail: () => {
 						uni.showToast({
-							title: "error2",
+							title: "生成预览失败",
 							duration: 2000,
 						})
 					},
@@ -728,7 +735,6 @@
 			},
 			chooseImage(index = undefined, params = undefined, data = undefined) {
 				if (params) {
-					console.log(params)
 					let areaWidth = params.areaWidth || this.areaWidth,
 						areaHeight = params.areaHeight || this.areaHeight,
 						expWidth = params.exportWidth || this.exportWidth,
@@ -742,14 +748,12 @@
 						stretch = params.stretch,
 						inner = params.inner,
 						lock = params.lock;
-					console.log('areaWidth', this.areaWidth)
 
 					expWidth && (this.expWidth = expWidth.indexOf('rpx') >= 0 ? parseInt(expWidth) * this.pxRatio : parseInt(expWidth));
 					expHeight && (this.expHeight = expHeight.indexOf('rpx') >= 0 ? parseInt(expHeight) * this.pxRatio : parseInt(expHeight));
 					this.isin = inner === true ? 1 : 0;
 					this.letRotate = (canRotate === false || this.isin) ? 0 : 1;
 					this.letScale = canScale === false ? 0 : 1;
-					// 设置是否允许调整裁剪框大小
 					this.letChangeSize = canChangeSize || false;
 					this.qlty = parseInt(quality) || 0.9;
 					this.mnScale = minScale || 0.3;
@@ -771,7 +775,6 @@
 						this.selStyle.height = areaHeight + 'px';
 						this.selStyle.top = (this.windowHeight - areaHeight - tabHeight) / 2 + 'px';
 						this.selStyle.left = (this.windowWidth - areaWidth) / 2 + 'px';
-						// console.log(this.selStyle);
 						this.hasSel = true;
 					}
 				}
@@ -788,10 +791,8 @@
 				}
 				// #endif
 
-				// if(this.letRotate) {
 				this.rotateDeg += 90 - this.rotateDeg % 90;
 				this.drawImage();
-				// }
 			},
 			start(e) {
 				let touches = e.touches,
@@ -805,34 +806,30 @@
 					let x = touch1.x - touch0.x,
 						y = touch1.y - touch0.y;
 					this.fgDistance = Math.sqrt(x * x + y * y);
-				} else {
-					// 只有在允许调整大小时才检查控制点
-					if (this.letChangeSize) {
-						// 检查是否点击在控制点上
-						const controlPointSize = 20;
-						const x = touch0.x;
-						const y = touch0.y;
-						const style = this.selStyle;
-						const left = parseInt(style.left);
-						const top = parseInt(style.top);
-						const width = parseInt(style.width);
-						const height = parseInt(style.height);
+				} else if (this.letChangeSize) {
+					// 单指落在四角控制点附近时进入裁剪框调整模式
+					const controlPointSize = 20;
+					const x = touch0.x;
+					const y = touch0.y;
+					const style = this.selStyle;
+					const left = parseInt(style.left);
+					const top = parseInt(style.top);
+					const width = parseInt(style.width);
+					const height = parseInt(style.height);
 
-						// 检查四个控制点
-						if (Math.abs(x - left) < controlPointSize && Math.abs(y - top) < controlPointSize) {
-							this.resizeHandle = 'top-left';
-						} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - top) < controlPointSize) {
-							this.resizeHandle = 'top-right';
-						} else if (Math.abs(x - left) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
-							this.resizeHandle = 'bottom-left';
-						} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
-							this.resizeHandle = 'bottom-right';
-						} else {
-							this.resizeHandle = null;
-						}
+					if (Math.abs(x - left) < controlPointSize && Math.abs(y - top) < controlPointSize) {
+						this.resizeHandle = 'top-left';
+					} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - top) < controlPointSize) {
+						this.resizeHandle = 'top-right';
+					} else if (Math.abs(x - left) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
+						this.resizeHandle = 'bottom-left';
+					} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
+						this.resizeHandle = 'bottom-right';
 					} else {
 						this.resizeHandle = null;
 					}
+				} else {
+					this.resizeHandle = null;
 				}
 			},
 			move(e) {
@@ -881,8 +878,8 @@
 
 					this.drawImage();
 				} else if (this.touch0) {
-					// 只有在允许调整大小时才处理裁剪框大小调整
 					if (this.resizeHandle && this.letChangeSize) {
+						// 拖拽控制点调整裁剪框
 						const style = { ...this.selStyle };
 						const left = parseInt(style.left);
 						const top = parseInt(style.top);
@@ -920,7 +917,6 @@
 						let nw = parseInt(style.width);
 						let nh = parseInt(style.height);
 
-						// 屏幕边界
 						if (nl < 0) nl = 0;
 						if (nt < 0) nt = 0;
 						if (nl + nw > this.windowWidth) nw = this.windowWidth - nl;
@@ -947,11 +943,10 @@
 							style.width = nw + 'px';
 							style.height = nh + 'px';
 							this.selStyle = style;
-							// 重新绘制操作层
 							this.drawInit();
 						}
 					} else {
-						// 原有的移动图片逻辑
+						// 单指拖动图片
 						let x = touch0.x - this.touch0.x,
 							y = touch0.y - this.touch0.y,
 							beX = this.posWidth + x,
@@ -997,14 +992,13 @@
 			},
 			end(e) {
 				let touches = e.touches,
-					touch0 = touches && touches[0],
-					touch1 = touches && touches[1];
+					touch0 = touches && touches[0];
 				if (touch0) {
 					this.touch0 = touch0;
 				} else {
 					this.touch0 = null;
 					this.touch1 = null;
-					this.resizeHandle = null; // 重置调整手柄
+					this.resizeHandle = null;
 				}
 			},
 			async getImgData() {
@@ -1034,6 +1028,7 @@
 					});
 				});
 			},
+			// 预览模式饱和度滑杆：HSL 调整后 putImageData 回写预览画布
 			async colorChange(e) {
 				let tm_now = Date.now();
 				if (tm_now - this.prvTm < 100) return;
@@ -1042,9 +1037,9 @@
 				uni.showLoading({ mask: true });
 
 				if (!this.prvImgData) {
-					if (!(this.prvImgData = await this.getImgData().catch((res) => {
+					if (!(this.prvImgData = await this.getImgData().catch(() => {
 						uni.showToast({
-							title: "error_read",
+							title: "读取图片失败",
 							duration: 2000,
 						})
 					}))) return;
@@ -1054,7 +1049,7 @@
 				let data = this.prvImgData,
 					target = this.target,
 					i = e.detail.value,
-					r, g, b, a, h, s, l, d, p, q, t, min, max, hK, tR, tG, tB;
+					r, g, b, a, h, s, l, d, p, q, min, max, hK, tR, tG, tB;
 
 				if (i === 0) {
 					target = data;
@@ -1163,7 +1158,7 @@
 					data: target,
 					fail() {
 						uni.showToast({
-							title: 'error_put',
+							title: "导出图片失败",
 							duration: 2000
 						})
 					},
@@ -1172,8 +1167,9 @@
 					}
 				});
 			},
+			// H5 专用：base64 转 blob URL，规避部分浏览器 canvas 跨域限制
 			btop(base64) {
-				return new Promise(function (resolve, reject) {
+				return new Promise(function (resolve) {
 					var arr = base64.split(','),
 						mime = arr[0].match(/:(.*?);/)[1],
 						bstr = atob(arr[1]),
@@ -1190,36 +1186,32 @@
 </script>
 
 <style lang="scss" scoped>
+	@import '../../scss/variables';
+
 	.dd-cropper {
 		.my-canvas {
 			display: flex;
 			position: fixed !important;
-			background: #000000;
+			background: $dd-color-black;
 			left: 0;
-			z-index: 100000;
+			z-index: $dd-z-index-cropper;
 			width: 100%;
-		}
-
-		.my-avatar {
-			width: 150rpx;
-			height: 150rpx;
-			border-radius: 100%;
 		}
 
 		.oper-canvas {
 			display: flex;
 			position: fixed !important;
 			left: 0;
-			z-index: 100001;
+			z-index: $dd-z-index-cropper + 1;
 			width: 100%;
 		}
 
 		.prv-canvas {
 			display: flex;
 			position: fixed !important;
-			background: #000000;
+			background: $dd-color-black;
 			left: 0;
-			z-index: 200000;
+			z-index: $dd-z-index-cropper * 2;
 			width: 100%;
 		}
 
@@ -1227,12 +1219,12 @@
 			height: 50px;
 			position: fixed !important;
 			box-sizing: border-box;
-			border: 1px solid #F1F1F1;
-			background: #ffffff;
+			border: 1px solid $dd-neutral-50;
+			background: $dd-color-white;
 			width: 100%;
 			left: 0;
 			bottom: 0;
-			z-index: 100009;
+			z-index: $dd-z-index-cropper + 9;
 			flex-direction: row;
 		}
 
@@ -1263,14 +1255,14 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 16px;
-			color: #333;
-			border: 1px solid #f1f1f1;
+			font-size: $dd-font-size-h4;
+			color: $dd-neutral-700;
+			border: 1px solid $dd-neutral-50;
 			border-radius: 6%;
 		}
 
 		.hover {
-			background: #f1f1f1;
+			background: $dd-neutral-50;
 			border-radius: 6%;
 		}
 
@@ -1284,9 +1276,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 16px;
-			color: #333;
-			border: 1px solid #f1f1f1;
+			font-size: $dd-font-size-h4;
+			color: $dd-neutral-700;
+			border: 1px solid $dd-neutral-50;
 			border-radius: 6%;
 		}
 

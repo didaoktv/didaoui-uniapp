@@ -1,5 +1,4 @@
 import config from '../../libs/config/config'
-import { t } from '../../libs/i18n'
 
 const {
     color
@@ -11,7 +10,7 @@ export default {
         fontSize: 15,
         underLine: false,
         href: '',
-        mpTips: t("dd.link.copyed"),
+        mpTips: '链接已复制，请在浏览器打开',
         lineColor: '',
         text: ''
     }

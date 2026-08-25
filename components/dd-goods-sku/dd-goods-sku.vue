@@ -22,8 +22,8 @@
                 <text class="dd-goods-sku__header__info__price__symbol">¥</text>
                 <text class="dd-goods-sku__header__info__price__value">{{ price }}</text>
               </view>
-              <view class="dd-goods-sku__header__info__stock">{{ t('dd.goodsSku.stock') }} {{ stock }} {{ t('dd.goodsSku.amount') }}</view>
-              <view class="dd-goods-sku__header__info__selected">{{ t('dd.goodsSku.choosed') }}: {{ selectedSkuText }}</view>
+              <view class="dd-goods-sku__header__info__stock">库存 {{ stock }} 件</view>
+              <view class="dd-goods-sku__header__info__selected">已选: {{ selectedSkuText }}</view>
             </view>
           </slot>
         </view>
@@ -48,7 +48,7 @@
           </view>
 
           <view class="dd-goods-sku__content__count">
-            <view class="dd-goods-sku__content__count__title">{{ t('dd.goodsSku.buyAmount') }}</view>
+            <view class="dd-goods-sku__content__count__title">购买数量</view>
             <view class="dd-goods-sku__content__count__control">
               <dd-stepper
                 v-model="buyNum"
@@ -72,7 +72,6 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { t } from '../../libs/i18n'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdStepper from '../dd-stepper/dd-stepper.vue'
 import DdButton from '../dd-button/dd-button.vue'

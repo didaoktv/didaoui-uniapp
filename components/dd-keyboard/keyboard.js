@@ -1,4 +1,3 @@
-import { t } from '../../libs/i18n'
 export default {
     // 键盘组件
     keyboard: {
@@ -15,8 +14,8 @@ export default {
         show: false,
         overlay: true,
         zIndex: 10075,
-        cancelText: t("dd.common.cancel"),
-        confirmText: t("dd.common.confirm"),
+        cancelText: '取消',
+        confirmText: '确定',
         autoChange: false
     }
 }

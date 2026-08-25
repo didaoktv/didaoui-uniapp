@@ -318,3 +318,5 @@ $dd-z-index-popup: 2001;
 $dd-z-index-modal: 3000;
 $dd-z-index-toast: 4000;
 $dd-z-index-loading: 5000;
+// 全屏裁剪覆盖层：三画布 + 操作条需压过全部全局层级
+$dd-z-index-cropper: 100000;

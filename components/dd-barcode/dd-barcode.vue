@@ -36,7 +36,6 @@
 
 <script>
 import { nextTick } from 'vue'
-import { t } from '../../libs/i18n'
 
 export default {
   name: 'dd-barcode',
@@ -303,7 +302,7 @@ export default {
         })
       } catch (error) {
         console.error('生成条码失败:', error)
-        this.error = error.message || t('dd.barcode.error')
+        this.error = error.message || '生成条码失败'
         this.$emit('error', error)
       }
     },

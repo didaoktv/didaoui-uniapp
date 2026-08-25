@@ -41,7 +41,7 @@
 			<!-- 笔画设置 -->
 			<view v-if="showBrushSettings" class="dd-signature__brush-settings">
 				<view class="dd-signature__progress">
-					<text class="dd-signature__progress-label">{{ t("dd.signature.penSize") }}:</text>
+					<text class="dd-signature__progress-label">笔画大小:</text>
 					<dd-slider
 						v-model="lineWidth"
 						:min="1"
@@ -54,7 +54,7 @@
 			<!-- 颜色设置 -->
 			<view v-if="showColorSettings" class="dd-signature__color-settings">
 				<view class="dd-signature__color-picker">
-                    <text class="dd-signature__color-label">{{ t("dd.signature.penColor") }}:</text>
+                    <text class="dd-signature__color-label">笔画颜色:</text>
 					<view class="dd-signature__colors">
 						<view 
 							v-for="(color, index) in presetColors" 
@@ -72,7 +72,6 @@
 </template>
 
 <script>
-	import { t } from '../../libs/i18n'
 	export default {
 		name: 'dd-signature',
 		props: {
@@ -180,7 +179,6 @@
 			}
 		},
 		methods: {
-			t,
 			resolveStrokeColor(color) {
 				return color
 			},

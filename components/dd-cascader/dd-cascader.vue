@@ -70,10 +70,10 @@
     <!-- 底部按钮区域 -->
     <view class="dd-cascader__action">
       <view class="dd-cascader__action-item">
-        <dd-button type="secondary" block @click="handleCancel">{{ t('dd.common.cancel') }}</dd-button>
+        <dd-button type="secondary" block @click="handleCancel">取消</dd-button>
       </view>
       <view class="dd-cascader__action-item">
-        <dd-button type="primary" block @click="handleConfirm">{{ t('dd.common.confirm') }}</dd-button>
+        <dd-button type="primary" block @click="handleConfirm">确定</dd-button>
       </view>
     </view>
   </dd-popup>
@@ -81,7 +81,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { t } from '../../libs/i18n'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdSteps from '../dd-steps/dd-steps.vue'
 import DdStep from '../dd-step/dd-step.vue'
@@ -183,7 +182,7 @@ watch(
 const isChange = computed(() => tabsIndex.value > 1)
 
 const genTabsList = computed(() => {
-  const tabsList: { name: string }[] = [{ name: t('dd.common.pleaseChoose') }]
+  const tabsList: { name: string }[] = [{ name: '请选择' }]
 
   // 根据选中的值动态生成tabs
   for (let i = 0; i < selectedValueIndexs.value.length; i++) {
@@ -199,7 +198,7 @@ const genTabsList = computed(() => {
           selectedItem[props.childrenKey] &&
           selectedItem[props.childrenKey].length > 0
         ) {
-          tabsList.push({ name: t('dd.common.pleaseChoose') })
+          tabsList.push({ name: '请选择' })
         }
       }
     }

@@ -1,10 +1,9 @@
 <template>
 	<view @click="handleClick">
-        <slot>{{ t("dd.common.copy") }}</slot>
+        <slot>复制</slot>
     </view>
 </template>
 <script>
-import { t } from '../../libs/i18n'
 export default {
     name: "up-copy",
     props: {
@@ -18,17 +17,16 @@ export default {
 		},
 		notice: {
 			type: String,
-			default: t("dd.common.copy") + t("dd.common.success")
+			default: '复制成功'
 		}
     },
 	emits: ['success'],
     methods: {
-		t,
         handleClick() {
             let content = this.content;
 			if (!content) {
 				uni.showToast({
-				    title: t("dd.common.none"),
+				    title: "暂无",
 				    icon: 'none',
 				    duration: 2000,
 				});
@@ -44,7 +42,7 @@ export default {
                 success: function() {
 					if (that.alertStyle == 'modal') {
 						uni.showModal({
-							title: t("dd.common.tip"),
+							title: "提示",
 							content: that.notice
 						});
 					} else {
@@ -57,7 +55,7 @@ export default {
                 },
                 fail:function(){
                     uni.showToast({
-                        title: t("dd.common.copy") + t("dd.common.fail"),
+                        title: "复制失败",
                         icon: 'none',
                         duration:3000,
                     });

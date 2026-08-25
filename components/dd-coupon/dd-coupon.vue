@@ -10,17 +10,19 @@
     @click="handleClick"
   >
     <view class="dd-coupon__content">
-      <!-- 左侧金额区域 -->
+      <!-- 左侧金额区域：unit + amount 基线对齐，limit 换行在下 -->
       <view class="dd-coupon__amount">
-        <slot name="unit" :unit="unit" :unitPosition="unitPosition">
-          <text v-if="unitPosition === 'left'" class="dd-coupon__amount-unit">{{ unit }}</text>
-        </slot>
-        <slot name="amount" :amount="amount">
-          <text class="dd-coupon__amount-value">{{ amount }}</text>
-        </slot>
-        <slot name="unit" :unit="unit" :unitPosition="unitPosition">
-          <text v-if="unitPosition === 'right'" class="dd-coupon__amount-unit">{{ unit }}</text>
-        </slot>
+        <view class="dd-coupon__amount-main">
+          <slot v-if="unitPosition === 'left'" name="unit" :unit="unit" :unitPosition="unitPosition">
+            <text class="dd-coupon__amount-unit">{{ unit }}</text>
+          </slot>
+          <slot name="amount" :amount="amount">
+            <text class="dd-coupon__amount-value">{{ amount }}</text>
+          </slot>
+          <slot v-if="unitPosition === 'right'" name="unit" :unit="unit" :unitPosition="unitPosition">
+            <text class="dd-coupon__amount-unit">{{ unit }}</text>
+          </slot>
+        </view>
         <slot name="limit" :limit="limit">
           <text v-if="limit" class="dd-coupon__amount-limit">{{ limit }}</text>
         </slot>
@@ -41,21 +43,14 @@
 
       <!-- 右侧操作区域 -->
       <view class="dd-coupon__action">
-        <slot name="action" :actionText="actionText" :circle="circle">
-          <!-- ponytail: 原版 :shape="circle ? 'circle': 'circle'" 恒为圆形，故 round 恒 true -->
-          <dd-tag
-            variant="error"
-            :type="type ? 'outlined' : 'filled'"
-            round
-            size="sm"
-            class="dd-coupon__action-btn"
-          >{{ actionText }}</dd-tag>
+        <slot name="action" :actionText="actionText">
+          <view class="dd-coupon__action-btn"><text>{{ actionText }}</text></view>
         </slot>
       </view>
     </view>
 
-    <!-- 红包绳子效果 -->
-    <view v-if="shape === 'envelope'" class="dd-coupon__rope"></view>
+    <!-- 红包顶部金条纹 -->
+    <view v-if="shape === 'envelope'" class="dd-coupon__stripe"></view>
 
     <!-- 默认插槽，可用于添加额外内容 -->
     <slot></slot>
@@ -64,7 +59,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import DdTag from '../dd-tag/dd-tag.vue'
 
 interface Props {
   /** 金额 */
@@ -87,16 +81,14 @@ interface Props {
   shape?: 'coupon' | 'envelope' | 'card'
   /** 尺寸：small, medium, large */
   size?: 'small' | 'medium' | 'large'
-  /** 是否圆形按钮（保留 API；原实现恒为圆形） */
-  circle?: boolean
   /** 是否禁用 */
   disabled?: boolean
-  /** 背景颜色 */
+  /** 背景颜色（覆盖内置主题渐变） */
   bgColor?: string
   /** 文字颜色 */
   color?: string
-  /** 内置背景主题：primary/success/warning/error */
-  type?: string
+  /** 内置渐变主题：primary/success/warning/error */
+  type?: 'primary' | 'success' | 'warning' | 'error' | ''
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -110,7 +102,6 @@ const props = withDefaults(defineProps<Props>(), {
   actionText: '使用',
   shape: 'coupon',
   size: 'medium',
-  circle: false,
   disabled: false,
   bgColor: '',
   color: '',
@@ -139,15 +130,14 @@ function handleClick() {
 .dd-coupon {
   position: relative;
   overflow: hidden;
-  border-radius: $dd-radius-md;
-  background: #ffebf0;
+  border-radius: $dd-radius-lg;
+  background: $dd-bg-elevated;
   color: $dd-text-primary;
   width: 100%;
 
+  // === 形状 ===
   &--coupon {
-    border-radius: $dd-radius-lg;
-    overflow: hidden;
-
+    // 两侧打孔：孔色取页面底色，需在 $dd-bg 页面上使用（文档化限制）
     &::before {
       content: '';
       position: absolute;
@@ -156,8 +146,9 @@ function handleClick() {
       transform: translateY(-50%);
       width: 48rpx;
       height: 48rpx;
-      background-color: $dd-bg;
+      background: $dd-bg;
       border-radius: 50%;
+      z-index: 1;
     }
 
     &::after {
@@ -168,39 +159,35 @@ function handleClick() {
       transform: translateY(-50%);
       width: 48rpx;
       height: 48rpx;
-      background-color: $dd-bg;
+      background: $dd-bg;
       border-radius: 50%;
+      z-index: 1;
     }
   }
 
-  &--envelope {
-    border-radius: $dd-radius-lg;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      height: 20rpx;
-      background: repeating-linear-gradient(-45deg, #ffd000, #ffd000 10rpx, #ffa000 10rpx, #ffa000 20rpx);
-    }
+  // === 尺寸（min-height，长内容不被裁剪） ===
+  &--small .dd-coupon__content {
+    min-height: 160rpx;
   }
 
-  &--card {
-    border-radius: $dd-radius-lg;
+  &--medium .dd-coupon__content {
+    min-height: 180rpx;
   }
 
-  &--small {
-    height: 160rpx;
+  &--large .dd-coupon__content {
+    min-height: 220rpx;
   }
 
-  &--medium {
-    height: 180rpx;
+  &--small .dd-coupon__amount-value {
+    font-size: 44rpx;
   }
 
-  &--large {
-    height: 220rpx;
+  &--medium .dd-coupon__amount-value {
+    font-size: 56rpx;
+  }
+
+  &--large .dd-coupon__amount-value {
+    font-size: 72rpx;
   }
 
   &--disabled {
@@ -212,156 +199,264 @@ function handleClick() {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
-    padding: 0 30rpx;
+    padding: 0 $dd-space-4;
     position: relative;
     z-index: 2;
+    box-sizing: border-box;
   }
 
   &__amount {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 10rpx;
-    padding-right: 30rpx;
-    border-right: 1px dashed $dd-border-default;
+    min-width: 144rpx;
+    padding: $dd-space-2 $dd-space-4 $dd-space-2 0;
+    border-right: 1px dashed $dd-border-strong;
+
+    &-main {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+    }
 
     &-unit {
-      font-size: $dd-font-size-caption;
-      font-weight: normal;
+      font-size: $dd-font-size-h3;
+      font-weight: $dd-font-weight-h4;
+      color: $dd-error-400;
+      line-height: 1;
     }
 
     &-value {
       font-size: 56rpx;
-      font-weight: bold;
+      font-weight: $dd-font-weight-display;
       color: $dd-error-400;
       line-height: 1;
-      margin: 10rpx 0;
     }
 
     &-limit {
+      margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      opacity: 0.9;
+      color: $dd-text-tertiary;
+      line-height: $dd-line-height-caption;
     }
   }
 
   &__info {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 30rpx;
+    padding: $dd-space-2 0 $dd-space-2 $dd-space-4;
 
     &-title {
       font-size: $dd-font-size-h4;
-      font-weight: bold;
-      margin-bottom: 10rpx;
+      font-weight: $dd-font-weight-h4;
+      color: $dd-text-primary;
+      line-height: $dd-line-height-h4;
+      @include dd-ellipsis(1);
     }
 
     &-desc {
+      margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      opacity: 0.9;
-      margin-bottom: 10rpx;
+      color: $dd-text-secondary;
+      line-height: $dd-line-height-caption;
+      @include dd-ellipsis(1);
     }
 
     &-time {
+      margin-top: $dd-space-1;
       font-size: $dd-font-size-caption;
-      opacity: 0.8;
+      color: $dd-text-tertiary;
+      line-height: $dd-line-height-caption;
+      @include dd-ellipsis(1);
     }
   }
 
   &__action {
+    flex-shrink: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding-right: 20rpx;
+    padding-left: $dd-space-4;
   }
 
-  &__rope {
+  // 默认操作按钮：error 实底胶囊；type 主题下在各主题块中改对比色描边
+  &__action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56rpx;
+    padding: 0 $dd-space-5;
+    border-radius: $dd-radius-full;
+    background: $dd-error-500;
+    color: $dd-error-contrast;
+    font-size: $dd-font-size-caption;
+    font-weight: $dd-font-weight-caption;
+  }
+
+  // 红包顶部金条纹（帝王金）
+  &__stripe {
     position: absolute;
-    top: -40rpx;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80rpx;
-    height: 80rpx;
-    background: linear-gradient(to right, #ffd000, #ffa000);
-    border-radius: 40rpx 40rpx 0 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 20rpx;
+    background: repeating-linear-gradient(
+      -45deg,
+      $dd-primary-300,
+      $dd-primary-300 10rpx,
+      $dd-primary-500 10rpx,
+      $dd-primary-500 20rpx
+    );
     z-index: 1;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -20rpx;
-      width: 20rpx;
-      height: 40rpx;
-      background: linear-gradient(to bottom, #ffd000, #ffa000);
-      border-radius: 10rpx 0 0 10rpx;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -20rpx;
-      width: 20rpx;
-      height: 40rpx;
-      background: linear-gradient(to bottom, #ffd000, #ffa000);
-      border-radius: 0 10rpx 10rpx 0;
-    }
   }
 
-  // 内置主题样式（保留原版券面渐变视觉）
+  &--envelope .dd-coupon__content {
+    padding-top: $dd-space-3;
+  }
+
+  // === 内置渐变主题（$dd-gradient-* token + 各主题 contrast 文字） ===
   &--primary {
-    background: linear-gradient(90deg, #43afff, #3b8cff);
-    color: $dd-color-white;
+    background: $dd-gradient-primary;
+    color: $dd-primary-contrast;
 
     .dd-coupon__amount {
-      border-right: 1px dashed #eee;
+      border-right-color: $dd-border-subtle;
     }
 
+    .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-color-white;
+      color: $dd-primary-contrast;
+    }
+
+    .dd-coupon__amount-limit {
+      color: $dd-primary-contrast;
+      opacity: 0.75;
+    }
+
+    .dd-coupon__info-title {
+      color: $dd-primary-contrast;
+    }
+
+    .dd-coupon__info-desc,
+    .dd-coupon__info-time {
+      color: $dd-primary-contrast;
+      opacity: 0.8;
+    }
+
+    .dd-coupon__action-btn {
+      background: transparent;
+      border: 1px solid $dd-primary-contrast;
+      color: $dd-primary-contrast;
     }
   }
 
   &--success {
-    background: linear-gradient(90deg, #67dda9, #19be6b);
-    color: $dd-color-white !important;
+    background: $dd-gradient-success;
+    color: $dd-success-contrast;
 
     .dd-coupon__amount {
-      border-right: 1px dashed #eee;
+      border-right-color: $dd-border-subtle;
     }
 
+    .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-color-white;
+      color: $dd-success-contrast;
+    }
+
+    .dd-coupon__amount-limit {
+      color: $dd-success-contrast;
+      opacity: 0.75;
+    }
+
+    .dd-coupon__info-title {
+      color: $dd-success-contrast;
+    }
+
+    .dd-coupon__info-desc,
+    .dd-coupon__info-time {
+      color: $dd-success-contrast;
+      opacity: 0.8;
+    }
+
+    .dd-coupon__action-btn {
+      background: transparent;
+      border: 1px solid $dd-success-contrast;
+      color: $dd-success-contrast;
     }
   }
 
   &--warning {
-    background: linear-gradient(90deg, #ff9739, #ff6a39);
-    color: $dd-color-white;
+    background: $dd-gradient-warning;
+    color: $dd-warning-contrast;
 
     .dd-coupon__amount {
-      border-right: 1px dashed #eee;
+      border-right-color: $dd-border-subtle;
     }
 
+    .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-color-white;
+      color: $dd-warning-contrast;
+    }
+
+    .dd-coupon__amount-limit {
+      color: $dd-warning-contrast;
+      opacity: 0.75;
+    }
+
+    .dd-coupon__info-title {
+      color: $dd-warning-contrast;
+    }
+
+    .dd-coupon__info-desc,
+    .dd-coupon__info-time {
+      color: $dd-warning-contrast;
+      opacity: 0.8;
+    }
+
+    .dd-coupon__action-btn {
+      background: transparent;
+      border: 1px solid $dd-warning-contrast;
+      color: $dd-warning-contrast;
     }
   }
 
   &--error {
-    background: linear-gradient(90deg, #ff7070, #ff4747);
-    color: $dd-color-white;
+    background: $dd-gradient-error;
+    color: $dd-error-contrast;
 
     .dd-coupon__amount {
-      border-right: 1px dashed #eee;
+      border-right-color: $dd-border-subtle;
     }
 
+    .dd-coupon__amount-unit,
     .dd-coupon__amount-value {
-      color: $dd-color-white;
+      color: $dd-error-contrast;
+    }
+
+    .dd-coupon__amount-limit {
+      color: $dd-error-contrast;
+      opacity: 0.75;
+    }
+
+    .dd-coupon__info-title {
+      color: $dd-error-contrast;
+    }
+
+    .dd-coupon__info-desc,
+    .dd-coupon__info-time {
+      color: $dd-error-contrast;
+      opacity: 0.8;
+    }
+
+    .dd-coupon__action-btn {
+      background: transparent;
+      border: 1px solid $dd-error-contrast;
+      color: $dd-error-contrast;
     }
   }
 }
