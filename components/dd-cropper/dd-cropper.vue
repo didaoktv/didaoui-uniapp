@@ -355,6 +355,8 @@
 								expWidth = this.expWidth,
 									expHeight = this.expHeight;
 
+								// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
+								ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
 								await ctxCanvas.drawImage(r, 0, 0, expWidth, expHeight);
 								ctxCanvas.draw(false, () => {
 									ctxCanvas.toTempFilePath({
@@ -444,6 +446,8 @@
 								expWidth = this.expWidth,
 									expHeight = this.expHeight;
 
+								// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
+								ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
 								await ctxCanvas.drawImage(r, 0, 0, expWidth, expHeight);
 								ctxCanvas.draw(false, () => {
 									ctxCanvas.toTempFilePath({
@@ -570,14 +574,17 @@
 				this.useHeight = useHeight;
 
 				let style = this.selStyle,
-					left = parseInt(style.left),
-					top = parseInt(style.top),
-					width = parseInt(style.width),
-					height = parseInt(style.height),
-					ctxCanvas = this.ctxCanvas,
-					ctxCanvasOper = this.ctxCanvasOper;
+				left = parseInt(style.left),
+				top = parseInt(style.top),
+				width = parseInt(style.width),
+				height = parseInt(style.height),
+				ctxCanvas = this.ctxCanvas,
+				ctxCanvasOper = this.ctxCanvasOper;
 
-				ctxCanvasOper.setLineWidth(3);
+			// H5/小程序 type=2d 为立即模式画布，重绘遮罩前须清掉上一帧，否则拖控制点时遮罩残留
+			ctxCanvasOper.clearRect(0, 0, this.windowWidth, this.windowHeight);
+
+			ctxCanvasOper.setLineWidth(3);
 				ctxCanvasOper.setStrokeStyle('grey');
 				ctxCanvasOper.setGlobalAlpha(0.4);
 				ctxCanvasOper.setFillStyle('black');
@@ -627,22 +634,30 @@
 				this.$emit("avtinit");
 			},
 			async drawImage() {
-				await this.initCanvasRefs();
-				let tm_now = Date.now();
-				if (tm_now - this.drawTm < 20) return;
-				this.drawTm = tm_now;
-				let ctxCanvas = this.ctxCanvas;
-				if (this.fillColor && this.fillColor !== 'transparent') {
-					ctxCanvas.fillRect(0, 0, this.windowWidth, this.windowHeight - tabHeight);
-				}
-				ctxCanvas.save();
-				ctxCanvas.translate(this.posWidth + this.useWidth / 2, this.posHeight + this.useHeight / 2);
-				ctxCanvas.scale(this.scaleSize, this.scaleSize);
-				ctxCanvas.rotate(this.rotateDeg * Math.PI / 180);
-				await ctxCanvas.drawImage(this.imgPath, -this.useWidth / 2, -this.useHeight / 2, this.useWidth, this.useHeight);
-				ctxCanvas.restore();
-				ctxCanvas.draw(false);
-			},
+			await this.initCanvasRefs();
+			let tm_now = Date.now();
+			if (tm_now - this.drawTm < 20) return;
+			this.drawTm = tm_now;
+			let ctxCanvas = this.ctxCanvas;
+			// 图片对象先取回（dd-canvas 内部有缓存，二次绘制走同步路径）；
+			// 加载期间若新帧已触发（token 失配）则丢弃本帧，避免旧帧续体把图片画回旧位置
+			const token = this._drawToken = (this._drawToken || 0) + 1;
+			const image = await ctxCanvas.loadImage(this.imgPath).catch(() => null);
+			if (!image || token !== this._drawToken) return;
+			// H5/小程序 type=2d 为立即模式画布，ctx.draw() 在 dd-canvas 内是 no-op，
+			// 上一帧像素不会自动清空——拖动残影的根因，每帧必须先 clearRect
+			ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
+			if (this.fillColor && this.fillColor !== 'transparent') {
+				ctxCanvas.fillRect(0, 0, this.windowWidth, this.windowHeight - tabHeight);
+			}
+			ctxCanvas.save();
+			ctxCanvas.translate(this.posWidth + this.useWidth / 2, this.posHeight + this.useHeight / 2);
+			ctxCanvas.scale(this.scaleSize, this.scaleSize);
+			ctxCanvas.rotate(this.rotateDeg * Math.PI / 180);
+			ctxCanvas.drawImage(image, -this.useWidth / 2, -this.useHeight / 2, this.useWidth, this.useHeight);
+			ctxCanvas.restore();
+			ctxCanvas.draw(false);
+		},
 			hideImg() {
 				this.prvImg = '';
 				this.prvTop = '-10000px';
@@ -681,23 +696,25 @@
 						this.prvImgTmp = r = r.tempFilePath;
 
 						let ctxCanvasPrv = this.ctxCanvasPrv,
-							prvX = this.windowWidth,
-							prvY = parseInt(this.cvsStyleHeight),
-							prvWidth = parseInt(this.selStyle.width),
-							prvHeight = parseInt(this.selStyle.height),
-							useWidth = prvX - 40,
-							useHeight = prvY - 80,
-							radio = useWidth / prvWidth,
-							rHeight = prvHeight * radio;
-						if (rHeight < useHeight) {
-							prvWidth = useWidth;
-							prvHeight = rHeight;
-						} else {
-							radio = useHeight / prvHeight;
-							prvWidth *= radio;
-							prvHeight = useHeight;
-						}
-						if (this.fillColor && this.fillColor !== 'transparent') {
+						prvX = this.windowWidth,
+						prvY = parseInt(this.cvsStyleHeight),
+						prvWidth = parseInt(this.selStyle.width),
+						prvHeight = parseInt(this.selStyle.height),
+						useWidth = prvX - 40,
+						useHeight = prvY - 80,
+						radio = useWidth / prvWidth,
+						rHeight = prvHeight * radio;
+					// 立即模式画布：清掉上一次预览的残影再画新帧
+					ctxCanvasPrv.clearRect(0, 0, this.windowWidth, this.windowHeight);
+					if (rHeight < useHeight) {
+						prvWidth = useWidth;
+						prvHeight = rHeight;
+					} else {
+						radio = useHeight / prvHeight;
+						prvWidth *= radio;
+						prvHeight = useHeight;
+					}
+					if (this.fillColor && this.fillColor !== 'transparent') {
 							ctxCanvasPrv.setFillStyle(this.fillColor);
 							ctxCanvasPrv.fillRect(0, 0, prvX, prvY);
 							ctxCanvasPrv.fillRect(x, y, width, height);
