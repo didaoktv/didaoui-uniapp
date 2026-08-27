@@ -113,14 +113,15 @@ function onConfirm() {
 @import '../../scss/variables';
 @import '../../scss/mixins';
 :deep(.uni-picker-view-mask) {
-  background-image: linear-gradient(180deg, hsl(0deg 0% 9% / 95%), hsl(0deg 0% 9% / 60%)), linear-gradient(0deg, hsl(0deg 0% 9% / 95%), hsl(0deg 0% 9% / 60%));
+  background-image: linear-gradient(180deg, var(--dd-surface-container, #{$dd-surface-container}), transparent 60%),
+                    linear-gradient(0deg, var(--dd-surface-container, #{$dd-surface-container}), transparent 60%);
 }
 .dd-picker {
   &__mask {
     position: fixed;
     inset: 0;
     z-index: $dd-z-index-overlay;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     pointer-events: none;
     @include dd-transition(opacity 0.3s);

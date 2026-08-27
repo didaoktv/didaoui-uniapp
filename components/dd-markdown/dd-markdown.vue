@@ -147,7 +147,7 @@ export default {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  color: #333;
+  color: var(--dd-fg, #{$dd-fg});
   padding: 16px;
   word-wrap: break-word;
   
@@ -195,7 +195,7 @@ export default {
   
   /* 链接样式 */
   :deep(a) {
-    color: #007AFF;
+    color: var(--dd-link, #{$dd-link});
     text-decoration: none;
     
     &:hover {
@@ -226,15 +226,15 @@ export default {
   :deep(blockquote) {
     margin: 8px 0;
     padding: 0 10px;
-    border-left: 4px solid #ccc;
-    color: #666;
+    border-left: 4px solid var(--dd-border-default, #{$dd-border-default});
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
   
   /* 代码样式 */
   :deep(&-code) {
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     font-size: 14px;
-    background-color: #f6f8fa;
+    background-color: var(--dd-surface-container, #{$dd-surface-container});
     padding: 3px 6px;
     border-radius: 3px;
     display: flex;
@@ -247,7 +247,7 @@ export default {
   :deep(pre) {
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     font-size: 14px;
-    background-color: #f6f8fa;
+    background-color: var(--dd-surface-container, #{$dd-surface-container});
     padding: 16px;
     overflow: auto;
     border-radius: 6px;
@@ -293,36 +293,12 @@ export default {
     height: 1px;
     padding: 0;
     margin: 24px 0;
-    background-color: #e1e4e8;
+    background-color: var(--dd-rule, #{$dd-rule});
     border: 0;
   }
-  
-  /* 深色主题 */
-  &.dark {
-    color: #ccc;
-    background-color: #1e1e1e;
-    
-    :deep(&-code) {
-      background-color: #2d2d2d;
-      color: #dcdcdc;
-    }
-    
-    :deep(pre) {
-      background-color: #2d2d2d;
-      color: #dcdcdc;
-    }
-
-    :deep(blockquote) {
-        margin: 8px 0;
-        padding: 0 10px;
-        border-left: 4px solid #ccc;
-        color: #bbb;
-    }
-    
-    :deep(a) {
-      color: #4da6ff;
-    }
-  }
+  // ponytail: .dark 本地类已废弃——CSS 变量随全局 .light/.dark 自动翻转，
+  // 保留空块避免消费方 class="dark" 断裂，升级路径：下个大版本直接删
+  &.dark {}
 }
 
 /* 代码块行号样式 */

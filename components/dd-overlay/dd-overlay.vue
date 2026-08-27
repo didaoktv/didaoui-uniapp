@@ -92,7 +92,7 @@ function onTouchMove() {
 .dd-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
   display: flex;
   align-items: center;
   justify-content: center;

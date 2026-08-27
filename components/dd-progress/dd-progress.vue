@@ -121,7 +121,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
   &__track {
     flex: 1;
     height: 12rpx;
-    background: #2a2a2a;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     border-radius: $dd-radius-full;
     overflow: hidden;
     position: relative;
@@ -207,7 +207,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
     width: 24rpx;
     height: 24rpx;
     border-radius: 50%;
-    background: #2a2a2a;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     flex-shrink: 0;
     @include dd-transition(all 0.3s ease);
 
@@ -226,7 +226,7 @@ function stepStatus(i: number): 'done' | 'current' | 'pending' {
     flex: 1;
     height: $dd-space-1;
     margin: 0 $dd-space-1;
-    background: #2a2a2a;
+    background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     @include dd-transition(background 0.3s ease);
 
     &--done {
