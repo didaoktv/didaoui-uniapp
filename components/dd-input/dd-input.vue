@@ -69,11 +69,8 @@ const emit = defineEmits<{
 const isFocused = ref(false)
 const visible = ref(false)
 
-// ponytail: search/number 在小程序降级处理；password 用 uni 原生 password 布尔属性跨端
-const inputType = computed<'text' | 'number'>(() => {
-  if (props.type === 'password' || props.type === 'search') return 'text'
-  return 'number'
-})
+// ponytail: search 在小程序降级为 text；password 用 uni 原生 password 布尔属性跨端
+const inputType = computed<'text' | 'number'>(() => (props.type === 'number' ? 'number' : 'text'))
 const isPassword = computed(() => props.type === 'password' && !visible.value)
 const confirmType = computed(() => (props.type === 'search' ? 'search' : 'done'))
 const showClear = computed(() => props.clearable && !!props.modelValue && !props.disabled)
