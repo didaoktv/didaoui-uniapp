@@ -12,6 +12,7 @@
 
 - 每组件一个目录：`components/dd-<名>/dd-<名>.vue`；复杂逻辑拆 `props.js` / `<名>.js`，表单类组件可带 `rules.ts`。
 - 组件名 `dd-` 前缀 kebab-case，导出名 PascalCase（`DdButton`）；新增组件必须登记进 `index.ts`（按现有分类注释归组）并同步 `README.md` 组件表。
+- **增减组件必须同步五处**：`index.ts`（注册+导出）、`README.md` 组件表与计数、`llms.txt` 索引与计数、文档站 `../DidaoUI-uniapp-docs/components/<slug>.md`、h5-demo `../DidaoUI-uniapp-docs/h5-demo/src/pages/<slug>/demo.vue`（含 `config.ts` 侧边栏、`pages.json`、首页 demo 列表登记）。完成后跑 `../DidaoUI-uniapp-docs/scripts/check-md.mjs`（md↔demo 1:1 配平自检）+ 本库 `npm run type-check`。
 - Props 用 `defineProps<Props>()` + `withDefaults`，事件用带类型的 `defineEmits`；通用兜底 prop：`customStyle` / `customClass` 思路对齐 Vant / uview-plus。
 - 模板类名走 BEM：`dd-tag` / `dd-tag__label` / `dd-tag--primary`，修饰符状态类挂根节点。
 - 跨组件共享的工具/混入放 `libs/`（`mixin/` / `function/` / `config/`）；不为单组件造 `libs/` 工具。
@@ -79,5 +80,6 @@ function onClick(e: Event) {
 
 ## 指针
 
+- Agent 快速索引：[`llms.txt`](./llms.txt)（llmstxt.org 约定；89 个组件清单、关键 API、易混组件选型速查）。新增/删除组件时同步该文件对应条目。
 - 文档站与可视化调试：`../DidaoUI-uniapp-docs`（`npm run dev:h5` 起 h5-demo，vite alias 指向本库源码）；新组件/新 demo 在该仓库补页面。
 - 设计 token 数据源：`.design_library/didao-ktv/css.json`；组件承接性/补齐决策见 [`../ktv-system/docs/调研报告/DidaoUI组件承接性评估-20260822.md`](../ktv-system/docs/调研报告/DidaoUI组件承接性评估-20260822.md)
