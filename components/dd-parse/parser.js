@@ -77,18 +77,25 @@ const config = {
 }
 const tagSelector = {}
 let windowWidth, system
-// #ifdef MP-WEIXIN
-if (uni.canIUse('getWindowInfo')) {
-  windowWidth = uni.getWindowInfo().windowWidth
-  system = uni.getDeviceInfo().system
-} else {
-// #endif
+// ponytail: 不能在模块顶层调用 uni.*——H5 下组件库 ESM 求值早于 uni-h5 运行时挂载 window.uni，
+// 会抛 "uni is not defined"；改为首次使用时惰性初始化
+function initSystemInfo () {
+  if (windowWidth !== undefined) {
+    return
+  }
+  // #ifdef MP-WEIXIN
+  if (uni.canIUse('getWindowInfo')) {
+    windowWidth = uni.getWindowInfo().windowWidth
+    system = uni.getDeviceInfo().system
+    return
+  }
+  // #endif
   const systemInfo = uni.getSystemInfoSync()
   windowWidth = systemInfo.windowWidth
   // #ifdef MP-WEIXIN
   system = systemInfo.system
+  // #endif
 }
-// #endif
 const blankChar = makeMap(' ,\r,\n,\t,\f')
 let idIndex = 0
 
@@ -310,6 +317,7 @@ Parser.prototype.parseStyle = function (node) {
         }
       } else if (value.includes('rpx')) {
         // 转换 rpx（rich-text 内部不支持 rpx）
+        initSystemInfo()
         value = value.replace(/[0-9.]+\s*rpx/g, $ => parseFloat($) * windowWidth / 750 + 'px')
       }
       styleObj[key] = value
@@ -556,6 +564,7 @@ Parser.prototype.onOpenTag = function (selfClose) {
       }
       // #endif
       // 设置的宽度超出屏幕，为避免变形，高度转为自动
+      initSystemInfo()
       if (parseInt(styleObj.width) > windowWidth) {
         styleObj.height = undefined
       }
@@ -790,6 +799,7 @@ Parser.prototype.popNode = function () {
 
   Object.assign(styleObj, this.parseStyle(node))
 
+  initSystemInfo()
   if (node.name !== 'table' && parseInt(styleObj.width) > windowWidth) {
     styleObj['max-width'] = '100%'
     styleObj['box-sizing'] = 'border-box'
@@ -1186,6 +1196,7 @@ Parser.prototype.onText = function (text) {
   node.text = decodeEntity(text)
   if (this.hook(node)) {
     // #ifdef MP-WEIXIN
+    initSystemInfo()
     if (this.options.selectable === 'force' && system.includes('iOS') && !uni.canIUse('rich-text.user-select')) {
       this.expose()
     }
