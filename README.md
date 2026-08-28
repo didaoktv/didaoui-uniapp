@@ -1,4 +1,4 @@
-# @didaoktv/didaoui-uniapp
+﻿# @didaoktv/didaoui-uniapp
 
 专为 KTV 场景打造的 UniApp 组件库。
 
@@ -6,7 +6,7 @@
 
 - **帝王级配色** — 帝王金 `#F5A623` + 皇家蓝 `#2D4BA0` 双主色，暗色主题默认
 - **玻璃拟态设计** — 多层级玻璃拟态效果，打造高端夜店沉浸感
-- **67 个精心打磨的组件** — 覆盖表单、导航、布局卡片、数据展示、浮层反馈、交互六大类，含 KTV 业务组件（房态卡、账单明细、工单卡、日历、二维码）
+- **89 个精心打磨的组件** — 覆盖表单、导航、布局卡片、数据展示、浮层反馈、交互、画布七大类，含 KTV 业务组件（房态卡、账单明细、工单卡、日历、二维码）
 - **Vue3 + TypeScript** — 完整类型定义，Composition API
 - **多端兼容** — H5 / 微信小程序 / 抖音小程序 / Android / iOS
 
@@ -50,13 +50,14 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 
 | 分类    | 数量 | 组件                                                                                                                                            |
 | ----- | -- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 表单输入  | 17 | Button, Input, Form, Field, Switch, Checkbox, CheckboxGroup, Radio, RadioGroup, Stepper, SearchBar, Slider, DatePicker, Picker, Rate, Upload, Icon                             |
+| 表单输入  | 23 | Button, CodeButton, Input, Form, Field, Switch, Checkbox, CheckboxGroup, Radio, RadioGroup, Stepper, SearchBar, Slider, DatePicker, Picker, Rate, Upload, Icon, Keyboard, NumberKeyboard, CarKeyboard, Cascader, GoodsSku |
 | 导航    | 12 | Navigation, TopNavbar, SwipeableTab, SegmentedTab, Drawer, Tabbar, TabbarItem, Backtop, Collapse, CollapseItem, DropdownMenu, DropdownItem    |
 | 布局/卡片 | 8  | Card, RoomCard, FeatureGrid, Sticky, BillDetail, WorkorderCard, Calendar, Qrcode                                                              |
-| 数据展示  | 16 | Tag, StatCard, ChampionCard, Avatar, Badge, ListCell, Cell, CellGroup, CountDown, Divider, Image, Progress, Skeleton, EmptyState, Step, Steps |
+| 数据展示  | 24 | Tag, StatCard, ChampionCard, Avatar, AvatarGroup, Badge, ListCell, Cell, CellGroup, CountDown, Divider, Image, Progress, Skeleton, EmptyState, Step, Steps, Text, Link, Copy, Album, Coupon, Parse, Markdown |
 | 浮层反馈  | 10 | Modal, ActionSheet, Toast, Alert, Loading, Dialog, Overlay, Popup, Popover, PopoverItem                                                       |
 | 交互    | 5  | SwipeAction, Swipe, SwipeItem, PullRefresh, Loadmore                                                                                         |
-| 小程序专属 | 2  | CapsuleButton, MiniProgramNavbar                                                                                                              |
+| 小程序专属 | 2  | CapsuleButton, MiniProgramNavbar                                                                                                             |
+| 画布    | 5  | Canvas, Barcode, Cropper, Signature, Poster                                                                                                  |
 
 ## 设计规范
 

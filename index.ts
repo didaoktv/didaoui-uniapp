@@ -1,7 +1,8 @@
 import type { App } from 'vue'
 
-// === Input (21) ===
+// === Input (23) ===
 import DdButton from './components/dd-button/dd-button.vue'
+import DdCodeButton from './components/dd-code-button/dd-code-button.vue'
 import DdInput from './components/dd-input/dd-input.vue'
 import DdSwitch from './components/dd-switch/dd-switch.vue'
 import DdCheckbox from './components/dd-checkbox/dd-checkbox.vue'
@@ -38,7 +39,7 @@ import DdCollapseItem from './components/dd-collapse-item/dd-collapse-item.vue'
 import DdDropdownMenu from './components/dd-dropdown-menu/dd-dropdown-menu.vue'
 import DdDropdownItem from './components/dd-dropdown-item/dd-dropdown-item.vue'
 
-// === Layout (4) ===
+// === Layout (8) ===
 import DdCard from './components/dd-card/dd-card.vue'
 import DdRoomCard from './components/dd-room-card/dd-room-card.vue'
 import DdFeatureGrid from './components/dd-feature-grid/dd-feature-grid.vue'
@@ -105,7 +106,7 @@ import DdSignature from './components/dd-signature/dd-signature.vue'
 import DdPoster from './components/dd-poster/dd-poster.vue'
 
 const components = {
-  DdButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
+  DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
   DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku,
@@ -135,7 +136,7 @@ export default { install }
 // 全量具名导出
 export {
   components,
-  DdButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
+  DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
   DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku,
