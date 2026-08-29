@@ -42,6 +42,8 @@ interface Props {
   title?: string
   loading?: boolean
   readonly?: boolean
+  // 每次打开时各列定位到的索引（缺省/超界则回落到当前值或 0），用于回显已有选中项（如房型筛选当前值）
+  defaultIndexes?: number[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -50,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   loading: false,
   readonly: false,
+  defaultIndexes: () => [],
 })
 
 const emit = defineEmits<{
@@ -75,6 +78,21 @@ watch(
     indexes.value = next
   },
   { immediate: true }
+)
+
+// 打开时按 defaultIndexes 回显各列索引；非法值（超界/非数字）回落当前值或 0
+watch(
+  () => props.show,
+  (v) => {
+    if (!v) return
+    const cols = normalizedColumns.value
+    const d = props.defaultIndexes
+    indexes.value = cols.map((_, i) => {
+      const preset = d[i]
+      if (typeof preset !== 'number' || preset < 0) return indexes.value[i] ?? 0
+      return Math.min(preset, Math.max(0, (cols[i]?.length || 1) - 1))
+    })
+  }
 )
 
 function emitChange() {
@@ -115,6 +133,11 @@ function onConfirm() {
 :deep(.uni-picker-view-mask) {
   background-image: linear-gradient(180deg, var(--dd-surface-container, #{$dd-surface-container}), transparent 60%),
                     linear-gradient(0deg, var(--dd-surface-container, #{$dd-surface-container}), transparent 60%);
+}
+// ponytail: H5 picker-view 吸附 itemSize 取 indicator 框高度(默认34px)，必须与行高一致拖动松手才对齐。
+// 需与下方 .dd-picker__item 的 88rpx 保持一致；改行高时必须同步改这里。小程序为原生组件此规则天然无效，安全。
+:deep(.uni-picker-view-indicator) {
+  height: 88rpx;
 }
 .dd-picker {
   &__mask {
