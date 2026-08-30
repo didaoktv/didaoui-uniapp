@@ -1,4 +1,4 @@
-﻿# @didaoktv/didaoui-uniapp
+# @didaoktv/didaoui-uniapp
 
 > KTV 场景 UniApp 组件库（Vue3 + TS + SCSS；H5 / 微信小程序 / 抖音小程序 / App；源码直发包，无构建产物）。本文件是 agent 快速索引，遵循 [llmstxt.org](https://llmstxt.org) 约定：先在此选组件、查约定，再进源码看精确签名。编码硬性规范在 AGENTS.md，此处不重复。
 
@@ -51,7 +51,7 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-icon](components/dd-icon/dd-icon.vue): 图标。name 对应 [icon-svg/](icon-svg/) 文件名；全集元数据 iconNames/iconGroups 从包根导出
 - [dd-keyboard](components/dd-keyboard/dd-keyboard.vue): 自定义安全键盘
 - [dd-number-keyboard](components/dd-number-keyboard/dd-number-keyboard.vue): 数字键盘
-- [dd-car-keyboard](components/dd-car-keyboard/dd-car-keyboard.vue): 车牌键盘
+- [dd-car-keyboard](components/dd-car-keyboard/dd-car-keyboard.vue): 车牌号输入（车牌格子+弹层键盘+按位锁键+新能源位，v-model）
 - [dd-goods-sku](components/dd-goods-sku/dd-goods-sku.vue): 商品 SKU 选择弹层。goodsInfo/skuTree/skuList/maxBuy/pageInline；emit confirm({sku, goodsInfo, num, selectedText})/open/close
 
 ### 导航 (12)

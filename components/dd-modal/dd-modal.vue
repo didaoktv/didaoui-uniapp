@@ -4,6 +4,7 @@ let activeModalClose: (() => void) | null = null
 </script>
 
 <template>
+  <dd-portal>
   <view class="dd-modal">
     <view
       v-if="visible"
@@ -56,10 +57,12 @@ let activeModalClose: (() => void) | null = null
       <view class="dd-modal__safe-bottom"></view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted, nextTick } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {

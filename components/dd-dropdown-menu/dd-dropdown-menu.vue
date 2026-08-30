@@ -3,6 +3,7 @@
     <view class="dd-dropdown__bar">
       <slot></slot>
     </view>
+    <dd-portal>
     <view
       v-if="overlay"
       class="dd-dropdown__overlay"
@@ -10,6 +11,7 @@
       :style="overlayStyle"
       @click="onOverlayClick"
     ></view>
+    </dd-portal>
   </view>
 </template>
 
@@ -21,6 +23,7 @@ let activeMenuClose: (() => void) | null = null
 
 <script setup lang="ts">
 import { getCurrentInstance, onMounted, onUnmounted, provide, reactive, ref } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   activeColor?: string

@@ -1,5 +1,7 @@
 <template>
-  <view v-if="fullscreen" class="dd-loading dd-loading--fullscreen" :style="{ zIndex: 9999 }">
+  <!-- 仅全屏分支传送；inline 分支必须留在原位（传送会破坏布局流） -->
+  <dd-portal v-if="fullscreen">
+  <view class="dd-loading dd-loading--fullscreen" :style="{ zIndex: 9999 }">
     <view class="dd-loading__mask"></view>
     <view class="dd-loading__box">
       <view class="dd-loading__core" :class="[`dd-loading__core--${type}`, `dd-loading__core--${size}`]" :style="coreStyle">
@@ -17,6 +19,7 @@
       <text v-if="text" class="dd-loading__text">{{ text }}</text>
     </view>
   </view>
+  </dd-portal>
   <view v-else class="dd-loading" :class="[`dd-loading--inline`, `dd-loading--${type}`, `dd-loading--${size}`]">
     <view class="dd-loading__core" :class="[`dd-loading__core--${type}`, `dd-loading__core--${size}`]" :style="coreStyle">
       <template v-if="type === 'spinner'">
@@ -36,6 +39,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   type?: 'spinner' | 'dots' | 'pulse'

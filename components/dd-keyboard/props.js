@@ -79,11 +79,6 @@ export const props = defineMixin({
         confirmText: {
             type: String,
             default: () => defProps.keyboard.confirmText
-        },
-        // 输入一个中文后，是否自动切换到英文
-        autoChange: {
-            type: Boolean,
-            default: () => defProps.keyboard.autoChange
         }
     }
 })

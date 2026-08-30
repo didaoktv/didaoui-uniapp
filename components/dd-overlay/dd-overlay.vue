@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view
     class="dd-overlay"
     :class="{ 'dd-overlay--show': modelValue }"
@@ -9,10 +10,12 @@
   >
     <slot></slot>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { watch } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   modelValue?: boolean

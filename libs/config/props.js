@@ -21,7 +21,6 @@ const componentKeys = [
     'button',
     'calendar',
     'calendarStrip',
-    'carKeyboard',
     'card',
     'cell',
     'cellGroup',

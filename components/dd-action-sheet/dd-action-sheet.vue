@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view class="dd-action-sheet">
     <view
       class="dd-action-sheet__mask"
@@ -33,9 +34,11 @@
       <view class="dd-action-sheet__safe-bottom"></view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
+import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface ActionItem {

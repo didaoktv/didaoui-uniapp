@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view class="dd-toast" :class="[`dd-toast--${toastState.position}`, { 'dd-toast--show': toastState.visible }]">
     <view class="dd-toast__capsule">
       <view v-if="showIcon" class="dd-toast__icon">
@@ -8,6 +9,7 @@
       <text v-if="toastState.message" class="dd-toast__msg">{{ toastState.message }}</text>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script lang="ts">
@@ -77,6 +79,7 @@ export function showError(message: string) {
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 // text 类型强制隐藏图标

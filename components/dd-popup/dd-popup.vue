@@ -1,4 +1,6 @@
 <template>
+  <!-- 内容经 portal 提升到页面根节点：popup 可安全嵌套进另一弹层/transform 祖先，不被其劫持 fixed 定位（详见 dd-portal 组件） -->
+  <dd-portal>
   <view class="dd-popup" :style="{ '--dd-popup-duration': `${props.duration}s` }">
     <view
       v-if="visible && overlay"
@@ -24,11 +26,13 @@
       <slot></slot>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted, nextTick } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   modelValue?: boolean

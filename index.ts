@@ -75,7 +75,8 @@ import DdCoupon from './components/dd-coupon/dd-coupon.vue'
 import DdParse from './components/dd-parse/dd-parse.vue'
 import DdMarkdown from './components/dd-markdown/dd-markdown.vue'
 
-// === Overlay (10) ===
+// === Overlay (11) ===
+import DdPortal from './components/dd-portal/dd-portal.vue'
 import DdModal from './components/dd-modal/dd-modal.vue'
 import DdActionSheet from './components/dd-action-sheet/dd-action-sheet.vue'
 import DdToast from './components/dd-toast/dd-toast.vue'
@@ -119,7 +120,7 @@ const components = {
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
   DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
-  DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
+  DdPortal, DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
   DdSwipeAction, DdSwipe, DdSwipeItem, DdPullRefresh, DdLoadmore,
   DdCapsuleButton, DdMiniProgramNavbar,
   DdCanvas, DdBarcode, DdCropper, DdSignature, DdPoster,
@@ -149,7 +150,7 @@ export {
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
   DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
-  DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
+  DdPortal, DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
   DdSwipeAction, DdSwipe, DdSwipeItem, DdPullRefresh, DdLoadmore,
   DdCapsuleButton, DdMiniProgramNavbar,
   DdCanvas, DdBarcode, DdCropper, DdSignature, DdPoster,

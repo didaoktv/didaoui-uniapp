@@ -29,7 +29,7 @@
 				<text
 				    v-if="showTips"
 				    class="dd-keyboard__tooltip__item dd-keyboard__tooltip__tips"
-				>{{tips ? tips : mode == 'number' ? '数字键盘' : mode == 'card' ? '身份证键盘' : '车牌号键盘'}}</text>
+				>{{tips ? tips : mode == 'number' ? '数字键盘' : '身份证键盘'}}</text>
 			</view>
 			<view
 			    hover-class="dd-keyboard-hover"
@@ -42,23 +42,14 @@
 				>{{showConfirm && confirmText}}</text>
 			</view>
 			</view>
-			<template v-if="mode == 'number' || mode == 'card'">
-				<dd-number-keyboard
+			<!-- 车牌号输入已独立为 dd-car-keyboard（车牌格子+按位锁键键盘一体），此处仅保留 number/card 数字键盘 -->
+			<dd-number-keyboard
 			    :random="random"
 			    @backspace="backspace"
 			    @change="change"
 			    :mode="mode"
 			    :dotDisabled="dotDisabled"
 			></dd-number-keyboard>
-			</template>
-			<template v-else>
-				<dd-car-keyboard
-			    :random="random"
-			    :autoChange="autoChange"
-			    @backspace="backspace"
-			    @change="change"
-			></dd-car-keyboard>
-		</template>
 	</view>
 	</dd-popup>
 </template>
@@ -70,8 +61,8 @@
 
 	/**
 	 * keyboard 键盘
-	 * @description 自定义的键盘面板，内含了数字键盘，车牌号键，身份证号键盘3种模式，都有可以打乱按键顺序的选项。
-	 * @property {String}			mode				键盘类型，见官网基本使用的说明 （默认 'number' ）
+	 * @description 自定义的键盘面板，内含了数字键盘，身份证号键盘2种模式，都有可以打乱按键顺序的选项。车牌号输入请使用 dd-car-keyboard。
+	 * @property {String}			mode				键盘类型：number-数字键盘，card-身份证键盘 （默认 'number' ）
 	 * @property {Boolean}			dotDisabled			是否显示"."按键，只在mode=number时有效 （默认 false ）
 	 * @property {Boolean}			tooltip				是否显示键盘顶部工具条 （默认 true ）
 	 * @property {Boolean}			showTips			是否显示工具条中间的提示 （默认 true ）

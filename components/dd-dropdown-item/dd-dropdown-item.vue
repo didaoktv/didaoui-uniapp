@@ -13,6 +13,7 @@
         :class="{ 'dd-dropdown-item__arrow--open': isOpen }"
       />
     </view>
+    <dd-portal>
     <view
       v-if="ctx"
       class="dd-dropdown-item__panel"
@@ -41,11 +42,13 @@
         </view>
       </scroll-view>
     </view>
+    </dd-portal>
   </view>
 </template>
 
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface DropdownOption {

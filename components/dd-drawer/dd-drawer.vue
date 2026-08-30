@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view class="dd-drawer">
     <view
       class="dd-drawer__mask"
@@ -36,10 +37,12 @@
       </scroll-view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { watch } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   modelValue?: boolean

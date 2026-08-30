@@ -1,15 +1,18 @@
 <template>
-  <view class="dd-dialog">
-    <view
-      class="dd-dialog__mask"
-      :class="{ 'dd-dialog__mask--show': modelValue }"
-      @click="onOverlayClick"
-    ></view>
-    <view
-      class="dd-dialog__card"
-      :class="[{ 'dd-dialog__card--show': modelValue }, `dd-dialog__card--${theme}`]"
-      :style="{ width: widthValue, maxWidth: '92vw' }"
-    >
+  <!-- 内容经 portal 提升到页面根节点：规避 transform 祖先劫持 fixed 定位（详见 dd-portal 组件） -->
+  <dd-portal>
+    <view class="dd-dialog">
+      <view
+        class="dd-dialog__mask"
+        :class="{ 'dd-dialog__mask--show': modelValue }"
+        :style="{ zIndex: maskZIndex }"
+        @click="onOverlayClick"
+      ></view>
+      <view
+        class="dd-dialog__card"
+        :class="[{ 'dd-dialog__card--show': modelValue }, `dd-dialog__card--${theme}`]"
+        :style="{ width: widthValue, maxWidth: '92vw', zIndex: cardZIndex }"
+      >
       <view v-if="title" class="dd-dialog__header">
         <text class="dd-dialog__title">{{ title }}</text>
       </view>
@@ -55,10 +58,17 @@
       </view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import zIndexConfig from '../../libs/config/zIndex.js'
+import DdPortal from '../dd-portal/dd-portal.vue'
+
+/* z-index 统一取 libs/config/zIndex.js（弹窗需压在 popup 面板之上、toast 之下） */
+const maskZIndex = zIndexConfig.dialogMask
+const cardZIndex = zIndexConfig.dialog
 
 interface Props {
   modelValue?: boolean
@@ -148,7 +158,7 @@ function onCancel() {
     background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
-    z-index: 2000;
+    /* z-index 由 script 注入（libs/config/zIndex.js） */
     @include dd-transition(opacity 0.3s ease, visibility 0.3s);
 
     &--show {
@@ -164,7 +174,6 @@ function onCancel() {
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
     visibility: hidden;
-    z-index: 2001;
     background: var(--dd-bg-elevated, #{$dd-bg-elevated});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-lg;

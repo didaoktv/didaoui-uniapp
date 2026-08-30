@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view class="dd-alert">
     <view
       class="dd-alert__mask"
@@ -21,10 +22,12 @@
       </view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 type AlertType = 'info' | 'success' | 'warning' | 'error' | 'confirm'

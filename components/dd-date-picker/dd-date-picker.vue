@@ -1,4 +1,5 @@
 <template>
+  <dd-portal>
   <view class="dd-dp" :class="{ 'dd-dp--open': show }">
     <view class="dd-dp__mask" @click="onMaskClick"></view>
     <view class="dd-dp__sheet">
@@ -21,10 +22,12 @@
       </picker-view>
     </view>
   </view>
+  </dd-portal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import DdPortal from '../dd-portal/dd-portal.vue'
 
 interface Props {
   show?: boolean
