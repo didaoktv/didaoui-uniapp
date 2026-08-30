@@ -124,15 +124,20 @@ function handleClick(e: Event) {
   padding: 0 24rpx 0 $dd-space-4;
   background: var(--dd-bg-elevated, #{$dd-bg-elevated});
   font-size: $dd-font-size-body;
+  // vant 式恒定行高（24px），title/value/label/icon 全部基线对齐
+  line-height: $dd-line-height-lead;
   color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
 
+  // vant 式：高度 = 垂直 padding + 行高（12/16px × 2 + 23.8px ≈ 96/112rpx），内容天然居中
   &--normal {
-    min-height: 96rpx;
+    padding-top: $dd-space-3;
+    padding-bottom: $dd-space-3;
   }
 
   &--large {
-    min-height: 112rpx;
+    padding-top: $dd-space-4;
+    padding-bottom: $dd-space-4;
   }
 
   &--center {
@@ -154,7 +159,8 @@ function handleClick(e: Event) {
     margin-right: $dd-space-2;
     display: flex;
     align-items: center;
-    height: 100%;
+    // ponytail: stretch 拉伸到兄弟 content 高度使图标居中于首行；title+label 多行时会居中于整块而非首行（vant 是贴首行），如需精确可改为固定行高盒
+    align-self: stretch;
   }
 
   &__icon-text {
@@ -167,7 +173,7 @@ function handleClick(e: Event) {
     color: var(--dd-error, #{$dd-error});
     font-size: $dd-font-size-body;
     margin-right: 4rpx;
-    line-height: $dd-line-height-caption;
+    line-height: inherit;
     text {
       line-height: 1;
     }
@@ -179,7 +185,6 @@ function handleClick(e: Event) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: $dd-space-2 0;
   }
 
   &__title {
