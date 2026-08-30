@@ -10,6 +10,7 @@
 		>
 			<view
 				class="dd-keyboard__button-wrapper__button"
+				:class="[btnBgGray(index) && 'dd-keyboard__button-wrapper__button--gray']"
 				:style="[itemStyle(index)]"
 				@tap="keyboardClick(item)"
 				hover-class="dd-keyboard-hover"
@@ -25,8 +26,10 @@
 				class="dd-keyboard__button-wrapper__button dd-keyboard__button-wrapper__button--gray"
 				hover-class="dd-keyboard-hover"
 				:hover-stay-time="200"
-				@touchstart.stop="backspaceClick"
+				@touchstart.stop="backspaceTouchStart"
 				@touchend="clearTimer"
+				@touchcancel="clearTimer"
+				@tap="backspaceTap"
 			>
 				<dd-icon
 				name="backspace"
@@ -61,6 +64,7 @@
 				backspace: 'backspace', // 退格键内容
 				dot: '.', // 点
 				timer: null, // 长按多次删除的事件监听
+				isTouch: false, // 本次退格是否来自触摸（防 tap 重复删除）
 				cardX: 'X' // 身份证的X符号
 			};
 		},
@@ -88,15 +92,15 @@
 					}
 				}
 			},
-			// 按键的样式，在非乱序&&数字键盘&&不显示点按钮时，index为9时，按键占位两个空间
+			// 按键的样式，在非乱序&&数字键盘&&不显示点按钮时，index为9时，"0"键占位两个空间（flex 拉伸为 2 倍宽）
 			itemStyle() {
 				return index => {
 					let style = {};
-					if (this.mode == 'number' && this.dotDisabled && index == 9) style.width = '464rpx';
+					if (this.mode == 'number' && this.dotDisabled && index == 9) style.flex = '2 1 30%';
 					return style;
 				};
 			},
-			// 是否让按键显示灰色，只在非乱序&&数字键盘&&且允许点按键的时候
+			// 是否让按键显示灰色，只在非乱序&&数字键盘&&且允许点按键的时候（"."键 / 身份证"X"键）
 			btnBgGray() {
 				return index => {
 					if (!this.random && index == 9 && (this.mode != 'number' || (this.mode == 'number' && !this
@@ -109,14 +113,22 @@
 		},
 		emits: ["backspace", "change"],
 		methods: {
-			// 点击退格键
-			backspaceClick() {
+			// 点击退格键（触摸路径：touchstart 立删 + 长按连删；鼠标路径：tap 单删，isTouch 防移动端触摸后 tap 二次删除）
+			backspaceTouchStart() {
+				this.isTouch = true
 				this.$emit('backspace');
 				clearInterval(this.timer); //再次清空定时器，防止重复注册定时器
 				this.timer = null;
 				this.timer = setInterval(() => {
 					this.$emit('backspace');
 				}, 250);
+			},
+			backspaceTap() {
+				if (this.isTouch) {
+					this.isTouch = false;
+					return;
+				}
+				this.$emit('backspace');
 			},
 			clearTimer() {
 				clearInterval(this.timer);
@@ -137,12 +149,8 @@
 @import '../../scss/dd-shared';
 	$dd-number-keyboard-background-color: var(--dd-bg-section, #{$dd-bg-section}) !default;
 	$dd-number-keyboard-padding:8px 10rpx 8px 10rpx !default;
-	$dd-number-keyboard-button-width:222rpx !default;
-	$dd-number-keyboard-button-margin:4px 6rpx !default;
-	$dd-number-keyboard-button-border-top-left-radius:4px !default;
-	$dd-number-keyboard-button-border-top-right-radius:4px !default;
-	$dd-number-keyboard-button-border-bottom-left-radius:4px !default;
-	$dd-number-keyboard-button-border-bottom-right-radius:4px !default;
+	$dd-number-keyboard-gap:6rpx !default;
+	$dd-number-keyboard-button-border-radius:var(--dd-radius-sm, #{$dd-radius-sm}) !default;
 	$dd-number-keyboard-button-height: 90rpx!default;
 	$dd-number-keyboard-button-background-color:var(--dd-surface-container-high, #{$dd-surface-container-high}) !default;
 	$dd-number-keyboard-button-box-shadow:0 2px 0px var(--dd-bg, #{$dd-bg}) !default;
@@ -155,30 +163,25 @@
 	.dd-keyboard {
 		@include flex;
 		flex-direction: row;
-		justify-content: space-around;
-		background-color: $dd-number-keyboard-background-color;
 		flex-wrap: wrap;
+		gap: $dd-number-keyboard-gap;
+		background-color: $dd-number-keyboard-background-color;
 		padding: $dd-number-keyboard-padding;
 
+		// ponytail: 弹性三等分替代固定 222rpx 宽——容器宽度不足 702rpx 时固定宽会挤成 2 列
 		&__button-wrapper {
+			flex: 1 1 30%;
 			box-shadow: $dd-number-keyboard-button-box-shadow;
-			margin: $dd-number-keyboard-button-margin;
-			border-top-left-radius: $dd-number-keyboard-button-border-top-left-radius;
-			border-top-right-radius: $dd-number-keyboard-button-border-top-right-radius;
-			border-bottom-left-radius: $dd-number-keyboard-button-border-bottom-left-radius;
-			border-bottom-right-radius: $dd-number-keyboard-button-border-bottom-right-radius;
+			border-radius: $dd-number-keyboard-button-border-radius;
 
 			&__button {
-				width: $dd-number-keyboard-button-width;
+				width: 100%;
 				height: $dd-number-keyboard-button-height;
 				background-color: $dd-number-keyboard-button-background-color;
 				@include flex;
 				justify-content: center;
 				align-items: center;
-				border-top-left-radius: $dd-number-keyboard-button-border-top-left-radius;
-				border-top-right-radius: $dd-number-keyboard-button-border-top-right-radius;
-				border-bottom-left-radius: $dd-number-keyboard-button-border-bottom-left-radius;
-				border-bottom-right-radius: $dd-number-keyboard-button-border-bottom-right-radius;
+				border-radius: $dd-number-keyboard-button-border-radius;
 
 				&__text {
 					font-size: $dd-number-keyboard-text-font-size;
@@ -187,9 +190,9 @@
 				}
 
 				&--gray {
-				background-color: $dd-number-keyboard-gray-background-color;
-				color: $dd-number-keyboard-text-color; // 退格图标 color=inherit，由此处控制
-			}
+					background-color: $dd-number-keyboard-gray-background-color;
+					color: $dd-number-keyboard-text-color; // 退格图标 color=inherit，由此处控制
+				}
 			}
 		}
 	}
