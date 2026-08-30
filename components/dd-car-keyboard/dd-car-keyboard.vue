@@ -26,48 +26,66 @@
 			</view>
 		</view>
 
-		<!-- 键盘弹层：0 位省份键盘，其余位字母数字键盘（按位锁键） -->
-		<view
-			v-if="active >= 0"
-			class="dd-car-keyboard__panel"
-			@touchmove.stop.prevent="noop"
+		<!-- 键盘弹层：与其他键盘模式一致，经 dd-popup 弹出（遮罩/动效/底部安全区），0 位省份键盘，其余位字母数字键盘（按位锁键） -->
+		<dd-popup
+			v-model="popupShow"
+			position="bottom"
+			:z-index="zIndexConfig.popup"
 		>
-			<view class="dd-car-keyboard__close" @tap="closeKeyboard">
-				<text class="dd-car-keyboard__close-text">关闭</text>
-			</view>
-			<view
-				v-for="(row, rowIndex) in keyRows"
-				:key="rowIndex"
-				class="dd-car-keyboard__row"
-			>
-				<view
-					v-for="item in row"
-					:key="item.label"
-					class="dd-car-keyboard__key"
-					:class="[item.locked && 'dd-car-keyboard__key--lock']"
-					hover-class="dd-car-keyboard__key--hover"
-					:hover-stay-time="100"
-					@tap="onKeyTap(item)"
-				>
-					<text class="dd-car-keyboard__key-text">{{ item.label }}</text>
+			<view class="dd-car-keyboard__panel">
+				<view class="dd-car-keyboard__tooltip">
+					<view hover-class="dd-car-keyboard__hover" :hover-stay-time="100">
+						<text
+							class="dd-car-keyboard__tooltip-item dd-car-keyboard__tooltip-item--cancel"
+							@tap="closeKeyboard"
+						>取消</text>
+					</view>
+					<view>
+						<text class="dd-car-keyboard__tooltip-item dd-car-keyboard__tooltip-item--tips">车牌键盘</text>
+					</view>
+					<view hover-class="dd-car-keyboard__hover" :hover-stay-time="100">
+						<text
+							class="dd-car-keyboard__tooltip-item dd-car-keyboard__tooltip-item--submit"
+							@tap="closeKeyboard"
+						>完成</text>
+					</view>
 				</view>
 				<view
-					v-if="rowIndex === 3"
-					class="dd-car-keyboard__key dd-car-keyboard__key--del"
-					hover-class="dd-car-keyboard__key--hover"
-					:hover-stay-time="100"
-					@tap="onBackspaceTap"
+					v-for="(row, rowIndex) in keyRows"
+					:key="rowIndex"
+					class="dd-car-keyboard__row"
 				>
-					<dd-icon size="22" name="backspace"></dd-icon>
+					<view
+						v-for="item in row"
+						:key="item.label"
+						class="dd-car-keyboard__key"
+						:class="[item.locked && 'dd-car-keyboard__key--lock']"
+						hover-class="dd-car-keyboard__key--hover"
+						:hover-stay-time="100"
+						@tap="onKeyTap(item)"
+					>
+						<text class="dd-car-keyboard__key-text">{{ item.label }}</text>
+					</view>
+					<view
+						v-if="rowIndex === 3"
+						class="dd-car-keyboard__key dd-car-keyboard__key--del"
+						hover-class="dd-car-keyboard__key--hover"
+						:hover-stay-time="100"
+						@tap="onBackspaceTap"
+					>
+						<dd-icon size="22" name="backspace"></dd-icon>
+					</view>
 				</view>
 			</view>
-		</view>
+		</dd-popup>
 	</view>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import zIndexConfig from '../../libs/config/zIndex.js'
 import DdIcon from '../dd-icon/dd-icon.vue'
+import DdPopup from '../dd-popup/dd-popup.vue'
 import { MAX_LEN, getKeyRows, nextPos, type KeyItem } from './carPlate'
 
 /**
@@ -76,7 +94,7 @@ import { MAX_LEN, getKeyRows, nextPos, type KeyItem } from './carPlate'
  * @property {String} modelValue 车牌号（v-model）
  * @event {Function} update:modelValue 输入变化
  * @event {Function} focus 键盘弹出
- * @event {Function} blur 键盘收起
+ * @event {Function} blur 键盘收起（含遮罩/取消/完成触发）
  * @example <dd-car-keyboard v-model="plateNo" />
  */
 
@@ -120,7 +138,13 @@ watch(keyboardVisible, (visible) => {
 	else emit('blur', props.modelValue)
 })
 
-function noop() {}
+// dd-popup 关闭路径（遮罩/取消/完成）统一经 update:modelValue 收敛回 active
+const popupShow = computed({
+	get: () => active.value >= 0,
+	set: (val: boolean) => {
+		if (!val) active.value = -1
+	}
+})
 
 function onBoxTap(index: number) {
 	active.value = index
@@ -219,25 +243,40 @@ $dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-spa
 	}
 
 	&__panel {
-		position: fixed;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		z-index: 10075; // ponytail: 取 libs/config/zIndex.js popup 值，模板内不能用表达式故字面量
-		background-color: var(--dd-bg-section, #{$dd-bg-section});
 		padding: $dd-car-keyboard-panel-padding;
 	}
 
-	&__close {
+	// 工具条对齐 dd-keyboard：取消 / 提示 / 完成
+	&__tooltip {
 		@include flex;
-		justify-content: flex-end;
-		padding: var(--dd-space-2, #{$dd-space-2}) 0;
+		justify-content: space-between;
+		background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
+		padding: 14px 12px;
+
+		&-item {
+			color: var(--dd-text-primary, #{$dd-text-primary});
+			flex: 1;
+			text-align: center;
+			font-size: 15px;
+
+			&--cancel {
+				text-align: left;
+				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+			}
+
+			&--tips {
+				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+			}
+
+			&--submit {
+				text-align: right;
+				color: var(--dd-primary-400, #{$dd-primary-400});
+			}
+		}
 	}
 
-	&__close-text {
-		padding: 0 var(--dd-space-2, #{$dd-space-2});
-		font-size: 13.5px;
-		color: var(--dd-text-secondary, #{$dd-text-secondary});
+	&__hover {
+		opacity: 0.7;
 	}
 
 	&__row {
