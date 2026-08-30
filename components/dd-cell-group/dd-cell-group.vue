@@ -42,7 +42,6 @@ withDefaults(defineProps<Props>(), {
   &--inset {
     border-radius: $dd-radius-lg;
     overflow: hidden;
-    margin: 0 24rpx;
   }
 
   &--border {
