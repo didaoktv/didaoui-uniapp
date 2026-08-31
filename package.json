@@ -24,6 +24,7 @@
     "dev:h5": "cd ../DidaoUI-uniapp-docs/h5-demo && npm run dev:h5",
     "build:docs": "cd ../DidaoUI-uniapp-docs && npm run build",
     "type-check": "vue-tsc --noEmit",
+    "bump:consumers": "node scripts/bump-consumers.mjs",
     "prepublishOnly": "node -e \"const p=require('./package.json');if(p.publishConfig&&p.publishConfig.access==='public'){process.exit(0)}console.error('publishConfig.access must be public');process.exit(1)\""
   },
   "publishConfig": {
