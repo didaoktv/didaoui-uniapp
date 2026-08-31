@@ -17,8 +17,9 @@
         <text class="dd-dialog__title">{{ title }}</text>
       </view>
       <view class="dd-dialog__body" :class="{ 'dd-dialog__body--isolated': !title }">
+        <!-- message 与 slot 共存（slot 在下）：prompt 型弹窗需同时展示说明文案与输入内容 -->
         <text v-if="message" class="dd-dialog__message">{{ message }}</text>
-        <slot v-else></slot>
+        <slot></slot>
       </view>
       <view v-if="showConfirmButton || showCancelButton" class="dd-dialog__footer" :class="`dd-dialog__footer--${theme}`">
         <template v-if="theme === 'round-button'">
@@ -83,6 +84,8 @@ interface Props {
   cancelColor?: string
   width?: string | number
   closeOnClickOverlay?: boolean
+  /** 异步关闭：确认/取消/遮罩只发事件不自动关窗，由调用方（如表单校验）自行控制 modelValue */
+  asyncClose?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -98,6 +101,7 @@ const props = withDefaults(defineProps<Props>(), {
   cancelColor: '',
   width: '640rpx',
   closeOnClickOverlay: false,
+  asyncClose: false,
 })
 
 const emit = defineEmits<{
@@ -133,17 +137,17 @@ function close() {
 function onOverlayClick() {
   if (!props.closeOnClickOverlay) return
   emit('cancel')
-  close()
+  if (!props.asyncClose) close()
 }
 
 function onConfirm() {
   emit('confirm')
-  close()
+  if (!props.asyncClose) close()
 }
 
 function onCancel() {
   emit('cancel')
-  close()
+  if (!props.asyncClose) close()
 }
 </script>
 
@@ -236,6 +240,11 @@ function onCancel() {
 
     &--cancel {
       border-right: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
+    }
+
+    /* 确认按钮文字默认主色；confirmColor 传入时走内联样式覆盖 */
+    &--confirm .dd-dialog__btn-text {
+      color: var(--dd-primary, #{$dd-primary});
     }
   }
 

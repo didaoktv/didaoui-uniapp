@@ -2,6 +2,7 @@
   <view
     v-if="variant === 'pill'"
     class="dd-seg dd-seg--pill"
+    :class="{ 'dd-seg--sm': size === 'sm' }"
   >
     <view
       ref="trackRef"
@@ -22,7 +23,11 @@
       ></view>
     </view>
   </view>
-  <view v-else class="dd-seg dd-seg--text">
+  <view
+    v-else
+    class="dd-seg dd-seg--text"
+    :class="{ 'dd-seg--sm': size === 'sm' }"
+  >
     <view
       v-for="(opt, index) in options"
       :key="index"
@@ -44,12 +49,15 @@ interface Props {
   modelValue?: number
   options?: (string | { label: string })[]
   variant?: 'pill' | 'text'
+  /** 尺寸：md 标准；sm 小号（与页面 24rpx 字号胶囊控件同高，用于工具行等紧凑场景） */
+  size?: 'sm' | 'md'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   options: () => [],
   variant: 'pill',
+  size: 'md',
 })
 
 const emit = defineEmits<{
@@ -135,6 +143,15 @@ watch(() => props.options, measure)
     }
   }
 
+  // sm 小号：字号 caption（12px=24rpx）、更紧内边距，整体高度对齐页面 24rpx 字号胶囊
+  &.dd-seg--sm {
+    .dd-seg__item {
+      min-width: 96rpx;
+      padding: $dd-space-1;
+      font-size: $dd-font-size-caption;
+    }
+  }
+
   .dd-seg__indicator {
     position: absolute;
     top: $dd-space-1;
@@ -153,6 +170,12 @@ watch(() => props.options, measure)
   display: flex;
   flex-direction: row;
   gap: $dd-space-6;
+
+  &.dd-seg--sm {
+    .dd-seg-text__item {
+      font-size: $dd-font-size-caption;
+    }
+  }
 
   .dd-seg-text__item {
     position: relative;

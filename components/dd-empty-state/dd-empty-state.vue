@@ -88,11 +88,11 @@ function onAction() {
 
   &__icon {
     margin-bottom: $dd-space-4;
+    font-size: 120rpx;
+    line-height: 1;
   }
 
   &__emoji {
-    font-size: 120rpx;
-    line-height: 1;
     animation: dd-empty-float 3s ease-in-out infinite;
   }
 
