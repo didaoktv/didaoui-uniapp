@@ -37,7 +37,7 @@ import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
   modelValue?: string | number
-  type?: 'text' | 'password' | 'search' | 'number'
+  type?: 'text' | 'password' | 'search' | 'number' | 'digit'
   placeholder?: string
   disabled?: boolean
   clearable?: boolean
@@ -70,7 +70,11 @@ const isFocused = ref(false)
 const visible = ref(false)
 
 // ponytail: search 在小程序降级为 text；password 用 uni 原生 password 布尔属性跨端
-const inputType = computed<'text' | 'number'>(() => (props.type === 'number' ? 'number' : 'text'))
+const inputType = computed<'text' | 'number' | 'digit'>(() => {
+  if (props.type === 'number') return 'number'
+  if (props.type === 'digit') return 'digit'
+  return 'text'
+})
 const isPassword = computed(() => props.type === 'password' && !visible.value)
 const confirmType = computed(() => (props.type === 'search' ? 'search' : 'done'))
 const showClear = computed(() => props.clearable && !!props.modelValue && !props.disabled)

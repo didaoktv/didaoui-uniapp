@@ -7,6 +7,7 @@
       {
         'dd-btn--block': block,
         'dd-btn--round': round,
+        'dd-btn--plain': plain,
         'dd-btn--icon-right': iconPosition === 'right',
         'dd-btn--icon-only': isIconOnly,
         'dd-btn--loading': loading,
@@ -31,10 +32,11 @@ import { computed, useSlots } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
-  type?: 'primary' | 'secondary' | 'ghost' | 'text' | 'success' | 'warning' | 'danger'
+  type?: 'default' | 'primary' | 'secondary' | 'ghost' | 'text' | 'success' | 'warning' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   block?: boolean
   round?: boolean
+  plain?: boolean
   iconPosition?: 'left' | 'right'
   icon?: string
   loading?: boolean
@@ -46,6 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   block: false,
   round: false,
+  plain: false,
   iconPosition: 'left',
   icon: '',
   loading: false,
@@ -149,6 +152,11 @@ function onClick(e: Event) {
   }
 }
 
+.dd-btn--default {
+  background: var(--dd-surface-container, #{$dd-surface-container});
+  color: var(--dd-text-primary, #{$dd-text-primary});
+  border-color: var(--dd-border-default, #{$dd-border-default});
+}
 .dd-btn--primary {
   background: var(--dd-primary, #{$dd-primary});
   color: $dd-neutral-50;
@@ -190,6 +198,28 @@ function onClick(e: Event) {
   color: var(--dd-error-contrast, #{$dd-error-contrast});
 }
 
+// plain：线框按钮，透明底 + 保留各 type 的主题色文字/描边（对齐 Vant 语义）
+.dd-btn--plain {
+  background: transparent;
+  border-color: currentColor;
+  &.dd-btn--primary {
+    color: var(--dd-primary, #{$dd-primary});
+  }
+  &.dd-btn--secondary {
+    color: var(--dd-primary-400, #{$dd-primary-400});
+    border-color: var(--dd-primary-400, #{$dd-primary-400});
+  }
+  &.dd-btn--success {
+    color: var(--dd-success, #{$dd-success});
+  }
+  &.dd-btn--warning {
+    color: var(--dd-warning, #{$dd-warning});
+  }
+  &.dd-btn--danger {
+    color: var(--dd-error, #{$dd-error});
+  }
+}
+
 .dd-btn--round {
   border-radius: $dd-radius-full;
 }
@@ -201,7 +231,8 @@ function onClick(e: Event) {
   opacity: 0.85;
 }
 .dd-btn--secondary.dd-btn--hover,
-.dd-btn--ghost.dd-btn--hover {
+.dd-btn--ghost.dd-btn--hover,
+.dd-btn--default.dd-btn--hover {
   opacity: 0.7;
 }
 
