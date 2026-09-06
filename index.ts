@@ -167,4 +167,4 @@ export type {
 } from './components/dd-form/rules'
 
 // 图标元数据（供 demo/文档消费，与 dd-icon.vue 内 SCSS &-- 规则保持一致）
-export { iconNames, iconGroups } from './components/dd-icon/dd-icon.vue'
+export { iconNames, iconGroups, iconLabels } from './components/dd-icon/dd-icon.vue'
