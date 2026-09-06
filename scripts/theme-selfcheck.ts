@@ -3,7 +3,7 @@
 //       然后 node .check/theme-selfcheck.js
 // 断言：
 //  1) theme.scss 编译通过
-//  2) 产物结构：:root/page = base(59) ∪ dark(44)；.dark/.light 键集一致且恰为 44 翻转 delta；
+//  2) 产物结构：:root/page = base(59) ∪ dark(45)；.dark/.light 键集一致且恰为 45 翻转 delta；
 //     明暗核心值确实翻转（bg/fg/surface/border-default/muted），品牌色不翻转
 //  3) 组件源码无变量全集内 token 的裸引用（必须 var(--dd-x, #{$dd-x}) 形态；
 //     rgba($dd-x) 编译期包裹为已知豁免——见下方 ponytail）
@@ -53,10 +53,10 @@ const pageVars = varsOf('page')
 const darkVars = varsOf('\\.dark')
 const lightVars = varsOf('\\.light')
 
-assert(rootVars.size === 103, `:root 应发射 103 个变量（base 59 + dark 44），实际 ${rootVars.size}`)
-assert(pageVars.size === 103, `page 应发射 103 个变量，实际 ${pageVars.size}`)
-assert(darkVars.size === 44, `.dark 应恰为 44 个翻转 delta，实际 ${darkVars.size}`)
-assert(lightVars.size === 44, `.light 应恰为 44 个翻转 delta，实际 ${lightVars.size}`)
+assert(rootVars.size === 104, `:root 应发射 104 个变量（base 59 + dark 45），实际 ${rootVars.size}`)
+assert(pageVars.size === 104, `page 应发射 104 个变量，实际 ${pageVars.size}`)
+assert(darkVars.size === 45, `.dark 应恰为 45 个翻转 delta，实际 ${darkVars.size}`)
+assert(lightVars.size === 45, `.light 应恰为 45 个翻转 delta，实际 ${lightVars.size}`)
 
 const darkKeys = [...darkVars.keys()].sort()
 const lightKeys = [...lightVars.keys()].sort()

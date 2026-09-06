@@ -121,9 +121,9 @@ provide('ddPopover', {
     z-index: 2000;
 
     &--light {
-      background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+      background: var(--dd-bg-popup, #{$dd-bg-popup});
       color: var(--dd-text-primary, #{$dd-text-primary});
-      .dd-popover__arrow { background: var(--dd-bg-elevated, #{$dd-bg-elevated}); }
+      .dd-popover__arrow { background: var(--dd-bg-popup, #{$dd-bg-popup}); }
     }
     &--dark {
       background: $dd-neutral-700;

@@ -176,7 +176,7 @@ function emitValue() {
 </script>
 
 <style lang="scss" scoped>
-/* 头部固定引入；只消费 $dd-* token，样式值写 var(--dd-x, $dd-x) 兜底形式 */
+/* 头部固定引入；只消费 $dd-* token，样式值一律 var() 兜底形式 */
 @import '../../scss/variables';
 @import '../../scss/dd-shared';
 
@@ -184,7 +184,7 @@ $dd-car-keyboard-gap: 8rpx !default;
 $dd-car-keyboard-box-height: 76rpx !default;
 $dd-car-keyboard-box-border: 1px solid var(--dd-border-default, #{$dd-border-default}) !default;
 $dd-car-keyboard-key-height: 76rpx !default;
-$dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-space-2, #{$dd-space-2}) !default;
+$dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 
 .dd-car-keyboard {
 	&__boxes {
@@ -200,14 +200,14 @@ $dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-spa
 		flex: 1;
 		height: $dd-car-keyboard-box-height;
 		border: $dd-car-keyboard-box-border;
-		border-radius: var(--dd-radius-md, #{$dd-radius-md});
+		border-radius: $dd-radius-md;
 
 		&--active {
 			border-color: var(--dd-primary-400, #{$dd-primary-400});
 		}
 
 		&--energy {
-			border-color: var(--dd-success-500, #{$dd-success-500});
+			border-color: var(--dd-success, #{$dd-success});
 		}
 	}
 
@@ -233,8 +233,8 @@ $dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-spa
 		left: 50%;
 		transform: translateX(-50%);
 		padding: 0 6rpx;
-		background-color: var(--dd-success-500, #{$dd-success-500});
-		border-radius: var(--dd-radius-sm, #{$dd-radius-sm});
+		background-color: var(--dd-success, #{$dd-success});
+		border-radius: $dd-radius-sm;
 	}
 
 	&__badge-text {
@@ -281,7 +281,7 @@ $dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-spa
 
 	&__row {
 		@include flex;
-		margin-top: var(--dd-space-2, #{$dd-space-2});
+		margin-top: $dd-space-2;
 		gap: $dd-car-keyboard-gap;
 	}
 
@@ -292,7 +292,7 @@ $dd-car-keyboard-panel-padding: 0 var(--dd-space-2, #{$dd-space-2}) var(--dd-spa
 		flex: 1;
 		height: $dd-car-keyboard-key-height;
 		background-color: var(--dd-surface-container-high, #{$dd-surface-container-high});
-		border-radius: var(--dd-radius-md, #{$dd-radius-md});
+		border-radius: $dd-radius-md;
 
 		&--lock {
 			opacity: 0.35;

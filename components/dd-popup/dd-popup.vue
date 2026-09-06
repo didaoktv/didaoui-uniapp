@@ -171,7 +171,7 @@ onUnmounted(() => {
 
   &__panel {
     position: fixed;
-    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    background: var(--dd-bg-popup, #{$dd-bg-popup});
     box-shadow: var(--dd-shadow-3, #{$dd-shadow-3});
     transition: transform var(--dd-popup-duration, 0.3s) ease,
                 opacity var(--dd-popup-duration, 0.3s) ease;

@@ -195,7 +195,7 @@ onUnmounted(() => {
     z-index: 1001;
     max-width: 720rpx; // 360px 上限
     max-height: 80vh;
-    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    background: var(--dd-bg-popup, #{$dd-bg-popup});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-xl;
     box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});
@@ -219,7 +219,7 @@ onUnmounted(() => {
     transform: translateY(100%);
     z-index: 1001;
     max-height: 85vh;
-    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    background: var(--dd-bg-popup, #{$dd-bg-popup});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-xl $dd-radius-xl 0 0;
     box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});

@@ -202,7 +202,7 @@ function onConfirm() {
     right: 0;
     bottom: 0;
     z-index: $dd-z-index-popup;
-    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    background: var(--dd-bg-popup, #{$dd-bg-popup});
     border-radius: $dd-radius-2xl $dd-radius-2xl 0 0;
     transform: translateY(100%);
     @include dd-transition(transform 0.3s);

@@ -150,7 +150,7 @@
 	$dd-number-keyboard-background-color: var(--dd-bg-section, #{$dd-bg-section}) !default;
 	$dd-number-keyboard-padding:8px 10rpx 8px 10rpx !default;
 	$dd-number-keyboard-gap:6rpx !default;
-	$dd-number-keyboard-button-border-radius:var(--dd-radius-sm, #{$dd-radius-sm}) !default;
+	$dd-number-keyboard-button-border-radius:$dd-radius-sm !default;
 	$dd-number-keyboard-button-height: 90rpx!default;
 	$dd-number-keyboard-button-background-color:var(--dd-surface-container-high, #{$dd-surface-container-high}) !default;
 	$dd-number-keyboard-button-box-shadow:0 2px 0px var(--dd-bg, #{$dd-bg}) !default;

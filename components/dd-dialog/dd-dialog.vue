@@ -178,7 +178,7 @@ function onCancel() {
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
     visibility: hidden;
-    background: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    background: var(--dd-bg-popup, #{$dd-bg-popup});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-lg;
     box-shadow: var(--dd-shadow-4, #{$dd-shadow-4});

@@ -119,6 +119,8 @@ $dd-surface-container-highest: $dd-neutral-600 !default;
 $dd-bg-section: $dd-neutral-800 !default;
 $dd-bg-card: $dd-neutral-800 !default;
 $dd-bg-elevated: $dd-neutral-800 !default;
+// 弹出层专用底色：比卡片（neutral-800）亮一档，形成 页面→卡片→弹出层 的抬升层级
+$dd-bg-popup: #222222 !default;
 
 // === 文本色 ===
 $dd-text-primary: $dd-neutral-50 !default;
@@ -168,6 +170,7 @@ $dd-light-surface-container-highest: $dd-neutral-100 !default;
 $dd-light-bg-section: $dd-neutral-50 !default;
 $dd-light-bg-card: #FFFFFF !default;
 $dd-light-bg-elevated: #FFFFFF !default; // ★推导（同 bg-card）
+$dd-light-bg-popup: #FFFFFF !default; // ★推导（浅色下靠阴影区分，弹出层同卡片白）
 $dd-light-text-primary: $dd-neutral-900 !default;
 $dd-light-text-secondary: $dd-neutral-700 !default; // ★推导
 $dd-light-text-tertiary: $dd-neutral-500 !default; // ★推导
