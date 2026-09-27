@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 
-// === Input (23) ===
+// === Input (24) ===
 import DdButton from './components/dd-button/dd-button.vue'
 import DdCodeButton from './components/dd-code-button/dd-code-button.vue'
 import DdInput from './components/dd-input/dd-input.vue'
@@ -24,8 +24,9 @@ import DdNumberKeyboard from './components/dd-number-keyboard/dd-number-keyboard
 import DdCarKeyboard from './components/dd-car-keyboard/dd-car-keyboard.vue'
 import DdCascader from './components/dd-cascader/dd-cascader.vue'
 import DdGoodsSku from './components/dd-goods-sku/dd-goods-sku.vue'
+import DdTreeSelect from './components/dd-tree-select/dd-tree-select.vue'
 
-// === Navigation (12) ===
+// === Navigation (14) ===
 import DdNavigation from './components/dd-navigation/dd-navigation.vue'
 import DdTopNavbar from './components/dd-top-navbar/dd-top-navbar.vue'
 import DdSegmentedTab from './components/dd-segmented-tab/dd-segmented-tab.vue'
@@ -38,8 +39,10 @@ import DdCollapse from './components/dd-collapse/dd-collapse.vue'
 import DdCollapseItem from './components/dd-collapse-item/dd-collapse-item.vue'
 import DdDropdownMenu from './components/dd-dropdown-menu/dd-dropdown-menu.vue'
 import DdDropdownItem from './components/dd-dropdown-item/dd-dropdown-item.vue'
+import DdSidebar from './components/dd-sidebar/dd-sidebar.vue'
+import DdSidebarItem from './components/dd-sidebar-item/dd-sidebar-item.vue'
 
-// === Layout (8) ===
+// === Layout (9) ===
 import DdCard from './components/dd-card/dd-card.vue'
 import DdRoomCard from './components/dd-room-card/dd-room-card.vue'
 import DdFeatureGrid from './components/dd-feature-grid/dd-feature-grid.vue'
@@ -48,8 +51,9 @@ import DdBillDetail from './components/dd-bill-detail/dd-bill-detail.vue'
 import DdWorkorderCard from './components/dd-workorder-card/dd-workorder-card.vue'
 import DdCalendar from './components/dd-calendar/dd-calendar.vue'
 import DdQrcode from './components/dd-qrcode/dd-qrcode.vue'
+import DdSubmitBar from './components/dd-submit-bar/dd-submit-bar.vue'
 
-// === Display (24) ===
+// === Display (25) ===
 import DdTag from './components/dd-tag/dd-tag.vue'
 import DdStatCard from './components/dd-stat-card/dd-stat-card.vue'
 import DdChampionCard from './components/dd-champion-card/dd-champion-card.vue'
@@ -74,6 +78,7 @@ import DdAlbum from './components/dd-album/dd-album.vue'
 import DdCoupon from './components/dd-coupon/dd-coupon.vue'
 import DdParse from './components/dd-parse/dd-parse.vue'
 import DdMarkdown from './components/dd-markdown/dd-markdown.vue'
+import DdPrice from './components/dd-price/dd-price.vue'
 
 // === Overlay (11) ===
 import DdPortal from './components/dd-portal/dd-portal.vue'
@@ -110,15 +115,17 @@ const components = {
   DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
-  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku,
+  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdTreeSelect,
   DdNavigation, DdTopNavbar, DdSegmentedTab, DdSwipeableTab,
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
+  DdSidebar, DdSidebarItem,
   DdCard, DdRoomCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
+  DdSubmitBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
   DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
-  DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown,
+  DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown, DdPrice,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
   DdPortal, DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
   DdSwipeAction, DdSwipe, DdSwipeItem, DdPullRefresh, DdLoadmore,
@@ -140,15 +147,17 @@ export {
   DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
-  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku,
+  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdTreeSelect,
   DdNavigation, DdTopNavbar, DdSegmentedTab, DdSwipeableTab,
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
+  DdSidebar, DdSidebarItem,
   DdCard, DdRoomCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
+  DdSubmitBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
   DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
-  DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown,
+  DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown, DdPrice,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
   DdPortal, DdDialog, DdOverlay, DdPopup, DdPopover, DdPopoverItem,
   DdSwipeAction, DdSwipe, DdSwipeItem, DdPullRefresh, DdLoadmore,

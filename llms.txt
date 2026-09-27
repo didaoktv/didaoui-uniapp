@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，89 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，95 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -18,7 +18,7 @@
 ```ts
 // main.ts —— 三端（uniapp-staff/boss/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
-app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
+app.use(ui) // 95 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 // App.vue <style> —— 运行时主题（不引入则组件用 SCSS 兜底值渲染）
 // @import '@didaoktv/didaoui-uniapp/scss/theme';
@@ -30,7 +30,7 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 > 约定：通用组件 API 对齐 Vant 同名/同类组件；仅业务/特有组件列关键签名；精确 props/events 以各 .vue 源码的 `interface Props` / `defineEmits` 为准。分组与 index.ts 一致。
 
-### 表单输入 (23)
+### 表单输入 (24)
 
 - [dd-button](components/dd-button/dd-button.vue): 按钮。type primary/secondary/ghost/text/success/warning/danger；size sm/md/lg；block/round/loading/disabled/icon/iconPosition
 - [dd-code-button](components/dd-code-button/dd-code-button.vue): 获取验证码按钮（倒计时防重）。time/startText/changeText(X占位秒数)/endText/keepRunning(跨页续跑,存储恢复)/uniqueKey；事件 click/start/change/finish；ref: start/reset/canGetCode。验证码场景选它而非 dd-count-down
@@ -46,6 +46,7 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-picker](components/dd-picker/dd-picker.vue): 列选择器，v-model
 - [dd-date-picker](components/dd-date-picker/dd-date-picker.vue): 日期选择器，v-model
 - [dd-cascader](components/dd-cascader/dd-cascader.vue): 级联选择
+- [dd-tree-select](components/dd-tree-select/dd-tree-select.vue): 分类选择（左侧导航+右侧子项，Vant TreeSelect 对齐）。items({text,disabled,dot,badge,children:[{id,text,disabled}]})、activeId 传数组开多选(配 max 上限)、height、selectedIcon；v-model:main-active-index / v-model:active-id；emit clickNav/clickItem；content/nav-text 插槽（内部复用 dd-sidebar）
 - [dd-search-bar](components/dd-search-bar/dd-search-bar.vue): 搜索栏
 - [dd-upload](components/dd-upload/dd-upload.vue): 文件上传
 - [dd-icon](components/dd-icon/dd-icon.vue): 图标。name 对应 [icon-svg/](icon-svg/) 文件名；全集元数据 iconNames/iconGroups 从包根导出
@@ -54,7 +55,7 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-car-keyboard](components/dd-car-keyboard/dd-car-keyboard.vue): 车牌号输入（车牌格子+弹层键盘+按位锁键+新能源位，v-model）
 - [dd-goods-sku](components/dd-goods-sku/dd-goods-sku.vue): 商品 SKU 选择弹层。goodsInfo/skuTree/skuList/maxBuy/pageInline；emit confirm({sku, goodsInfo, num, selectedText})/open/close
 
-### 导航 (12)
+### 导航 (14)
 
 - [dd-navigation](components/dd-navigation/dd-navigation.vue): 底部导航栏（icon+label+指示条）。v-model:number、items({icon,label})、fixed/border
 - [dd-top-navbar](components/dd-top-navbar/dd-top-navbar.vue): 页面顶部导航栏。title/fixed/transparent/showBack/placeholder/fallbackPath；emit back
@@ -65,8 +66,9 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-backtop](components/dd-backtop/dd-backtop.vue): 回到顶部
 - [dd-collapse](components/dd-collapse/dd-collapse.vue) / [dd-collapse-item](components/dd-collapse-item/dd-collapse-item.vue): 折叠面板
 - [dd-dropdown-menu](components/dd-dropdown-menu/dd-dropdown-menu.vue) / [dd-dropdown-item](components/dd-dropdown-item/dd-dropdown-item.vue): 下拉筛选菜单
+- [dd-sidebar](components/dd-sidebar/dd-sidebar.vue) / [dd-sidebar-item](components/dd-sidebar-item/dd-sidebar-item.vue): 侧边栏导航（垂直一级导航；tree-select 左列同款，v-model 索引、title/dot/badge/disabled）
 
-### 布局/卡片/业务 (8)
+### 布局/卡片/业务 (9)
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
@@ -76,8 +78,9 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-workorder-card](components/dd-workorder-card/dd-workorder-card.vue): 工单卡。title、type service/repair/feedback/decoration/todo、status、checklist、progress、time；emit check({item, done})/click
 - [dd-calendar](components/dd-calendar/dd-calendar.vue): 月历+时段选择（日期多选区间/禁选/时段格）
 - [dd-qrcode](components/dd-qrcode/dd-qrcode.vue): canvas 二维码（内容/尺寸/前景背景色/logo；前景背景色是库内仅有的硬编码色值例外）
+- [dd-submit-bar](components/dd-submit-bar/dd-submit-bar.vue): 提交订单栏（底部固定：合计价格+提交按钮+tip 提示）。price(分)/label/currency/decimalLength/suffixLabel、buttonText/buttonType/buttonColor/loading/disabled、tip/tipIcon、textAlign、placeholder/safeAreaInsetBottom；emit submit；slots top/tip/default/button（价格区由 dd-price 渲染）
 
-### 数据展示 (24)
+### 数据展示 (25)
 
 - [dd-tag](components/dd-tag/dd-tag.vue): 标签。type filled/outlined/dot、variant primary/accent/success/warning/error/info/default、size/round/closable/bgColor/color
 - [dd-stat-card](components/dd-stat-card/dd-stat-card.vue): 统计卡。variant 6 语义色、trend up/down/none、title/value/prefix/trendValue；emit click
@@ -100,8 +103,9 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-coupon](components/dd-coupon/dd-coupon.vue): 优惠券票券。amount/unit/unitPosition/limit/title/desc/time/actionText/shape/disabled；emit click
 - [dd-parse](components/dd-parse/dd-parse.vue): 富文本 HTML 渲染（H5 的 uni 时序问题已修为惰性初始化）
 - [dd-markdown](components/dd-markdown/dd-markdown.vue): Markdown 渲染（内置 marked.esm.mjs）
+- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix；颜色 inherit 跟随上下文；submit-bar 内部亦用它
 
-### 浮层反馈 (10)
+### 浮层反馈 (11)
 
 - [dd-modal](components/dd-modal/dd-modal.vue): 模态框。v-model:boolean、type dialog/bottom-sheet、title/width/showClose/closeOnClickModal
 - [dd-dialog](components/dd-dialog/dd-dialog.vue): 确认对话框（Vant Dialog 对齐）。title/message/theme round-button/showConfirmButton/showCancelButton/confirmColor
@@ -142,6 +146,7 @@ app.use(ui) // 89 个 dd-* 全局注册，模板直接写 <dd-xxx>
 | 确认弹窗 | dd-dialog（双按钮）/ dd-alert（单按钮轻提示） | dd-modal（自定义内容才用） |
 | 自定义内容弹层 | dd-popup（五方向）/ dd-modal（dialog/bottom-sheet） | — |
 | 选择菜单 | dd-action-sheet（动作）/ dd-picker（数据列） | — |
+| 分类选择 | dd-tree-select（两级同屏：左导航右子项）/ dd-cascader（多级逐级弹层） | — |
 | 列表项 | dd-cell（Vant Cell 语义）/ dd-list-cell（副标题行） | — |
 | 轻提示 | showToast 等函数（勿重复挂多个 dd-toast） | — |
 | 左滑删除 | dd-swipe-action；轮播才是 dd-swipe | — |

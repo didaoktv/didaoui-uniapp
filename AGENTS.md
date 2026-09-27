@@ -80,6 +80,6 @@ function onClick(e: Event) {
 
 ## 指针
 
-- Agent 快速索引：[`llms.txt`](./llms.txt)（llmstxt.org 约定；89 个组件清单、关键 API、易混组件选型速查）。新增/删除组件时同步该文件对应条目。
+- Agent 快速索引：[`llms.txt`](./llms.txt)（llmstxt.org 约定；95 个组件清单、关键 API、易混组件选型速查）。新增/删除组件时同步该文件对应条目。
 - 文档站与可视化调试：`../DidaoUI-uniapp-docs`（`npm run dev:h5` 起 h5-demo，vite alias 指向本库源码）；新组件/新 demo 在该仓库补页面。
 - 设计 token 数据源：`.design_library/didao-ktv/css.json`；组件承接性/补齐决策见 [`../ktv-system/docs/调研报告/DidaoUI组件承接性评估-20260822.md`](../ktv-system/docs/调研报告/DidaoUI组件承接性评估-20260822.md)
