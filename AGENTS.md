@@ -75,6 +75,7 @@ function onClick(e: Event) {
 
 - 提交前 `npm run type-check`（vue-tsc），必须零错误。
 - **发布只走 GitHub Actions**：推送 `v*` tag 自动对齐版本号并发布；**禁止手动 `npm publish`**（npm 不允许同版本重复发布，手动先行会弄炸 CI 发布）。
+- **package.json version 与最新发版 tag 同步**：每次打 `v*` tag 发版时，把 `package.json` 的 `version` 同步改为该 tag 对应数字（如 v1.4.0 → `"version": "1.4.0"`）；CI 发布时会以 tag 为准覆写，仓库内同步仅为保持源码可读。
 - `prepublishOnly` 会校验 `publishConfig.access === public`，勿移除。
 - 发布流程/Secrets/注意事项 → [`../ktv-system/docs/平行项目/DidaoUI-uniapp发布流程.md`](../ktv-system/docs/平行项目/DidaoUI-uniapp发布流程.md)
 
