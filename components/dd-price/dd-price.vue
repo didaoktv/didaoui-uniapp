@@ -52,7 +52,7 @@ const pricePair = computed<string[] | null>(() => {
 .dd-price {
   display: inline-flex;
   align-items: baseline;
-  // ponytail: 颜色跟随使用方（inherit），Vant 亦由上下文（如 submit-bar 红价）控制
+  // ponytail: 颜色跟随使用方（inherit），如 submit-bar 的红价由使用方控制
   color: inherit;
   font-weight: 600;
   line-height: 1;

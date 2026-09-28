@@ -46,7 +46,7 @@ app.use(ui) // 95 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-picker](components/dd-picker/dd-picker.vue): 列选择器，v-model
 - [dd-date-picker](components/dd-date-picker/dd-date-picker.vue): 日期选择器，v-model
 - [dd-cascader](components/dd-cascader/dd-cascader.vue): 级联选择
-- [dd-tree-select](components/dd-tree-select/dd-tree-select.vue): 分类选择（左侧导航+右侧子项，Vant TreeSelect 对齐）。items({text,disabled,dot,badge,children:[{id,text,disabled}]})、activeId 传数组开多选(配 max 上限)、height、selectedIcon；v-model:main-active-index / v-model:active-id；emit clickNav/clickItem；content/nav-text 插槽（内部复用 dd-sidebar）
+- [dd-tree-select](components/dd-tree-select/dd-tree-select.vue): 分类选择（左侧导航+右侧子项）。items({text,disabled,dot,badge,children:[{id,text,disabled}]})、activeId 传数组开多选(配 max 上限)、height、selectedIcon；v-model:main-active-index / v-model:active-id；emit clickNav/clickItem；content/nav-text 插槽（内部复用 dd-sidebar）
 - [dd-search-bar](components/dd-search-bar/dd-search-bar.vue): 搜索栏
 - [dd-upload](components/dd-upload/dd-upload.vue): 文件上传
 - [dd-icon](components/dd-icon/dd-icon.vue): 图标。name 对应 [icon-svg/](icon-svg/) 文件名；全集元数据 iconNames/iconGroups 从包根导出

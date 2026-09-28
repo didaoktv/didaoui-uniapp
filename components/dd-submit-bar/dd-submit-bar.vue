@@ -103,7 +103,7 @@ const slots = useSlots()
 
 const hasTip = computed(() => !!props.tip || !!slots.tip)
 
-// Vant 口径：price 单位为分，除以 100 转元交给 dd-price 渲染
+// price 单位为分，除以 100 转元交给 dd-price 渲染
 const priceYuan = computed(() => (typeof props.price === 'number' ? props.price / 100 : undefined))
 const hasPrice = computed(() => priceYuan.value !== undefined)
 
