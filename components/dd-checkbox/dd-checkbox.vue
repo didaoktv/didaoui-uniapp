@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   indeterminate: false,
 })
 
-// 必须配合 dd-checkbox-group 使用（vant/uview 同款约定）
+// 必须配合 dd-checkbox-group 使用
 const group = inject<{
   props: { modelValue: any[]; disabled: boolean }
   isMaxed: { value: boolean }

@@ -77,7 +77,7 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 
 ### 圆角
 
-2 / 4 / 8 / 12 / 16 / 9999 px (Vant 对齐小圆角)
+2 / 4 / 8 / 12 / 16 / 9999 px
 
 ### 间距
 
@@ -144,13 +144,13 @@ $dd-primary: #d32f2f;
 
 ## 新增业务组件（2026-08-22 纳入设计系统）
 
-> 新组件统一以主流组件库（Vant 等）同名/同类组件为 API 设计基准，符合 uni-app 多端规范，只消费上层 `scss/_variables.scss` 既有 token。
+> 新组件统一以主流组件库同名/同类组件为 API 设计基准，符合 uni-app 多端规范，只消费上层 `scss/_variables.scss` 既有 token。
 
 | 组件 | 用途 | 参考基准 |
 |------|------|---------|
-| `dd-bill-detail` | 账单明细（商品项/小计/合计/支付状态/操作按钮 slot） | Vant `Card` + GoodsAction 聚合 |
-| `dd-workorder-card` | 工单条目卡片（类型/状态/进度/布置 checklist/完成确认） | Vant `Card` + `Tag` + Checklist |
-| `dd-calendar` | 月历 + 时段（日期多选区间/禁选/时段格） | Vant `Calendar` + 主流日历组件 |
+| `dd-bill-detail` | 账单明细（商品项/小计/合计/支付状态/操作按钮 slot） | 卡片 + 底部操作条聚合 |
+| `dd-workorder-card` | 工单条目卡片（类型/状态/进度/布置 checklist/完成确认） | 卡片 + 标签 + 清单聚合 |
+| `dd-calendar` | 月历 + 时段（日期多选区间/禁选/时段格） | 主流日历组件 |
 | `dd-qrcode` | 二维码渲染（canvas，内容/尺寸/前景色/背景色/logo） | 主流二维码组件 API |
 
 ## License

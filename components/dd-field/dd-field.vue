@@ -388,7 +388,7 @@ function scrollIntoView() {
   uni.pageScrollTo({ selector: `.${rootClass}`, duration: 300 })
 }
 
-/** 手动聚焦/失焦（vant focus()/blur() 对齐；blur 经 uni.hideKeyboard 收起键盘） */
+/** 手动聚焦/失焦（blur 经 uni.hideKeyboard 收起键盘） */
 const focusState = ref(false)
 
 function focusField() {
@@ -426,7 +426,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
 @import '../../scss/variables';
 @import '../../scss/mixins';
 
-// 样式对齐 vant 4 Field（cell：padding 10px 16px / line-height 24px / 16px 字号 / label 6.2em 主文本色）
+// 样式基准（cell：padding 10px 16px / line-height 24px / 16px 字号 / label 6.2em 主文本色）
 // 颜色全部走 $dd-* 主题 token；1px 发丝线为刻意的例外
 .dd-field {
   position: relative;
@@ -442,7 +442,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   color: var(--dd-text-primary, #{$dd-text-primary});
   background: var(--dd-bg-elevated, #{$dd-bg-elevated});
 
-  // vant 式发丝线：两侧缩进 32rpx
+  // 发丝线：两侧缩进 32rpx
   &::after {
     position: absolute;
     box-sizing: border-box;
@@ -626,7 +626,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     text-align: right;
   }
 
-  // error：输入文字与 placeholder 变红，label 不变（vant 行为）
+  // error：输入文字与 placeholder 变红，label 不变
   &--error {
     .dd-field__control,
     .dd-field__control::placeholder {
@@ -634,7 +634,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     }
   }
 
-  // disabled：仅文字变灰，不整体降透明度（vant 行为）
+  // disabled：仅文字变灰，不整体降透明度
   &--disabled {
     .dd-field__label,
     .dd-field__left-icon {

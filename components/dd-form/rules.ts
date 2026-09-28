@@ -1,5 +1,5 @@
 /**
- * dd-form 轻量校验引擎（vant runRules 思想，自研无依赖）
+ * dd-form 轻量校验引擎（自研无依赖）
  * 规则分散在各 dd-field 上，dd-form 只做调度。
  */
 
@@ -36,7 +36,7 @@ export interface DdFieldRule {
   pattern?: RegExp
   /**
    * 自定义校验：返回 true=通过，false=用 message 报错，
-   * 返回 string=直接以该字符串为错误消息（vant 语义）；支持 Promise
+   * 返回 string=直接以该字符串为错误消息；支持 Promise
    */
   validator?: (value: any) => boolean | string | Promise<boolean | string>
   /** 触发时机；缺省 = 任意触发都执行 */

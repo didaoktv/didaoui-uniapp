@@ -198,7 +198,7 @@ function onClick(e: Event) {
   color: var(--dd-error-contrast, #{$dd-error-contrast});
 }
 
-// plain：线框按钮，透明底 + 保留各 type 的主题色文字/描边（对齐 Vant 语义）
+// plain：线框按钮，透明底 + 保留各 type 的主题色文字/描边
 .dd-btn--plain {
   background: transparent;
   border-color: currentColor;
