@@ -16,7 +16,7 @@
 ## 消费方接入速查
 
 ```ts
-// main.ts —— 三端（uniapp-staff/boss/customer）已统一此接法
+// main.ts —— 两端（uniapp-staff/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
 app.use(ui) // 96 个 dd-* 全局注册，模板直接写 <dd-xxx>
 

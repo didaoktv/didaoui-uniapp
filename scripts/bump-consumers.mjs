@@ -1,4 +1,4 @@
-// 打 tag 发版后，把 ktv-system 三端的 @didaoktv/didaoui-uniapp 版本号对齐到本次发布版本。
+// 打 tag 发版后，把 ktv-system 两端（uniapp-customer / uniapp-staff）的 @didaoktv/didaoui-uniapp 版本号对齐到本次发布版本。
 // 用法：推完 tag 后立即 npm run bump:consumers（省略参数自动取最新 git tag；也可显式 npm run bump:consumers -- 1.3.4）。
 // 脚本会先轮询等 npm 上出现该版本（即 CI 发布完成）再改依赖，锁文件才能解析成功。
 // 注意：pnpm install --lockfile-only 需在用户终端执行（沙箱禁写 .pnpm-store），改完由人工在 ktv-system 提交。
@@ -37,7 +37,8 @@ if (!npmHasVersion()) {
   }
 }
 
-for (const app of ['uniapp-boss', 'uniapp-customer', 'uniapp-staff']) {
+// uniapp-boss 已弃用移除，仅保留现存消费方：uniapp-customer / uniapp-staff
+for (const app of ['uniapp-customer', 'uniapp-staff']) {
   const f = join(ktvRoot, 'apps', app, 'package.json')
   const pkg = JSON.parse(readFileSync(f, 'utf8'))
   pkg.dependencies[PKG] = `^${version}`
@@ -47,4 +48,4 @@ for (const app of ['uniapp-boss', 'uniapp-customer', 'uniapp-staff']) {
 
 // 同步 pnpm-lock.yaml（只更新锁文件，不真正装依赖）
 execSync('pnpm install --lockfile-only', { cwd: ktvRoot, stdio: 'inherit' })
-console.log('完成。请在 ktv-system 自行提交三端 package.json 与 pnpm-lock.yaml。')
+console.log('完成。请在 ktv-system 自行提交两端 package.json 与 pnpm-lock.yaml。')

@@ -1,6 +1,6 @@
 # AGENTS.md — DidaoUI-uniapp 组件库编码守则
 
-> 适用：本组件库仓库。消费方（ktv-system 三端 UniApp 应用）的 UI 使用规则见 [`ktv-system/packages/uniapp-shared/AGENTS.md`](../ktv-system/packages/uniapp-shared/AGENTS.md)。npm 包名 `@didaoktv/didaoui-uniapp`。
+> 适用：本组件库仓库。消费方（ktv-system 两端 UniApp 应用）的 UI 使用规则见 [`ktv-system/packages/uniapp-shared/AGENTS.md`](../ktv-system/packages/uniapp-shared/AGENTS.md)。npm 包名 `@didaoktv/didaoui-uniapp`。
 
 ## 技术栈与形态
 
