@@ -12,11 +12,11 @@
   >
     <view class="dd-sidebar-item__text">
       <slot name="title">{{ title }}</slot>
+      <view v-if="badge" class="dd-sidebar-item__badge">
+        <text class="dd-sidebar-item__badge-text">{{ badge }}</text>
+      </view>
+      <view v-else-if="dot" class="dd-sidebar-item__dot"></view>
     </view>
-    <view v-if="badge" class="dd-sidebar-item__badge">
-      <text class="dd-sidebar-item__badge-text">{{ badge }}</text>
-    </view>
-    <view v-else-if="dot" class="dd-sidebar-item__dot"></view>
   </view>
 </template>
 
@@ -91,23 +91,26 @@ function onClick() {
   }
 
   &--disabled {
+    // ponytail: 用透明度淡化，随主题自适应；文字对比度随之下降以强化「禁用」观感
+    opacity: 0.45;
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__text {
+    display: inline-flex;
+    align-items: center;
     @include dd-ellipsis(1);
   }
 
   &__badge {
-    position: absolute;
-    top: $dd-space-2;
-    right: $dd-space-2;
     min-width: $dd-space-4;
     height: $dd-space-4;
+    margin-left: $dd-space-1;
     padding: 0 $dd-space-1;
     border-radius: $dd-radius-full;
     background: var(--dd-error, #{$dd-error});
     @include dd-flex-center;
+    flex-shrink: 0;
   }
 
   &__badge-text {
@@ -117,11 +120,10 @@ function onClick() {
   }
 
   &__dot {
-    position: absolute;
-    top: $dd-space-2;
-    right: $dd-space-2;
+    flex-shrink: 0;
     width: $dd-space-2;
     height: $dd-space-2;
+    margin-left: $dd-space-1;
     border-radius: 50%;
     background: var(--dd-error, #{$dd-error});
   }
