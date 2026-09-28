@@ -164,12 +164,10 @@ function onItemClick(child: TreeSelectChild) {
   }
 
   &__item {
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     min-height: 96rpx;
-    padding: 0 88rpx 0 $dd-space-4;
+    padding: 0 $dd-space-4;
     font-weight: 600;
     color: var(--dd-text-primary, #{$dd-text-primary});
 
@@ -178,7 +176,8 @@ function onItemClick(child: TreeSelectChild) {
     }
 
     &--active {
-      color: var(--dd-primary, #{$dd-primary});
+      background: var(--dd-primary, #{$dd-primary});
+      color: $dd-neutral-50;
     }
 
     &--disabled {
@@ -197,12 +196,9 @@ function onItemClick(child: TreeSelectChild) {
   }
 
   &__selected {
-    position: absolute;
-    top: 50%;
-    right: $dd-space-4;
-    transform: translateY(-50%);
+    margin-left: $dd-space-2;
     font-size: 32rpx;
-    color: var(--dd-primary, #{$dd-primary});
+    color: $dd-neutral-50;
   }
 }
 </style>
