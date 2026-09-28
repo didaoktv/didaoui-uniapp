@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，95 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，96 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -18,7 +18,7 @@
 ```ts
 // main.ts —— 三端（uniapp-staff/boss/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
-app.use(ui) // 95 个 dd-* 全局注册，模板直接写 <dd-xxx>
+app.use(ui) // 96 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 // App.vue <style> —— 运行时主题（不引入则组件用 SCSS 兜底值渲染）
 // @import '@didaoktv/didaoui-uniapp/scss/theme';
@@ -68,10 +68,11 @@ app.use(ui) // 95 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-dropdown-menu](components/dd-dropdown-menu/dd-dropdown-menu.vue) / [dd-dropdown-item](components/dd-dropdown-item/dd-dropdown-item.vue): 下拉筛选菜单
 - [dd-sidebar](components/dd-sidebar/dd-sidebar.vue) / [dd-sidebar-item](components/dd-sidebar-item/dd-sidebar-item.vue): 侧边栏导航（垂直一级导航；tree-select 左列同款，v-model 索引、title/dot/badge/disabled）
 
-### 布局/卡片/业务 (9)
+### 布局/卡片/业务 (10)
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
+- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、thumb/title/desc/price/originPrice/tag/num/disabled；价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom 插槽
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
