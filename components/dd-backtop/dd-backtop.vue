@@ -2,7 +2,7 @@
   <view
     class="dd-backtop"
     :class="{ 'dd-backtop--show': visible }"
-    :style="{ right: right + 'rpx', bottom: bottom + 'rpx' }"
+    :style="{ right: right + 'rpx', bottom: bottom + 'rpx', zIndex: zIndexConfig.sticky + 1 }"
     @click="onClick"
   >
     <slot name="icon">
@@ -14,6 +14,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js：sticky 档 + 1，浮钮须盖住吸顶元素
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   scrollTop?: number
@@ -47,7 +49,6 @@ function onClick() {
 
 .dd-backtop {
   position: fixed;
-  z-index: $dd-z-index-fixed;
   width: 80rpx;
   height: 80rpx;
   border-radius: $dd-radius-full;

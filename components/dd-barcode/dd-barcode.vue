@@ -26,6 +26,7 @@
       v-if="!useCanvas && calcSizeDone"
       ref="barcodeImageCanvas"
       class="dd-barcode__hidden-canvas"
+      :style="{ zIndex: zcBase }"
       :canvas-id="tempCanvasId"
       :width="canvasWidth"
       :height="canvasHeight"
@@ -36,6 +37,8 @@
 
 <script>
 import { nextTick } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（离屏隐藏画布归 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 export default {
   name: 'dd-barcode',
@@ -156,6 +159,8 @@ export default {
   },
   data() {
     return {
+      // 离屏隐藏画布层级（base 档，Options API 经 data 暴露给模板）
+      zcBase: zIndexConfig.base,
       canvasId: 'barcode-' + Math.random().toString(36).substr(2, 9),
       tempCanvasId: 'barcode-temp-' + Math.random().toString(36).substr(2, 9),
       barcodeImage: '',
@@ -1012,7 +1017,6 @@ export default {
   position: fixed;
   top: -10000px;
   left: -10000px;
-  z-index: -1;
 }
 
 .error-container {

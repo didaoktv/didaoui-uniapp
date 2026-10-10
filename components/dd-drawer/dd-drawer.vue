@@ -4,12 +4,13 @@
     <view
       class="dd-drawer__mask"
       :class="{ 'dd-drawer__mask--show': modelValue }"
+      :style="{ zIndex: zIndexConfig.dialogMask }"
       @click="onMaskClick"
     ></view>
     <view
       class="dd-drawer__panel"
       :class="[`dd-drawer__panel--${position}`, { 'dd-drawer__panel--show': modelValue }]"
-      :style="{ width: width }"
+      :style="{ width: width, zIndex: zIndexConfig.dialog }"
     >
       <view v-if="$slots.header" class="dd-drawer__header">
         <slot name="header"></slot>
@@ -43,6 +44,8 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（对话框族与 dd-dialog 同档：dialogMask/dialog）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
@@ -106,7 +109,6 @@ function onMaskClick() {
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   visibility: hidden;
-  z-index: 1000;
   @include dd-transition(opacity 0.3s ease, visibility 0.3s ease);
 
   &--show {
@@ -123,7 +125,6 @@ function onMaskClick() {
   flex-direction: column;
   background: var(--dd-surface, #{$dd-surface});
   overflow: hidden;
-  z-index: 1001;
   // ponytail: cubic-bezier 取 iOS 标准滑出曲线，遮罩淡入同期 0.3s，合上略快收尾
   transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;

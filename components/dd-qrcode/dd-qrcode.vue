@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <view class="dd-qrcode"
           :id="rootId"
           :style="{
@@ -496,13 +496,6 @@ export default {
 
     &__content {
         position: relative;
-
-        &__canvas {
-            position: fixed;
-            top: -99999rpx;
-            left: -99999rpx;
-            z-index: -99999;
-        }
     }
 }
 </style>

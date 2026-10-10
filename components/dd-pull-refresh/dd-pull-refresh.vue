@@ -3,9 +3,9 @@
     <view
       class="dd-pull-refresh__track"
       :class="{ 'dd-pull-refresh__track--anim': !pulling }"
-      :style="{ transform: `translateY(${distance}px)` }"
+      :style="{ transform: `translateY(${distance}px)`, zIndex: zIndexConfig.base + 1 }"
     >
-      <view class="dd-pull-refresh__head" :style="{ height: headHeightPx + 'px' }">
+      <view class="dd-pull-refresh__head" :style="{ height: headHeightPx + 'px', zIndex: zIndexConfig.base }">
         <view class="dd-pull-refresh__head-inner">
           <view v-if="status === 'loading'" class="dd-pull-refresh__spinner"></view>
           <text class="dd-pull-refresh__text">{{ statusText }}</text>
@@ -32,6 +32,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（内容层 base 档内 +1，下拉头垫底取 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 type Status = 'pulling' | 'loosing' | 'loading' | 'success'
 
@@ -182,7 +184,6 @@ watch(
   &__track {
     position: relative;
     height: 100%;
-    z-index: 1;
     background: var(--dd-bg, #{$dd-bg});
 
     &--anim {
@@ -197,7 +198,6 @@ watch(
     right: 0;
     overflow: hidden;
     transform: translateY(-100%);
-    z-index: 0;
   }
 
   &__head-inner {

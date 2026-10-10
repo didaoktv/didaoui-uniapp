@@ -1,7 +1,7 @@
 <template>
   <view class="dd-swipe-action" :class="{ 'dd-swipe-action--disabled': disabled }">
     <!-- 左侧操作层 (右滑露出) -->
-    <view class="dd-swipe-action__actions dd-swipe-action__actions--left" :style="{ width: leftWidthPx + 'px' }">
+    <view class="dd-swipe-action__actions dd-swipe-action__actions--left" :style="{ width: leftWidthPx + 'px', zIndex: zIndexConfig.base }">
       <view
         v-for="(action, i) in leftActions"
         :key="'l' + i"
@@ -14,7 +14,7 @@
       </view>
     </view>
     <!-- 右侧操作层 (左滑露出) -->
-    <view class="dd-swipe-action__actions dd-swipe-action__actions--right" :style="{ width: rightWidthPx + 'px' }">
+    <view class="dd-swipe-action__actions dd-swipe-action__actions--right" :style="{ width: rightWidthPx + 'px', zIndex: zIndexConfig.base }">
       <view
         v-for="(action, i) in rightActions"
         :key="'r' + i"
@@ -30,7 +30,7 @@
     <view
       class="dd-swipe-action__content"
       :class="{ 'dd-swipe-action__content--anim': animating }"
-      :style="{ transform: `translateX(${translateX}px)` }"
+      :style="{ transform: `translateX(${translateX}px)`, zIndex: zIndexConfig.base + 1 }"
       @touchstart="onTouchStart"
       @touchmove.stop.prevent="onTouchMove"
       @touchend="onTouchEnd"
@@ -44,6 +44,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（操作层 base 档，内容层档内 +1 盖住操作层）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface SwipeAction {
   text?: string
@@ -187,7 +189,6 @@ defineExpose({ close })
     top: 0;
     bottom: 0;
     display: flex;
-    z-index: 0;
 
     &--left {
       left: 0;
@@ -234,7 +235,6 @@ defineExpose({ close })
 
   &__content {
     position: relative;
-    z-index: 1;
     width: 100%;
     background: var(--dd-bg-elevated, #{$dd-bg-elevated});
     transform: translateX(0);

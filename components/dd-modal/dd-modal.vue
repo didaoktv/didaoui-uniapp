@@ -10,6 +10,7 @@ let activeModalClose: (() => void) | null = null
       v-if="visible"
       class="dd-modal__mask"
       :class="{ 'dd-modal__mask--show': showClass }"
+      :style="{ zIndex: zIndexConfig.dialogMask }"
       @click="onMaskClick"
     ></view>
 
@@ -18,7 +19,7 @@ let activeModalClose: (() => void) | null = null
       v-if="visible && type === 'dialog'"
       class="dd-modal__dialog"
       :class="{ 'dd-modal__dialog--show': showClass }"
-      :style="{ width: widthValue }"
+      :style="{ width: widthValue, zIndex: zIndexConfig.dialog }"
     >
       <view v-if="$slots.header || title" class="dd-modal__header">
         <slot name="header">
@@ -41,6 +42,7 @@ let activeModalClose: (() => void) | null = null
       v-else-if="visible"
       class="dd-modal__sheet"
       :class="{ 'dd-modal__sheet--show': showClass }"
+      :style="{ zIndex: zIndexConfig.dialog }"
     >
       <view class="dd-modal__handle"></view>
       <view v-if="$slots.header || title" class="dd-modal__header">
@@ -64,6 +66,8 @@ let activeModalClose: (() => void) | null = null
 import { computed, ref, watch, onUnmounted, nextTick } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（对话框族与 dd-dialog 同档：dialogMask/dialog）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
@@ -177,7 +181,6 @@ onUnmounted(() => {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     opacity: 0;
-    z-index: 1000;
     transition: opacity 0.25s ease;
 
     &--show {
@@ -192,7 +195,6 @@ onUnmounted(() => {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
-    z-index: 1001;
     max-width: 720rpx; // 360px 上限
     max-height: 80vh;
     background: var(--dd-bg-popup, #{$dd-bg-popup});
@@ -217,7 +219,6 @@ onUnmounted(() => {
     right: 0;
     bottom: 0;
     transform: translateY(100%);
-    z-index: 1001;
     max-height: 85vh;
     background: var(--dd-bg-popup, #{$dd-bg-popup});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});

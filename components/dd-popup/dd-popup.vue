@@ -19,7 +19,7 @@
       ]"
       :style="panelStyle"
     >
-      <view v-if="closeable" class="dd-popup__close" :class="`dd-popup__close--${closeIconPosition}`" @click="onCloseIcon">
+      <view v-if="closeable" class="dd-popup__close" :class="`dd-popup__close--${closeIconPosition}`" :style="{ zIndex: zIndexConfig.base + 1 }" @click="onCloseIcon">
         <dd-icon name="cross" />
       </view>
       <view v-if="position === 'bottom' && safeAreaInsetBottom" class="dd-popup__safe-bottom"></view>
@@ -33,6 +33,8 @@
 import { computed, ref, watch, onUnmounted, nextTick } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（遮罩 overlay 档、面板 popup 档，不对外暴露）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
@@ -46,7 +48,6 @@ interface Props {
   width?: string
   height?: string
   closeOnClickOverlay?: boolean
-  zIndex?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -61,7 +62,6 @@ const props = withDefaults(defineProps<Props>(), {
   width: '',
   height: '',
   closeOnClickOverlay: true,
-  zIndex: 2000,
 })
 
 const emit = defineEmits<{
@@ -74,12 +74,12 @@ const emit = defineEmits<{
   (e: 'click-close-icon'): void
 }>()
 
-const overlayZIndex = computed(() => props.zIndex)
-const panelZIndex = computed(() => props.zIndex + 1)
+const overlayZIndex = zIndexConfig.overlay
+const panelZIndex = zIndexConfig.popup
 
 const panelStyle = computed(() => {
   const s: Record<string, string> = {
-    zIndex: String(panelZIndex.value),
+    zIndex: String(panelZIndex),
   }
   if (props.width && (props.position === 'left' || props.position === 'right')) {
     s.width = props.width
@@ -232,7 +232,6 @@ onUnmounted(() => {
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: 44rpx;
     @include dd-flex-center;
-    z-index: 2;
 
     &--top-left { top: $dd-space-2; left: $dd-space-2; }
     &--top-right { top: $dd-space-2; right: $dd-space-2; }

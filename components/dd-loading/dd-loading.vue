@@ -1,9 +1,9 @@
 <template>
   <!-- 仅全屏分支传送；inline 分支必须留在原位（传送会破坏布局流） -->
   <dd-portal v-if="fullscreen">
-  <view class="dd-loading dd-loading--fullscreen" :style="{ zIndex: 9999 }">
+  <view class="dd-loading dd-loading--fullscreen" :style="{ zIndex: zIndexConfig.loading }">
     <view class="dd-loading__mask"></view>
-    <view class="dd-loading__box">
+    <view class="dd-loading__box" :style="{ zIndex: zIndexConfig.base }">
       <view class="dd-loading__core" :class="[`dd-loading__core--${type}`, `dd-loading__core--${size}`]" :style="coreStyle">
         <template v-if="type === 'spinner'">
           <view class="dd-loading__spinner"></view>
@@ -40,6 +40,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（压过 dialog/popup，但不压 toast）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   type?: 'spinner' | 'dots' | 'pulse'
@@ -93,7 +95,6 @@ const coreStyle = computed(() => (props.color ? { '--dd-loading-color': props.co
 
   &__box {
     position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;

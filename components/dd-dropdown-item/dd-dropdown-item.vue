@@ -50,6 +50,8 @@
 import { computed, inject, ref } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（下拉面板取 base 档内 +1，盖住 bar 与遮罩）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface DropdownOption {
   text: string
@@ -93,9 +95,9 @@ const panelStyle = computed(() => {
   if (!ctx) return {}
   const winH = uni.getWindowInfo?.().windowHeight || 667
   if (direction.value === 'down') {
-    return { top: ctx.barRect.bottom + 'px', left: '0', right: '0' }
+    return { top: ctx.barRect.bottom + 'px', left: '0', right: '0', zIndex: zIndexConfig.base + 1 }
   }
-  return { bottom: winH - ctx.barRect.top + 'px', left: '0', right: '0' }
+  return { bottom: winH - ctx.barRect.top + 'px', left: '0', right: '0', zIndex: zIndexConfig.base + 1 }
 })
 
 function onTrigger() {
@@ -149,7 +151,6 @@ function onSelect(opt: DropdownOption) {
 
   &__panel {
     position: fixed;
-    z-index: 10;
     background: var(--dd-surface, #{$dd-surface});
     max-height: 50vh;
     overflow: hidden;
@@ -170,7 +171,6 @@ function onSelect(opt: DropdownOption) {
       transform: translateY(0);
       opacity: 1;
       visibility: visible;
-      z-index: 11;
       pointer-events: auto;
     }
   }

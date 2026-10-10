@@ -11,6 +11,7 @@
       'dd-tabbar--border': border,
       'dd-tabbar--safe': safeAreaInsetBottom,
     }"
+    :style="{ zIndex: zIndexConfig.sticky }"
   >
     <slot></slot>
   </view>
@@ -18,6 +19,8 @@
 
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（fixed 时吸底层级取 sticky 档；非 fixed 时为 static，z-index 天然失效）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: string | number
@@ -96,7 +99,6 @@ provide('ddTabbar', {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: $dd-z-index-sticky;
   }
 }
 

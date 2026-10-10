@@ -9,7 +9,7 @@
     :style="couponStyle"
     @click="handleClick"
   >
-    <view class="dd-coupon__content">
+    <view class="dd-coupon__content" :style="{ zIndex: zIndexConfig.base + 1 }">
       <!-- 左侧金额区域：unit + amount 基线对齐，limit 换行在下 -->
       <view class="dd-coupon__amount">
         <view class="dd-coupon__amount-main">
@@ -50,7 +50,7 @@
     </view>
 
     <!-- 红包顶部金条纹 -->
-    <view v-if="shape === 'envelope'" class="dd-coupon__stripe"></view>
+    <view v-if="shape === 'envelope'" class="dd-coupon__stripe" :style="{ zIndex: zIndexConfig.base }"></view>
 
     <!-- 默认插槽，可用于添加额外内容 -->
     <slot></slot>
@@ -59,6 +59,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（内容层 base 档内 +1，打孔伪元素经 CSS 变量透传 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   /** 金额 */
@@ -114,6 +116,8 @@ const couponStyle = computed(() => {
   const style: Record<string, string> = {}
   if (props.bgColor) style.background = props.bgColor
   if (props.color) style.color = props.color
+  // 伪元素（::before/::after 打孔圆）无法 :style 注入，经 CSS 变量透传档位值
+  style['--dd-coupon-notch-z'] = String(zIndexConfig.base)
   return style
 })
 
@@ -148,7 +152,7 @@ function handleClick() {
       height: 48rpx;
       background: var(--dd-bg, #{$dd-bg});
       border-radius: 50%;
-      z-index: 1;
+      z-index: var(--dd-coupon-notch-z);
     }
 
     &::after {
@@ -161,7 +165,7 @@ function handleClick() {
       height: 48rpx;
       background: var(--dd-bg, #{$dd-bg});
       border-radius: 50%;
-      z-index: 1;
+      z-index: var(--dd-coupon-notch-z);
     }
   }
 
@@ -201,7 +205,6 @@ function handleClick() {
     justify-content: space-between;
     padding: 0 $dd-space-4;
     position: relative;
-    z-index: 2;
     box-sizing: border-box;
   }
 
@@ -312,7 +315,6 @@ function handleClick() {
       var(--dd-primary, #{$dd-primary}) 10rpx,
       var(--dd-primary, #{$dd-primary}) 20rpx
     );
-    z-index: 1;
   }
 
   &--envelope .dd-coupon__content {

@@ -65,11 +65,6 @@ export const props = defineMixin({
             type: Boolean,
             default: () => defProps.keyboard.overlay
         },
-        // z-index值
-        zIndex: {
-            type: [String, Number],
-            default: () => defProps.keyboard.zIndex
-        },
         // 取消按钮的文字
         cancelText: {
             type: String,

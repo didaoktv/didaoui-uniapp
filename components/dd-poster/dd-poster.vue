@@ -1,10 +1,11 @@
 <template>
 	<view class="dd-poster">
 		<!-- canvas用于绘制海报 -->
-		<view v-if="showCanvas" class="dd-poster__renderer">
+		<view v-if="showCanvas" class="dd-poster__renderer" :style="{ zIndex: zcBase }">
 			<dd-canvas
 				ref="posterCanvas"
 				class="dd-poster__hidden-canvas"
+				:style="{ zIndex: zcBase }"
 				:canvas-id="canvasId"
 				:width="canvasWidth"
 				:height="canvasHeight"
@@ -13,7 +14,7 @@
 			</dd-canvas>
 		</view>
 		<!-- 隐藏的二维码组件，用于生成二维码图片 -->
-		<view class="dd-poster__renderer">
+		<view class="dd-poster__renderer" :style="{ zIndex: zcBase }">
 			<dd-qrcode
 				ref="qrCode"
 				:val="qrCodeValue"
@@ -24,6 +25,7 @@
 				background="#ffffff"
 				foreground="#000000"
 				:class="['dd-poster__hidden-qrcode', qrCodeShow ? '' : 'dd-poster__hidden-qrcode--hidden']"
+				:style="{ zIndex: zcBase }"
 			/>
 		</view>
 	</view>
@@ -48,6 +50,8 @@
 import {
 	rpx2px
 } from '../../libs/function/index.js';
+// z-index 统一取 libs/config/zIndex.js（离屏隐藏容器归 base 档，Options API 经 data 暴露给模板）
+import zIndexConfig from '../../libs/config/zIndex.js';
 export default {
 	name: 'dd-poster',
 	props: {
@@ -58,6 +62,8 @@ export default {
 	},
 	data() {
 		return {
+			// 离屏隐藏容器层级（base 档）
+			zcBase: zIndexConfig.base,
 			canvasId: 'dd-poster-canvas-' + Date.now(),
 			showCanvas: false,
 			canvasWidth: 0,
@@ -656,7 +662,6 @@ export default {
 		width: 1px;
 		height: 1px;
 		overflow: hidden;
-		z-index: -1;
 		opacity: 0.01;
 		pointer-events: none;
 	}
@@ -670,22 +675,19 @@ export default {
 		width: 1px;
 		height: 1px;
 		overflow: hidden;
-		z-index: -1;
 	}
 
 	&__hidden-canvas {
 		position: fixed;
 		top: -10000px;
 		left: -10000px;
-		z-index: -1;
 	}
-	
+
 	&__hidden-qrcode {
 		position: fixed;
 		top: -10000px;
 		left: -10000px;
-		z-index: -1;
-		
+
 		&--hidden {
 			display: none;
 		}

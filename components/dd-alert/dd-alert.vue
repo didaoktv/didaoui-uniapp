@@ -4,9 +4,10 @@
     <view
       class="dd-alert__mask"
       :class="{ 'dd-alert__mask--show': modelValue }"
+      :style="{ zIndex: zIndexConfig.dialogMask }"
       @click="onMaskClick"
     ></view>
-    <view class="dd-alert__card" :class="{ 'dd-alert__card--show': modelValue }">
+    <view class="dd-alert__card" :class="{ 'dd-alert__card--show': modelValue }" :style="{ zIndex: zIndexConfig.dialog }">
       <view class="dd-alert__icon" :class="[`dd-alert__icon--${type}`]">
         <dd-icon :name="iconName" class="dd-alert__icon-text" />
       </view>
@@ -29,6 +30,8 @@
 import { computed } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（对话框族与 dd-dialog 同档：dialogMask/dialog）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 type AlertType = 'info' | 'success' | 'warning' | 'error' | 'confirm'
 
@@ -103,7 +106,6 @@ function onMaskClick() {
     background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
-    z-index: 1000;
     @include dd-transition(opacity 0.25s, visibility 0.25s);
 
     &--show {
@@ -119,7 +121,6 @@ function onMaskClick() {
     transform: translate(-50%, -50%) scale(0.9);
     opacity: 0;
     visibility: hidden;
-    z-index: 1001;
     width: 560rpx;
     background: var(--dd-bg-elevated, #{$dd-bg-elevated});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});

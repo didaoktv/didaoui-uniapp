@@ -25,6 +25,8 @@
 
 <script setup lang="ts">
 import { computed, provide } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（透明点击遮罩 overlay 档、面板 popup 档，不对外暴露）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
@@ -33,7 +35,6 @@ interface Props {
   closeOnClickAction?: boolean
   closeOnClickOverlay?: boolean
   offset?: number
-  zIndex?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -43,7 +44,6 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnClickAction: true,
   closeOnClickOverlay: true,
   offset: 16,
-  zIndex: 2000,
 })
 
 const emit = defineEmits<{
@@ -53,11 +53,11 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const maskZIndex = computed(() => props.zIndex - 1)
+const maskZIndex = zIndexConfig.overlay
 
 const panelStyle = computed(() => {
   const offsetRpx = `${props.offset}rpx`
-  const s: Record<string, string> = { zIndex: String(props.zIndex) }
+  const s: Record<string, string> = { zIndex: String(zIndexConfig.popup) }
   // 偏移通过 margin 表达，避免覆盖 transform
   if (props.placement === 'top') s.marginBottom = offsetRpx
   if (props.placement === 'bottom') s.marginTop = offsetRpx
@@ -118,7 +118,6 @@ provide('ddPopover', {
     border-radius: $dd-radius-lg;
     box-shadow: var(--dd-shadow-2, #{$dd-shadow-2});
     overflow: visible;
-    z-index: 2000;
 
     &--light {
       background: var(--dd-bg-popup, #{$dd-bg-popup});

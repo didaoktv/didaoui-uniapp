@@ -7,7 +7,6 @@
 	    position="bottom"
 	    :safe-area-inset-bottom="safeAreaInsetBottom"
 	    @close="popupClose"
-	    :z-index="zIndex"
 	>
 	<view class="dd-keyboard">
 			<slot />
@@ -74,7 +73,6 @@
 	 * @property {Boolean}			closeOnClickOverlay	是否允许点击遮罩收起键盘 （默认 true ）
 	 * @property {Boolean}			show				控制键盘的弹出与收起（默认 false ）
 	 * @property {Boolean}			overlay				是否显示遮罩 （默认 true ）
-	 * @property {String | Number}	zIndex				弹出键盘的z-index值 （默认 1075 ）
 	 * @property {String}			cancelText			取消按钮的文字 （默认 '取消' ）
 	 * @property {String}			confirmText			确认按钮的文字 （默认 '确认' ）
 	 * @property {Object}			customStyle			自定义样式，对象形式

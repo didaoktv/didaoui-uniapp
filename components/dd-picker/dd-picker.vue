@@ -1,8 +1,8 @@
 <template>
   <dd-portal>
   <view class="dd-picker" :class="{ 'dd-picker--open': show }">
-    <view class="dd-picker__mask" @click="onMaskClick"></view>
-    <view class="dd-picker__sheet">
+    <view class="dd-picker__mask" :style="{ zIndex: zIndexConfig.overlay }" @click="onMaskClick"></view>
+    <view class="dd-picker__sheet" :style="{ zIndex: zIndexConfig.popup }">
       <view class="dd-picker__toolbar">
         <text class="dd-picker__cancel" @click="onCancel">取消</text>
         <text class="dd-picker__title">{{ title }}</text>
@@ -33,6 +33,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（picker 底部面板：overlay/popup 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface PickerItem {
   text: string
@@ -146,7 +148,6 @@ function onConfirm() {
   &__mask {
     position: fixed;
     inset: 0;
-    z-index: $dd-z-index-overlay;
     background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     pointer-events: none;
@@ -158,7 +159,6 @@ function onConfirm() {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: $dd-z-index-popup;
     background: var(--dd-bg-popup, #{$dd-bg-popup});
     border-radius: $dd-radius-lg $dd-radius-lg 0 0;
     transform: translateY(100%);

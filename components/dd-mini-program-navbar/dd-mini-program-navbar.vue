@@ -51,6 +51,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（自定义导航吸顶层级取 sticky 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   variant?: 'default' | 'search' | 'custom'
@@ -121,7 +123,7 @@ function info_windowWidth(): number {
   }
 }
 
-const navStyle = computed(() => ({}))
+const navStyle = computed(() => ({ zIndex: zIndexConfig.sticky }))
 
 const placeholderStyle = 'color: #9E9E9E; font-size: 14px;'
 
@@ -146,7 +148,7 @@ function onSearchConfirm(e: any) {
   @include dd-glass;
   border-bottom: 1px solid var(--dd-glass-border, #{$dd-glass-border});
   position: relative;
-  z-index: $dd-z-index-fixed;
+  /* z-index 由模板注入（libs/config/zIndex.js sticky 档） */
 
   &--transparent {
     background: transparent !important;

@@ -1,6 +1,6 @@
 <template>
   <dd-portal>
-  <view class="dd-toast" :class="[`dd-toast--${toastState.position}`, { 'dd-toast--show': toastState.visible }]">
+  <view class="dd-toast" :class="[`dd-toast--${toastState.position}`, { 'dd-toast--show': toastState.visible }]" :style="{ zIndex: zIndexConfig.toast }">
     <view class="dd-toast__capsule">
       <view v-if="showIcon" class="dd-toast__icon">
         <view v-if="toastState.type === 'loading'" class="dd-toast__spinner"></view>
@@ -81,6 +81,8 @@ export function showError(message: string) {
 import { computed } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（toast 必须压过 dialog/popup/keyboard 等一切弹出层）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 // text 类型强制隐藏图标
 const showIcon = computed(() => toastState.icon && toastState.type !== 'text')
@@ -105,7 +107,7 @@ const iconName = computed(() => {
   transform: translateX(-50%) scale(0.9);
   opacity: 0;
   visibility: hidden;
-  z-index: $dd-z-index-toast;
+  /* z-index 由模板注入（libs/config/zIndex.js） */
   @include dd-no-touch; // pointer-events none
   @include dd-transition(opacity 0.25s ease, transform 0.25s ease, visibility 0.25s);
 

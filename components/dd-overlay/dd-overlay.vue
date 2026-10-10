@@ -3,7 +3,7 @@
   <view
     class="dd-overlay"
     :class="{ 'dd-overlay--show': modelValue }"
-    :style="{ zIndex: zIndex, '--dd-overlay-duration': `${duration}s` }"
+    :style="{ zIndex: zIndexConfig.overlay, '--dd-overlay-duration': `${duration}s` }"
     @click="onClick"
     @touchmove="onTouchMove"
     @touchmove.stop.prevent="onTouchMove"
@@ -16,11 +16,12 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（overlay 遮罩档，不对外暴露）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
   lockScroll?: boolean
-  zIndex?: number
   duration?: number
   closeOnClickOverlay?: boolean
 }
@@ -28,7 +29,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   lockScroll: true,
-  zIndex: 2000,
   duration: 0.3,
   closeOnClickOverlay: true,
 })

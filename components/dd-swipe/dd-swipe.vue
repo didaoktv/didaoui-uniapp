@@ -14,7 +14,7 @@
       <slot></slot>
     </swiper>
     <slot name="indicator" :active="current" :count="count">
-      <view v-if="showIndicators && count > 1" class="dd-swipe__indicators" :class="`dd-swipe__indicators--${vertical ? 'vertical' : 'horizontal'}`">
+      <view v-if="showIndicators && count > 1" class="dd-swipe__indicators" :class="`dd-swipe__indicators--${vertical ? 'vertical' : 'horizontal'}`" :style="{ zIndex: zIndexConfig.base + 1 }">
         <view
           v-for="i in count"
           :key="i"
@@ -30,6 +30,8 @@
 
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（指示点盖住轮播内容取 base 档内 +1）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   width?: string
@@ -113,7 +115,6 @@ defineExpose({ jumpTo, current })
   &__indicators {
     position: absolute;
     display: flex;
-    z-index: 2;
 
     &--horizontal {
       bottom: $dd-space-3;

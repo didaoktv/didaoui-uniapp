@@ -5,6 +5,7 @@
       v-if="visible"
       class="dd-badge__sup"
       :class="[`dd-badge__sup--${type}`, `dd-badge__sup--${variant}`]"
+      :style="{ zIndex: zIndexConfig.base }"
     >
       <text v-if="type === 'number'" class="dd-badge__num">{{ displayContent }}</text>
       <text v-else-if="type === 'text'" class="dd-badge__txt">{{ content }}</text>
@@ -14,6 +15,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（角标抬到宿主内容之上取 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   type?: 'dot' | 'number' | 'text'
@@ -72,7 +75,6 @@ const visible = computed(() => {
     top: 0;
     right: 0;
     transform: translate(25%, -25%);
-    z-index: 1;
     box-sizing: border-box;
     display: flex;
     align-items: center;

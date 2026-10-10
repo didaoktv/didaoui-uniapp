@@ -19,7 +19,7 @@
           :mode="thumbMode"
         ></image>
       </slot>
-      <text v-if="tag" class="dd-goods-card__tag">{{ tag }}</text>
+      <text v-if="tag" class="dd-goods-card__tag" :style="{ zIndex: zIndexConfig.base }">{{ tag }}</text>
     </view>
 
     <!-- 信息区 -->
@@ -53,6 +53,8 @@
 
 <script setup lang="ts">
 import DdPrice from '../dd-price/dd-price.vue'
+// z-index 统一取 libs/config/zIndex.js（角标抬到缩略图之上取 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   /** 商品图片地址 */
@@ -160,7 +162,6 @@ function onClick(e: Event) {
     color: var(--dd-primary-contrast, #{$dd-primary-contrast});
     font-size: 20rpx;
     line-height: 1.4;
-    z-index: 1;
   }
 
   &__body {

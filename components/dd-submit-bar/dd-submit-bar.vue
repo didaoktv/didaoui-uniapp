@@ -4,7 +4,7 @@
     class="dd-submit-bar__placeholder"
     :class="{ 'dd-submit-bar__placeholder--safe': safeAreaInsetBottom }"
   ></view>
-  <view class="dd-submit-bar" :class="{ 'dd-submit-bar--safe': safeAreaInsetBottom }">
+  <view class="dd-submit-bar" :class="{ 'dd-submit-bar--safe': safeAreaInsetBottom }" :style="{ zIndex: zIndexConfig.sticky }">
     <slot name="top"></slot>
     <view v-if="hasTip" class="dd-submit-bar__tip">
       <dd-icon v-if="tipIcon" :name="tipIcon" class="dd-submit-bar__tip-icon" />
@@ -44,6 +44,8 @@ import type { CSSProperties } from 'vue'
 import DdButton from '../dd-button/dd-button.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 import DdPrice from '../dd-price/dd-price.vue'
+// z-index 统一取 libs/config/zIndex.js（底部固定条取 sticky 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   /** 提示文案（tip 区域，如「小计不含服务费」） */
@@ -128,7 +130,6 @@ function onSubmit() {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: $dd-z-index-sticky;
   background: var(--dd-bg-card, #{$dd-bg-card});
 
   &--safe {

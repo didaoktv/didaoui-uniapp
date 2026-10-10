@@ -5,6 +5,7 @@
       'dd-nav--fixed': fixed,
       'dd-nav--border': border,
     }"
+    :style="{ zIndex: zIndexConfig.sticky }"
   >
     <view
       v-for="(item, index) in items"
@@ -27,6 +28,8 @@
 
 <script setup lang="ts">
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（fixed 时吸底层级取 sticky 档；非 fixed 时为 static，z-index 天然失效）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface NavItem {
   icon: string
@@ -83,7 +86,6 @@ function onSelect(index: number) {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: $dd-z-index-sticky;
     @include dd-safe-area-bottom;
   }
 

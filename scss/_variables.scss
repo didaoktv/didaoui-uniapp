@@ -359,15 +359,3 @@ $dd-popup-duration: 0.3s !default;
 $dd-popover-offset: 8px !default;
 $dd-step-inactive-color: $dd-neutral-500 !default;
 $dd-step-active-color: $dd-primary-500 !default;
-
-// === z-index 层级 ===
-$dd-z-index-base: 1 !default;
-$dd-z-index-sticky: 100 !default;
-$dd-z-index-fixed: 1000 !default;
-$dd-z-index-overlay: 2000 !default;
-$dd-z-index-popup: 2001 !default;
-$dd-z-index-modal: 3000 !default;
-$dd-z-index-toast: 4000 !default;
-$dd-z-index-loading: 5000 !default;
-// 全屏裁剪覆盖层：三画布 + 操作条需压过全部全局层级
-$dd-z-index-cropper: 100000 !default;

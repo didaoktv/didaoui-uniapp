@@ -13,7 +13,6 @@ export default {
         closeOnClickOverlay: true,
         show: false,
         overlay: true,
-        zIndex: 10075,
         cancelText: '取消',
         confirmText: '确定'
     }

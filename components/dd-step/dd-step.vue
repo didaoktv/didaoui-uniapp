@@ -42,6 +42,8 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（圆点/连接线的层内叠放取 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 type StepStatus = 'wait' | 'process' | 'finish'
 
@@ -81,11 +83,15 @@ const isActive = computed(() => status.value === 'finish' || status.value === 'p
 const circleStyle = computed(() => ({
   background: isActive.value ? activeColor.value : '#2A2A2A',
   color: isActive.value ? '#FFFFFF' : inactiveColor.value,
+  // z-index 统一取 libs/config/zIndex.js（圆点 base 档内 +1，盖住连接线）
+  zIndex: zIndexConfig.base + 1,
 }))
 
 // ponytail: 水平连接线整段按本步骤 status 着色，current/首个 wait 左半段颜色为近似值
 const lineStyle = computed(() => ({
   background: status.value === 'finish' ? activeColor.value : inactiveColor.value,
+  // z-index 统一取 libs/config/zIndex.js（连接线垫底取 base 档）
+  zIndex: zIndexConfig.base,
 }))
 </script>
 
@@ -125,7 +131,6 @@ const lineStyle = computed(() => ({
     right: 0;
     height: 1px;
     transform: translateY(-50%);
-    z-index: 0;
 
     &--first {
       left: 50%;
@@ -143,7 +148,6 @@ const lineStyle = computed(() => ({
 
   &__circle {
     position: relative;
-    z-index: 1;
     width: $dd-size-icon-md;
     height: $dd-size-icon-md;
     border-radius: $dd-radius-full;

@@ -1,6 +1,6 @@
 <template>
-  <view class="dd-dropdown" :class="{ 'dd-dropdown--active': activeId !== null }" ref="rootRef">
-    <view class="dd-dropdown__bar">
+  <view class="dd-dropdown" :class="{ 'dd-dropdown--active': activeId !== null }" :style="rootStyle" ref="rootRef">
+    <view class="dd-dropdown__bar" :style="{ zIndex: zIndexConfig.base + 1 }">
       <slot></slot>
     </view>
     <dd-portal>
@@ -22,8 +22,10 @@ let activeMenuClose: (() => void) | null = null
 </script>
 
 <script setup lang="ts">
-import { getCurrentInstance, onMounted, onUnmounted, provide, reactive, ref } from 'vue'
+import { computed, getCurrentInstance, onMounted, onUnmounted, provide, reactive, ref } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（激活时整档抬到 sticky，遮罩 base，bar 档内 +1）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   activeColor?: string
@@ -44,6 +46,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{ (e: 'change', id: number): void }>()
 
 const activeId = ref<number | null>(null)
+// 激活时整体抬到 sticky 档，避免被同页其他菜单的 bar 盖住 panel
+const rootStyle = computed(() => (activeId.value !== null ? { zIndex: zIndexConfig.sticky } : {}))
 const counter = ref(0)
 const barRect = reactive({ top: 0, bottom: 0, height: 0 })
 const overlayStyle = ref({})
@@ -71,11 +75,13 @@ function measureBar() {
         overlayStyle.value = {
           top: barRect.bottom + 'px',
           bottom: '0',
+          zIndex: zIndexConfig.base,
         }
       } else {
         overlayStyle.value = {
           top: '0',
           bottom: winH - barRect.top + 'px',
+          zIndex: zIndexConfig.base,
         }
       }
     })
@@ -142,16 +148,10 @@ onUnmounted(() => {
 .dd-dropdown {
   position: relative;
   width: 100%;
-
-  // 激活时整体抬高层级，避免被同页其他菜单的 bar 盖住 panel
-  &--active {
-    z-index: 100;
-  }
 }
 
 .dd-dropdown__bar {
   position: relative;
-  z-index: 11;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -167,7 +167,6 @@ onUnmounted(() => {
   background: var(--dd-glass-bg, #{$dd-glass-bg});
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 9;
   opacity: 0;
   visibility: hidden;
   @include dd-transition(opacity 0.3s, visibility 0.3s);

@@ -13,6 +13,7 @@
         :key="index"
         class="dd-seg__item"
         :class="{ 'dd-seg__item--active': index === modelValue }"
+        :style="{ zIndex: zIndexConfig.base }"
         @click="onSelect(index)"
       >
         <text class="dd-seg__label">{{ labelOf(opt) }}</text>
@@ -44,6 +45,8 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 import { getCurrentInstance } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（分段项盖住滑块指示器取 base 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: number
@@ -128,7 +131,6 @@ watch(() => props.options, measure)
 
   .dd-seg__item {
     position: relative;
-    z-index: 1;
     min-width: 120rpx;
     padding: 12rpx $dd-space-4;
     @include dd-flex-center;

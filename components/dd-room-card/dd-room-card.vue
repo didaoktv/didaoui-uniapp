@@ -9,7 +9,7 @@
     <!-- grid 模式: 方形卡 + 顶部状态栏 -->
     <template v-if="view === 'grid'">
       <view class="dd-room-card__topbar"></view>
-      <view v-if="type === 'vip'" class="dd-room-card__vip-tag"><text>VIP</text></view>
+      <view v-if="type === 'vip'" class="dd-room-card__vip-tag" :style="{ zIndex: zIndexConfig.base + 1 }"><text>VIP</text></view>
       <view class="dd-room-card__grid-inner">
         <text class="dd-room-card__no">{{ roomNo }}</text>
         <view class="dd-room-card__status">
@@ -44,6 +44,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+// z-index 统一取 libs/config/zIndex.js（VIP 角标抬到卡片内容之上取 base 档内 +1）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   view?: 'grid' | 'list'
@@ -169,7 +171,6 @@ function onClick() {
   position: absolute;
   top: 12rpx;
   right: 12rpx;
-  z-index: 2;
   padding: 2rpx 12rpx;
   background: var(--dd-gradient-primary, #{$dd-gradient-primary});
   border-radius: $dd-radius-sm;

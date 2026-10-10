@@ -30,7 +30,6 @@
 		<dd-popup
 			v-model="popupShow"
 			position="bottom"
-			:z-index="zIndexConfig.popup"
 		>
 			<view class="dd-car-keyboard__panel">
 				<view class="dd-car-keyboard__tooltip">
@@ -83,7 +82,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import zIndexConfig from '../../libs/config/zIndex.js'
 import DdIcon from '../dd-icon/dd-icon.vue'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import { MAX_LEN, getKeyRows, nextPos, type KeyItem } from './carPlate'

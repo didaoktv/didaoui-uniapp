@@ -5,7 +5,6 @@
     :closeable="closeable"
     :safe-area-inset-bottom="true"
     :close-on-click-overlay="maskCloseAble"
-    :z-index="uZIndex"
     @close="close"
   >
     <!-- column 头部：垂直步骤（ponytail: dd-steps 无 dot 模式，用默认数字圆点步骤） -->
@@ -111,8 +110,6 @@ interface Props {
   childrenKey?: string
   /** 是否允许通过点击遮罩关闭Picker */
   maskCloseAble?: boolean
-  /** 弹出的z-index值 */
-  zIndex?: string | number
   /** 是否在选择最后一级时自动关闭并触发confirm */
   autoClose?: boolean
   /** 选中项目的展示方向：column 垂直方向适合文字长度过长 */
@@ -131,7 +128,6 @@ const props = withDefaults(defineProps<Props>(), {
   labelKey: 'label',
   childrenKey: 'children',
   maskCloseAble: true,
-  zIndex: 0,
   autoClose: false,
   headerDirection: 'row',
   optionsCols: 2,
@@ -206,8 +202,6 @@ const genTabsList = computed(() => {
 
   return tabsList
 })
-
-const uZIndex = computed(() => (props.zIndex ? Number(props.zIndex) : 2000))
 
 function getSelectedValues(): Array<string | number> {
   const result: Array<string | number> = []

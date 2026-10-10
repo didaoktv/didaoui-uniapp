@@ -69,7 +69,7 @@ function onClick(e: Event) {
 ## 多端约束
 
 - 平台差异用条件编译（`#ifdef`），不写运行时平台嗅探；API 一律 `uni.*`，不用 `window`/`document`（H5 专属逻辑必须包在条件编译内）。
-- 尺寸单位 rpx；z-index 统一取 `libs/config/zIndex.js`，不手写魔数。
+- 尺寸单位 rpx；z-index 统一取 `libs/config/zIndex.js`，不手写魔数。档位表即唯一真源（ADR 0013）：组件只准选档或档内 +1 派生，改动后跑 `scripts/zindex-selfcheck.ts`。
 - 小程序端注意：模板内不能用复杂表达式、组件需在消费方 `easycom` 或全局注册可用（路径即 `components/dd-x/dd-x.vue`）。
 
 ## 校验与发布

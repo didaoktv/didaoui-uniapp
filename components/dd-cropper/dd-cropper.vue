@@ -1,9 +1,9 @@
 <template>
 	<view class="dd-cropper">
-		<dd-canvas ref="avatarCanvas" :canvas-id="'avatar-canvas-' + instanceId" class="my-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight }" bg-color="transparent"></dd-canvas>
-		<dd-canvas ref="operCanvas" :canvas-id="'oper-canvas-' + instanceId" class="oper-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight }" bg-color="transparent" @touchstart="start" @touchmove="move" @touchend="end"></dd-canvas>
-		<dd-canvas ref="prvCanvas" :canvas-id="'prv-canvas-' + instanceId" class="prv-canvas" :width="windowWidth || 0" :height="windowHeight || 0" bg-color="transparent" @touchstart="hideImg" :style="{ height: cvsStyleHeight, top: prvTop }"></dd-canvas>
-		<view class="oper-wrapper" :style="{ display: styleDisplay }">
+		<dd-canvas ref="avatarCanvas" :canvas-id="'avatar-canvas-' + instanceId" class="my-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zc }" bg-color="transparent"></dd-canvas>
+		<dd-canvas ref="operCanvas" :canvas-id="'oper-canvas-' + instanceId" class="oper-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zcOper }" bg-color="transparent" @touchstart="start" @touchmove="move" @touchend="end"></dd-canvas>
+		<dd-canvas ref="prvCanvas" :canvas-id="'prv-canvas-' + instanceId" class="prv-canvas" :width="windowWidth || 0" :height="windowHeight || 0" bg-color="transparent" @touchstart="hideImg" :style="{ height: cvsStyleHeight, top: prvTop, zIndex: zcPrv }"></dd-canvas>
+		<view class="oper-wrapper" :style="{ display: styleDisplay, zIndex: zcBar }">
 			<view class="oper">
 				<view class="btn-wrapper" v-if="showOper">
 					<view @click="select" hover-class="hover" :style="{ width: btnWidth }">
@@ -37,11 +37,20 @@
 </template>
 
 <script>
+	import zIndexConfig from '../../libs/config/zIndex.js'
+
 	// 画布系组件（dd-canvas / dd-signature / dd-qrcode 同族）统一采用 Options API，
 	// 命令式 canvas 状态挂在 this 上不走响应式，避免触摸高频重绘的代理开销。
 
 	// 底部操作条高度（px），与样式 .oper-wrapper 的 height 保持一致
 	const tabHeight = 50;
+
+	// z-index 统一取 libs/config/zIndex.js（cropper 档 + 显式偏移；Options API 经 data 暴露给模板）。
+	// ×2 原语义：预览层须盖过工作画布与操作条。
+	const Z_CROPPER = zIndexConfig.cropper
+	const Z_CROPPER_OPER = Z_CROPPER + 1
+	const Z_CROPPER_PRV = Z_CROPPER * 2
+	const Z_CROPPER_BAR = Z_CROPPER + 9
 
 	export default {
 		name: "dd-cropper",
@@ -160,6 +169,11 @@
 				letChangeSize: false,
 				// 底部安全区大小
 				safeAreaInsetsBottom: 0,
+				// z-index 档位（libs/config/zIndex.js cropper 档派生，见 script 头部常量）
+				zc: Z_CROPPER,
+				zcOper: Z_CROPPER_OPER,
+				zcPrv: Z_CROPPER_PRV,
+				zcBar: Z_CROPPER_BAR,
 			};
 		},
 		created() {
@@ -1211,7 +1225,7 @@
 			position: fixed !important;
 			background: $dd-color-black;
 			left: 0;
-			z-index: $dd-z-index-cropper;
+			/* z-index 由模板注入（libs/config/zIndex.js cropper 档） */
 			width: 100%;
 		}
 
@@ -1219,7 +1233,6 @@
 			display: flex;
 			position: fixed !important;
 			left: 0;
-			z-index: $dd-z-index-cropper + 1;
 			width: 100%;
 		}
 
@@ -1228,7 +1241,6 @@
 			position: fixed !important;
 			background: $dd-color-black;
 			left: 0;
-			z-index: $dd-z-index-cropper * 2;
 			width: 100%;
 		}
 
@@ -1241,7 +1253,6 @@
 			width: 100%;
 			left: 0;
 			bottom: 0;
-			z-index: $dd-z-index-cropper + 9;
 			flex-direction: row;
 		}
 

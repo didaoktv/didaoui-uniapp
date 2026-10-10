@@ -6,6 +6,7 @@
       'dd-topbar--transparent': transparent,
       'dd-topbar--border': border && !transparent,
     }"
+    :style="{ zIndex: zIndexConfig.sticky }"
   >
     <view
       v-if="fixed && statusBarHeight > 0"
@@ -39,6 +40,8 @@
 import { computed } from 'vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
 import { getStatusBarHeight, isH5 } from '../../libs/utils'
+// z-index 统一取 libs/config/zIndex.js（fixed 时吸顶层级取 sticky 档；非 fixed 时为 static，z-index 天然失效）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   title?: string
@@ -102,7 +105,6 @@ function onBack() {
     top: 0;
     left: 0;
     right: 0;
-    z-index: $dd-z-index-sticky;
   }
 
   &--transparent {

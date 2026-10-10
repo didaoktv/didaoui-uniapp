@@ -10,6 +10,8 @@
 
 <script setup lang="ts">
 import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
+// z-index 统一取 libs/config/zIndex.js：默认吸顶层级取 sticky 档（zIndex prop 保留可覆盖）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   offsetTop?: number // rpx
@@ -19,7 +21,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   offsetTop: 0,
-  zIndex: 99,
+  zIndex: zIndexConfig.sticky,
   disabled: false,
 })
 

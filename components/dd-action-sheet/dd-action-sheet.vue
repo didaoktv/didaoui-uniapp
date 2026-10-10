@@ -4,9 +4,10 @@
     <view
       class="dd-action-sheet__mask"
       :class="{ 'dd-action-sheet__mask--show': modelValue }"
+      :style="{ zIndex: zIndexConfig.dialogMask }"
       @click="onMaskClick"
     ></view>
-    <view class="dd-action-sheet__panel" :class="{ 'dd-action-sheet__panel--show': modelValue }">
+    <view class="dd-action-sheet__panel" :class="{ 'dd-action-sheet__panel--show': modelValue }" :style="{ zIndex: zIndexConfig.dialog }">
       <view class="dd-action-sheet__handle"></view>
       <view v-if="title" class="dd-action-sheet__title">
         <text class="dd-action-sheet__title-text">{{ title }}</text>
@@ -40,6 +41,8 @@
 <script setup lang="ts">
 import DdPortal from '../dd-portal/dd-portal.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
+// z-index 统一取 libs/config/zIndex.js（对话框族与 dd-dialog 同档：dialogMask/dialog）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface ActionItem {
   name: string
@@ -104,7 +107,6 @@ function onClose() {
     background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     visibility: hidden;
-    z-index: 1000;
     @include dd-transition(opacity 0.3s, visibility 0.3s);
 
     &--show {
@@ -120,7 +122,6 @@ function onClose() {
     right: 0;
     bottom: 0;
     transform: translateY(100%);
-    z-index: 1001;
     @include dd-glass;
     border-radius: $dd-radius-2xl $dd-radius-2xl 0 0;
     padding: $dd-space-3 $dd-space-4 $dd-space-4;

@@ -1,8 +1,8 @@
 <template>
   <dd-portal>
   <view class="dd-dp" :class="{ 'dd-dp--open': show }">
-    <view class="dd-dp__mask" @click="onMaskClick"></view>
-    <view class="dd-dp__sheet">
+    <view class="dd-dp__mask" :style="{ zIndex: zIndexConfig.overlay }" @click="onMaskClick"></view>
+    <view class="dd-dp__sheet" :style="{ zIndex: zIndexConfig.popup }">
       <view class="dd-dp__toolbar">
         <text class="dd-dp__cancel" @click="onCancel">取消</text>
         <text class="dd-dp__title">{{ title }}</text>
@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import DdPortal from '../dd-portal/dd-portal.vue'
+// z-index 统一取 libs/config/zIndex.js（picker 底部面板：overlay/popup 档）
+import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   show?: boolean
@@ -189,7 +191,6 @@ function onConfirm() {
   &__mask {
     position: fixed;
     inset: 0;
-    z-index: $dd-z-index-overlay;
     background: var(--dd-color-overlay-strong, #{$dd-color-overlay-strong});
     opacity: 0;
     pointer-events: none;
@@ -201,7 +202,6 @@ function onConfirm() {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: $dd-z-index-popup;
     background: var(--dd-bg-popup, #{$dd-bg-popup});
     border-radius: $dd-radius-2xl $dd-radius-2xl 0 0;
     transform: translateY(100%);
