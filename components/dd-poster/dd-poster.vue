@@ -5,12 +5,11 @@
 			<dd-canvas
 				ref="posterCanvas"
 				class="dd-poster__hidden-canvas"
-				:style="{ zIndex: zcBase }"
 				:canvas-id="canvasId"
 				:width="canvasWidth"
 				:height="canvasHeight"
 				bg-color="transparent"
-				:style="{ width: canvasWidth + 'px', height: canvasHeight + 'px' }">
+				:style="{ zIndex: zcBase, width: canvasWidth + 'px', height: canvasHeight + 'px' }">
 			</dd-canvas>
 		</view>
 		<!-- 隐藏的二维码组件，用于生成二维码图片 -->

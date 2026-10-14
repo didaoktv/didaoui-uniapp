@@ -195,7 +195,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   name: '',
-  size: 'inherit',
+  size: '',
   color: 'inherit',
   dot: false,
 })
