@@ -22,8 +22,9 @@
       <view v-if="closeable" class="dd-popup__close" :class="`dd-popup__close--${closeIconPosition}`" :style="{ zIndex: zIndexConfig.base + 1 }" @click="onCloseIcon">
         <dd-icon name="cross" />
       </view>
-      <view v-if="position === 'bottom' && safeAreaInsetBottom" class="dd-popup__safe-bottom"></view>
+      <view v-if="title || $slots.title" class="dd-popup__title"><slot name="title">{{ title }}</slot></view>
       <slot></slot>
+      <view v-if="position === 'bottom' && safeAreaInsetBottom" class="dd-popup__safe-bottom"></view>
     </view>
   </view>
   </dd-portal>
@@ -38,6 +39,7 @@ import zIndexConfig from '../../libs/config/zIndex.js'
 
 interface Props {
   modelValue?: boolean
+  title?: string
   position?: 'top' | 'bottom' | 'left' | 'right' | 'center'
   round?: boolean
   overlay?: boolean
@@ -52,6 +54,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
+  title: '',
   position: 'bottom',
   round: false,
   overlay: true,
@@ -223,6 +226,16 @@ onUnmounted(() => {
         opacity: 1;
       }
     }
+  }
+
+  &__title {
+    @include dd-flex-between;
+    padding: $dd-space-4 $dd-space-5;
+    box-sizing: border-box;
+    font-size: $dd-font-size-h4;
+    font-weight: $dd-font-weight-h4;
+    color: var(--dd-text-primary, #{$dd-text-primary});
+    @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
   }
 
   &__close {
