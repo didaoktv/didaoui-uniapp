@@ -80,7 +80,7 @@ function onClick(e: Event) {
   font-family: $dd-font-body;
   white-space: nowrap;
   user-select: none;
-  height: $dd-size-button-md;
+  height: $dd-size-control-md;
   padding: 0 $dd-space-4;
   font-size: $dd-font-size-body;
   font-weight: 600;
@@ -97,7 +97,7 @@ function onClick(e: Event) {
 
   &__loading {
     width: 28rpx;
-    height: 28rpx;
+    height: 28rpx; // size-exempt: loading 圈内部件，非控件高度
     border: 3rpx solid currentColor;
     border-top-color: transparent;
     border-radius: 50%;
@@ -106,7 +106,7 @@ function onClick(e: Event) {
 
   .dd-btn--icon-only {
     padding: 0;
-    width: $dd-size-button-md;
+    width: $dd-size-control-md;
     gap: 0;
   }
 
@@ -127,28 +127,28 @@ function onClick(e: Event) {
 }
 
 .dd-btn--sm {
-  height: $dd-size-button-sm;
+  height: $dd-size-control-sm;
   padding: 0 $dd-space-3;
   font-size: $dd-font-size-caption;
   &.dd-btn--icon-only {
-    width: $dd-size-button-sm;
+    width: $dd-size-control-sm;
   }
   .dd-btn__loading {
     width: 22rpx;
-    height: 22rpx;
+    height: 22rpx; // size-exempt: loading 圈内部件，非控件高度
   }
 }
 
 .dd-btn--lg {
-  height: $dd-size-button-lg;
+  height: $dd-size-control-lg;
   padding: 0 $dd-space-5;
   font-size: $dd-font-size-h4;
   &.dd-btn--icon-only {
-    width: $dd-size-button-lg;
+    width: $dd-size-control-lg;
   }
   .dd-btn__loading {
     width: 34rpx;
-    height: 34rpx;
+    height: 34rpx; // size-exempt: loading 圈内部件，非控件高度
   }
 }
 

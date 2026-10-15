@@ -435,6 +435,8 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   flex-wrap: wrap; // extra 插槽独占第二行
   box-sizing: border-box;
   width: 100%;
+  // 单行/多行统一以 md 档为下限（border-box 下 padding 已含）；textarea 靠内容自然增高，min-height 不限高
+  min-height: $dd-size-control-md;
   padding: 20rpx $dd-space-4;
   overflow: hidden;
   font-size: $dd-font-size-body;
@@ -517,7 +519,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     align-items: center;
     flex: 1;
     min-width: 0;
-    min-height: 48rpx;
+    min-height: 48rpx; // size-exempt: 控件行内部最小高，非档位
   }
 
   &__control {
@@ -545,7 +547,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   }
 
   &__textarea {
-    min-height: 48rpx;
+    min-height: 48rpx; // size-exempt: textarea 内部最小高，非档位
   }
 
   &__left-icon {

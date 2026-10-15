@@ -114,7 +114,7 @@ function onAction() {
   &__btn {
     margin-top: $dd-space-5;
     padding: 0 $dd-space-5;
-    height: $dd-size-button-md;
+    height: $dd-size-control-md;
     border-radius: $dd-radius-full;
     background: var(--dd-gradient-primary, #{$dd-gradient-primary});
     @include dd-flex-center;

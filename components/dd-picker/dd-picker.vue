@@ -142,7 +142,7 @@ function onConfirm() {
 // ponytail: H5 picker-view 吸附 itemSize 取 indicator 框高度(默认34px)，必须与行高一致拖动松手才对齐。
 // 需与下方 .dd-picker__item 的 88rpx 保持一致；改行高时必须同步改这里。小程序为原生组件此规则天然无效，安全。
 :deep(.uni-picker-view-indicator) {
-  height: 88rpx;
+  height: 88rpx; // size-exempt: 滚轮选项行高（列表项），非控件高度
 }
 .dd-picker {
   &__mask {
@@ -176,7 +176,7 @@ function onConfirm() {
 
   &__toolbar {
     @include dd-flex-between;
-    height: 96rpx;
+    height: 96rpx; // size-exempt: 弹层头部，非控件高度
     padding: 0 32rpx;
     @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
   }
@@ -203,12 +203,12 @@ function onConfirm() {
   }
   &__wheels {
     width: 100%;
-    height: 440rpx;
+    height: 440rpx; // size-exempt: 弹层滚轮区，非控件高度
   }
 
   &__item {
     @include dd-flex-center;
-    height: 88rpx;
+    height: 88rpx; // size-exempt: 滚轮选项行高（列表项），非控件高度
   }
   &__item-text {
     font-size: 28rpx;

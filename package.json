@@ -1,6 +1,6 @@
 {
   "name": "@didaoktv/didaoui-uniapp",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "帝到KTV UniApp 组件库",
   "main": "index.ts",
   "types": "index.ts",
@@ -24,6 +24,7 @@
     "dev:h5": "cd ../DidaoUI-uniapp-docs/h5-demo && npm run dev:h5",
     "build:docs": "cd ../DidaoUI-uniapp-docs && npm run build",
     "type-check": "vue-tsc --noEmit",
+    "size-selfcheck": "npx tsc scripts/size-selfcheck.ts --module commonjs --target es2020 --lib es2020 --outDir .check --skipLibCheck && node .check/size-selfcheck.js",
     "bump:consumers": "node scripts/bump-consumers.mjs",
     "prepublishOnly": "node -e \"const p=require('./package.json');if(p.publishConfig&&p.publishConfig.access==='public'){process.exit(0)}console.error('publishConfig.access must be public');process.exit(1)\""
   },

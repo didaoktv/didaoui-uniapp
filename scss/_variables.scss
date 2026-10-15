@@ -267,19 +267,17 @@ $dd-size-icon-sm: 16px !default;
 $dd-size-icon-md: 20px !default;
 $dd-size-icon-lg: 24px !default;
 $dd-size-icon-xl: 32px !default;
-$dd-size-button-sm: 32px !default;
-$dd-size-button-md: 44px !default;
-$dd-size-button-lg: 50px !default;
-$dd-size-input-height: 44px !default;
+
+// 控件高度档位真源（ADR 0019）：输入类与按钮类同档消费同一变量；值 = css.json size × 2（1px=2rpx）
+$dd-size-control-sm: 64rpx !default;
+$dd-size-control-compact: 72rpx !default;
+$dd-size-control-md: 88rpx !default;
+$dd-size-control-lg: 100rpx !default;
 
 // 按钮内边距
 $dd-button-padding-x-sm: 12px !default;
 $dd-button-padding-x-md: 16px !default;
 $dd-button-padding-x-lg: 24px !default;
-$dd-button-height-sm: $dd-size-button-sm !default;
-$dd-button-height-md: $dd-size-button-md !default;
-$dd-button-height-lg: $dd-size-button-lg !default;
-$dd-input-height: $dd-size-input-height !default;
 
 // === 阴影 (from css.json shadow) ===
 $dd-shadow-1: 0 2px 8px rgba(0, 0, 0, 0.3) !default;

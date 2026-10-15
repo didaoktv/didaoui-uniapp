@@ -140,10 +140,10 @@ function onPlus() {
 }
 
 .dd-stepper--md {
-  height: 72rpx;
+  height: $dd-size-control-compact;
   .dd-stepper__btn {
     width: 56rpx;
-    height: 56rpx;
+    height: 56rpx; // size-exempt: 步进器内部按钮
   }
   .dd-stepper__icon {
     font-size: $dd-font-size-h4;
@@ -155,10 +155,10 @@ function onPlus() {
 }
 
 .dd-stepper--sm {
-  height: 56rpx;
+  height: 56rpx; // size-exempt: sm 档变体，档位体系外（本轮仅 md→compact 入档）
   .dd-stepper__btn {
     width: 44rpx;
-    height: 44rpx;
+    height: 44rpx; // size-exempt: 步进器内部按钮
   }
   .dd-stepper__icon {
     font-size: 26rpx;

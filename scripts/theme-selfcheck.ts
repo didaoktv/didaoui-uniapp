@@ -95,7 +95,8 @@ const emitted = new Set<string>([...rootVars.keys()])
 const consumed = new Set<string>()
 const localAssigned = new Set<string>() // 组件私有 --dd-*（--dd-loading-color 等，非主题变量）
 // 组件私有且「只消费不赋值」的公开定制变量（消费者可覆盖；新增时在此登记）
-const KNOWN_LOCAL = new Set(['overlay-duration', 'popup-duration'])
+// coupon-notch-z：dd-coupon 在 script 运行时经 :style 赋值，localAssigned 只扫 <style> 块检不到，在此登记
+const KNOWN_LOCAL = new Set(['overlay-duration', 'popup-duration', 'coupon-notch-z'])
 const bareRefs: string[] = []
 const x500Refs: string[] = []
 const wrapRe = /\$dd-([a-z0-9-]+)/g

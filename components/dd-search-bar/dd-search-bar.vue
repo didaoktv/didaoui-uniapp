@@ -107,7 +107,7 @@ function onCancel() {
     display: flex;
     align-items: center;
     gap: $dd-space-2;
-    height: 88rpx;
+    height: $dd-size-control-md;
     padding: 0 $dd-space-3;
     background: var(--dd-surface-container-low, #{$dd-surface-container-low});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
@@ -149,7 +149,7 @@ function onCancel() {
   &__clear {
     @include dd-flex-center;
     width: 36rpx;
-    height: 36rpx;
+    height: 36rpx; // size-exempt: clear 图标内部件
     border-radius: 50%;
     background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     color: var(--dd-text-secondary, #{$dd-text-secondary});
