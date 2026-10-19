@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 
-// === Input (24) ===
+// === Input (25) ===
 import DdButton from './components/dd-button/dd-button.vue'
 import DdCodeButton from './components/dd-code-button/dd-code-button.vue'
 import DdInput from './components/dd-input/dd-input.vue'
@@ -24,6 +24,7 @@ import DdNumberKeyboard from './components/dd-number-keyboard/dd-number-keyboard
 import DdCarKeyboard from './components/dd-car-keyboard/dd-car-keyboard.vue'
 import DdCascader from './components/dd-cascader/dd-cascader.vue'
 import DdGoodsSku from './components/dd-goods-sku/dd-goods-sku.vue'
+import DdPackageSku from './components/dd-package-sku/dd-package-sku.vue'
 import DdTreeSelect from './components/dd-tree-select/dd-tree-select.vue'
 
 // === Navigation (14) ===
@@ -116,7 +117,7 @@ const components = {
   DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
-  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdTreeSelect,
+  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdPackageSku, DdTreeSelect,
   DdNavigation, DdTopNavbar, DdSegmentedTab, DdSwipeableTab,
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
@@ -148,7 +149,7 @@ export {
   DdButton, DdCodeButton, DdInput, DdSwitch, DdCheckbox, DdCheckboxGroup, DdRadio, DdRadioGroup, DdForm,
   DdSearchBar, DdSlider, DdStepper, DdDatePicker, DdField,
   DdPicker, DdRate, DdUpload, DdIcon,
-  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdTreeSelect,
+  DdKeyboard, DdNumberKeyboard, DdCarKeyboard, DdCascader, DdGoodsSku, DdPackageSku, DdTreeSelect,
   DdNavigation, DdTopNavbar, DdSegmentedTab, DdSwipeableTab,
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
@@ -175,6 +176,13 @@ export type {
   DdFieldInstance,
   DdFormContext,
 } from './components/dd-form/rules'
+
+// 套餐可选组类型（dd-package-sku 配套）
+export type {
+  PackageSkuItem,
+  PackageSkuGroup,
+  PackageSkuOption,
+} from './components/dd-package-sku/package-sku'
 
 // 图标元数据（供 demo/文档消费，与 dd-icon.vue 内 SCSS &-- 规则保持一致）
 export { iconNames, iconGroups, iconLabels } from './components/dd-icon/dd-icon.vue'
