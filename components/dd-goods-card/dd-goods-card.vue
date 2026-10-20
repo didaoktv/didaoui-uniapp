@@ -40,7 +40,10 @@
               {{ currency }}{{ originPrice }}
             </text>
           </view>
-          <text v-if="num" class="dd-goods-card__num">×{{ num }}</text>
+          <!-- 价格行右侧扩展位（步进器/加购等与价格同排贴底）；未用时回退已选数量 -->
+          <slot name="price-right">
+            <text v-if="num" class="dd-goods-card__num">×{{ num }}</text>
+          </slot>
         </view>
 
         <view v-if="$slots.bottom" class="dd-goods-card__bottom">
