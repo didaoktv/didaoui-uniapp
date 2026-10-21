@@ -137,6 +137,23 @@ export function daysInMonth(year: number, month: number): number {
 }
 
 // ============================================================
+// 缺图文字占位（供 dd-goods-sku / dd-goods-card / dd-package-sku 图块使用）
+// 底色档位与 scss 的 dd-avatar-colors mixin 一一对应：bg=主题基色、文字=各自 contrast
+// ============================================================
+export const AVATAR_HUES = ['primary', 'accent', 'success', 'warning', 'error', 'info'] as const
+export type AvatarHue = (typeof AVATAR_HUES)[number]
+
+/** 随机取一种占位底色档位 */
+export function pickAvatarHue(): AvatarHue {
+  return AVATAR_HUES[Math.floor(Math.random() * AVATAR_HUES.length)]
+}
+
+/** 占位文字：取名称前 2 字 */
+export function avatarText(name?: string): string {
+  return String(name ?? '').slice(0, 2)
+}
+
+// ============================================================
 // 二维码（QR Code）生成 — 纯 JS，无三方依赖
 // port: 移植自 Project Nayuki QR Code generator（public domain，qrcodegen）。
 //   https://www.nayuki.io/page/qr-code-generator-library

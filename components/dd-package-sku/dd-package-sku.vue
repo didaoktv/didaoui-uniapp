@@ -13,6 +13,23 @@
       <view class="dd-package-sku__container">
         <view class="dd-package-sku__title">{{ title }}</view>
 
+        <view v-if="hasHeader" class="dd-package-sku__header">
+          <view class="dd-package-sku__header__image" :class="'dd-package-sku__header__image--' + avatarHue">
+            <image v-if="headerImage" :src="headerImage" mode="aspectFill" />
+            <text v-else class="dd-package-sku__header__image__text">{{ avatarText }}</text>
+          </view>
+          <view class="dd-package-sku__header__info">
+            <view class="dd-package-sku__header__info__price">
+              <text class="dd-package-sku__header__info__price__symbol">¥</text>
+              <text class="dd-package-sku__header__info__price__value">{{ price }}</text>
+            </view>
+            <view v-if="stock !== undefined && stock !== null" class="dd-package-sku__header__info__stock">
+              库存 {{ stock }} 件
+            </view>
+            <view class="dd-package-sku__header__info__selected">已选: {{ selectedText || '未选择' }}</view>
+          </view>
+        </view>
+
         <scroll-view class="dd-package-sku__content" scroll-y>
           <view v-for="group in groups" :key="group.id" class="dd-package-sku__group">
             <view class="dd-package-sku__group__header">
@@ -52,13 +69,15 @@
 
 <script setup lang="ts">
 /**
- * 套餐可选组选择弹层（N选M 多选 + 加价 + 售罄置灰）
+ * 套餐可选组选择弹层（N选M 多选 + N选1 单选直接替换 + 加价 + 售罄置灰）
  * - groups 通用形状，不绑业务 DTO；FIXED 组只读展示，OPTIONAL 组按 minSel/maxSel 校验
+ * - goodsInfo 传入时头部展示图片/价格（底价+已选加价）/库存/已选项，对齐 dd-goods-sku；图块必有，缺图时以主题随机色块 + 套餐名前 2 字占位
  * - confirm emit { options:[{groupId,skuId}], surchargeFen, selectedText }；确认后不自动关闭，由调用方 ref.close()
  */
 import { computed, reactive, ref } from 'vue'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdButton from '../dd-button/dd-button.vue'
+import { pickAvatarHue, avatarText as calcAvatarText } from '../../libs/utils'
 import {
   type PackageSkuGroup,
   type PackageSkuItem,
@@ -68,6 +87,7 @@ import {
   isItemDisabled,
   groupHint,
   groupMax,
+  nextSelection,
   isGroupSatisfied,
   canConfirm as calcCanConfirm,
   unmetText,
@@ -80,6 +100,8 @@ import {
 interface Props {
   /** 选择组列表 */
   groups?: PackageSkuGroup[]
+  /** 套餐主图/底价/库存（与 dd-goods-sku 对齐：image|picture / price|price_fee / stock|quantity） */
+  goodsInfo?: Record<string, any>
   /** 弹层标题 */
   title?: string
   /** 确认按钮文字 */
@@ -90,6 +112,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   groups: () => [],
+  goodsInfo: () => ({}),
   title: '选择套餐内容',
   confirmText: '确定',
   closeable: true,
@@ -107,6 +130,26 @@ const selections = reactive<PackageSkuSelections>({})
 
 const canConfirmNow = computed(() => calcCanConfirm(props.groups, selections))
 const unmetTip = computed(() => unmetText(props.groups, selections))
+
+/** 头部（对齐 dd-goods-sku）：传了 goodsInfo 才渲染，存量调用方零改动不显示 */
+const hasHeader = computed(() => Object.keys(props.goodsInfo).length > 0)
+const headerImage = computed(() => props.goodsInfo.image || props.goodsInfo.picture || '')
+/** 缺图时文字占位块：每次 open 从主题 6 档基色随机取底色（libs/utils + dd-avatar-colors mixin） */
+const avatarHue = ref<string>(pickAvatarHue())
+/** 占位文字：取套餐名前 2 字 */
+const avatarText = computed(() => calcAvatarText(props.goodsInfo.name))
+/** 展示价（元）= 套餐底价 + 已选 OPTIONAL 项加价合计；按分相加再除 100，避免浮点误差 */
+const surchargeFen = computed(() => computeSurchargeFen(props.groups, selections))
+const price = computed(
+  () =>
+    (Math.round((props.goodsInfo.price ?? props.goodsInfo.price_fee ?? 0) * 100) +
+      surchargeFen.value) /
+    100,
+)
+/** 库存：缺省不显示库存行（套餐可能无台账库存，如房时套餐） */
+const stock = computed(() => props.goodsInfo.stock ?? props.goodsInfo.quantity)
+/** 已选项实时摘要（确认前即联动展示） */
+const selectedText = computed(() => buildSelectedText(props.groups, selections))
 
 // 模板内避免复杂表达式（小程序约束），逐一下沉为方法
 function isFixedGroup(group: PackageSkuGroup): boolean {
@@ -132,17 +175,12 @@ function isSelected(group: PackageSkuGroup, item: PackageSkuItem): boolean {
 function onItemClick(group: PackageSkuGroup, item: PackageSkuItem): void {
   if (isFixed(group) || isItemDisabled(item)) return
   const key = String(group.id)
-  const selected = selections[key] ?? []
-  const at = selected.indexOf(item.id)
-  if (at >= 0) {
-    selected.splice(at, 1)
-  } else if (selected.length >= groupMax(group)) {
+  const next = nextSelection(group, selections[key] ?? [], item.id)
+  if (next === null) {
     uni.showToast({ title: `最多选择${groupMax(group)}项`, icon: 'none' })
     return
-  } else {
-    selected.push(item.id)
   }
-  selections[key] = selected
+  selections[key] = next
 }
 
 function reset(): void {
@@ -150,6 +188,7 @@ function reset(): void {
 }
 
 function open(): void {
+  avatarHue.value = pickAvatarHue()
   show.value = true
   emit('open')
 }
@@ -188,6 +227,70 @@ defineExpose({ open, close, reset })
     font-size: 32rpx;
     font-weight: bold;
     color: var(--dd-text-primary, #{$dd-text-primary});
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    padding: 20rpx 0;
+
+    &__image {
+      width: 180rpx;
+      height: 180rpx;
+      border-radius: 10rpx;
+      overflow: hidden;
+      margin-right: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
+
+      &__text {
+        font-size: 56rpx;
+        font-weight: bold;
+        line-height: 1;
+      }
+
+      @include dd-avatar-colors;
+    }
+
+    &__info {
+      flex: 1;
+
+      &__price {
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        margin-bottom: 20rpx;
+
+        &__symbol {
+          font-size: 24rpx;
+          color: var(--dd-error-400, #{$dd-error-400});
+          margin-right: 4rpx;
+        }
+
+        &__value {
+          font-size: 36rpx;
+          color: var(--dd-error-400, #{$dd-error-400});
+          font-weight: bold;
+        }
+      }
+
+      &__stock {
+        font-size: 26rpx;
+        color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+        margin-bottom: 20rpx;
+      }
+
+      &__selected {
+        font-size: 26rpx;
+        color: var(--dd-text-primary, #{$dd-text-primary});
+      }
+    }
   }
 
   &__content {

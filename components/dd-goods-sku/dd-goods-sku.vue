@@ -14,8 +14,9 @@
       <view class="dd-goods-sku__container" :style="{ padding: pageInline ? '0px' : '' }">
         <view class="dd-goods-sku__header">
           <slot name="header">
-            <view class="dd-goods-sku__header__image">
-              <image :src="goodsInfo.image || goodsInfo.picture" mode="aspectFill"></image>
+            <view class="dd-goods-sku__header__image" :class="'dd-goods-sku__header__image--' + avatarHue">
+              <image v-if="headerImage" :src="headerImage" mode="aspectFill"></image>
+              <text v-else class="dd-goods-sku__header__image__text">{{ avatarText }}</text>
             </view>
             <view class="dd-goods-sku__header__info">
               <view class="dd-goods-sku__header__info__price">
@@ -75,6 +76,7 @@ import { computed, reactive, ref } from 'vue'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdStepper from '../dd-stepper/dd-stepper.vue'
 import DdButton from '../dd-button/dd-button.vue'
+import { pickAvatarHue, avatarText as calcAvatarText } from '../../libs/utils'
 
 interface SkuLeaf {
   id: string | number
@@ -136,6 +138,11 @@ const price = computed(() => {
   if (comb) return comb.price || comb.price_fee
   return props.goodsInfo.price || props.goodsInfo.price_fee || 0
 })
+
+// 头图：缺图时文字占位（与 dd-package-sku / dd-goods-card 同规则）——随机主题底色 + 名称前 2 字
+const headerImage = computed(() => props.goodsInfo.image || props.goodsInfo.picture || '')
+const avatarHue = ref<string>(pickAvatarHue())
+const avatarText = computed(() => calcAvatarText(props.goodsInfo.name))
 
 // 当前库存
 const stock = computed(() => {
@@ -329,11 +336,22 @@ defineExpose({ open, close, reset })
       border-radius: 10rpx;
       overflow: hidden;
       margin-right: 20rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       image {
         width: 100%;
         height: 100%;
       }
+
+      &__text {
+        font-size: 56rpx;
+        font-weight: bold;
+        line-height: 1;
+      }
+
+      @include dd-avatar-colors;
     }
 
     &__info {

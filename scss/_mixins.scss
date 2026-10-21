@@ -152,3 +152,14 @@
   pointer-events: none;
   user-select: none;
 }
+
+// 缺图文字占位底色：6 档主题基色 + 各自 contrast 文字色（配套 libs/utils.ts 的 AVATAR_HUES，
+// 随机命中其一；运行时可换肤，明暗主题自动跟随）
+@mixin dd-avatar-colors {
+  &--primary { background-color: var(--dd-primary, #{$dd-primary}); color: var(--dd-primary-contrast, #{$dd-primary-contrast}); }
+  &--accent { background-color: var(--dd-accent, #{$dd-accent}); color: var(--dd-accent-contrast, #{$dd-accent-contrast}); }
+  &--success { background-color: var(--dd-success, #{$dd-success}); color: var(--dd-success-contrast, #{$dd-success-contrast}); }
+  &--warning { background-color: var(--dd-warning, #{$dd-warning}); color: var(--dd-warning-contrast, #{$dd-warning-contrast}); }
+  &--error { background-color: var(--dd-error, #{$dd-error}); color: var(--dd-error-contrast, #{$dd-error-contrast}); }
+  &--info { background-color: var(--dd-info, #{$dd-info}); color: var(--dd-info-contrast, #{$dd-info-contrast}); }
+}

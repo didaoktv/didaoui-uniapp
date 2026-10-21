@@ -10,14 +10,16 @@
     :hover-stay-time="120"
     @click="onClick"
   >
-    <!-- 缩略图 + 金色角标 -->
-    <view class="dd-goods-card__thumb">
+    <!-- 缩略图 + 金色角标（缺图时文字占位：随机主题底色 + 名称前 2 字） -->
+    <view class="dd-goods-card__thumb" :class="'dd-goods-card__thumb--' + avatarHue">
       <slot name="thumb">
         <image
+          v-if="thumb"
           class="dd-goods-card__thumb-img"
           :src="thumb"
           :mode="thumbMode"
         ></image>
+        <text v-else class="dd-goods-card__thumb-text">{{ avatarText }}</text>
       </slot>
       <text v-if="tag" class="dd-goods-card__tag" :style="{ zIndex: zIndexConfig.base }">{{ tag }}</text>
     </view>
@@ -55,9 +57,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import DdPrice from '../dd-price/dd-price.vue'
 // z-index 统一取 libs/config/zIndex.js（角标抬到缩略图之上取 base 档）
 import zIndexConfig from '../../libs/config/zIndex.js'
+import { pickAvatarHue, avatarText as calcAvatarText } from '../../libs/utils'
 
 interface Props {
   /** 商品图片地址 */
@@ -109,6 +113,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ (e: 'click', val: Event): void }>()
 
+// 缺图文字占位（与 dd-goods-sku / dd-package-sku 同规则）：随机主题底色 + 名称前 2 字（实例化时随机一次）
+const avatarHue = ref<string>(pickAvatarHue())
+const avatarText = computed(() => calcAvatarText(props.title))
+
 function onClick(e: Event) {
   if (props.disabled) return
   emit('click', e)
@@ -143,12 +151,23 @@ function onClick(e: Event) {
     position: relative;
     flex-shrink: 0;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &-img {
       display: block;
       width: 100%;
       height: 100%;
     }
+
+    &-text {
+      font-size: 40rpx;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    @include dd-avatar-colors;
   }
 
   &__tag {

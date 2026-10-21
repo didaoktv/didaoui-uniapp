@@ -7,6 +7,8 @@ import {
   type PackageSkuSelections,
   isItemDisabled,
   groupHint,
+  isSingleSelect,
+  nextSelection,
   isGroupSatisfied,
   canConfirm,
   unmetText,
@@ -56,6 +58,14 @@ function main(): void {
   assert(groupHint(optGroup) === '3选1', 'min=max 输出 N选M')
   assert(groupHint({ id: 'g', name: 'g', minSel: 1, maxSel: 2, items: [{ id: '1', name: '1' }, { id: '2', name: '2' }, { id: '3', name: '3' }] }) === '选1~2项', 'min<max 输出区间')
   assert(groupHint({ id: 'g', name: 'g', items: [{ id: '1', name: '1' }] }) === '最多选1项', 'min 缺省 0 输出上限')
+
+  // === 单选判定 / 点击替换 ===
+  assert(isSingleSelect(optGroup) === true, 'maxSel=1 应判单选')
+  assert(isSingleSelect(fixedGroup) === false, 'FIXED 组不判单选')
+  assert(isSingleSelect({ id: 'g', name: 'g', maxSel: 2, items: [{ id: '1', name: '1' }, { id: '2', name: '2' }] }) === false, 'maxSel=2 非单选')
+  assert(JSON.stringify(nextSelection(optGroup, ['a'], 'b')) === JSON.stringify(['b']), '单选点非选中项直接替换')
+  assert(JSON.stringify(nextSelection(optGroup, ['b'], 'b')) === JSON.stringify([]), '单选点已选中项取消选中')
+  assert(nextSelection({ id: 'g', name: 'g', maxSel: 2, items: [{ id: '1', name: '1' }, { id: '2', name: '2' }, { id: '3', name: '3' }] }, ['1', '2'], '3') === null, '多选超上限返回 null 拦截')
 
   // === min/max 校验 ===
   const empty: PackageSkuSelections = {}

@@ -58,6 +58,31 @@ export function groupHint(group: PackageSkuGroup): string {
   return `最多选${max}项`
 }
 
+/** 单选组：上限为 1 的 OPTIONAL 组（N选1），点非选中项直接替换选中，无需先取消 */
+export function isSingleSelect(group: PackageSkuGroup): boolean {
+  return !isFixed(group) && groupMax(group) === 1
+}
+
+/**
+ * 点击可选项后的新选中集（纯逻辑，供组件与自检共用）
+ * 返回 null 表示多选上限拦截；FIXED/售罄由调用方先行拦截，不在此处理
+ */
+export function nextSelection(
+  group: PackageSkuGroup,
+  selected: (string | number)[],
+  itemId: string | number,
+): (string | number)[] | null {
+  const at = selected.indexOf(itemId)
+  if (at >= 0) {
+    const copy = selected.slice()
+    copy.splice(at, 1)
+    return copy
+  }
+  if (isSingleSelect(group)) return [itemId]
+  if (selected.length >= groupMax(group)) return null
+  return [...selected, itemId]
+}
+
 /** 组是否已选满最低要求（上限在点击时拦截，不会超） */
 export function isGroupSatisfied(group: PackageSkuGroup, selections: PackageSkuSelections): boolean {
   if (isFixed(group)) return true
