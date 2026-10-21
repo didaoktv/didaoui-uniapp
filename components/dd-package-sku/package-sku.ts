@@ -4,10 +4,12 @@
 export interface PackageSkuItem {
   id: string | number
   name: string
-  /** 加价金额（分），0/缺省 = 不加价 */
+  /** 加价金额（分/每份，ADR-0026），0/缺省 = 不加价 */
   priceFen?: number
   /** 库存数量，<=0 置灰；缺省视为有货 */
   qty?: number
+  /** 单次选中份数（选中一次即 N 份，仅影响摘要文案与加价合计），缺省 1；与 qty（库存）正交 */
+  perQty?: number
   /** false 置灰；缺省视为可用 */
   enabled?: boolean
 }
@@ -115,33 +117,35 @@ export function buildOptions(groups: PackageSkuGroup[], selections: PackageSkuSe
   return options
 }
 
-/** 已选 OPTIONAL 项加价合计（分） */
+/** 已选 OPTIONAL 项加价合计（分）：每份加价 × 单次选中份数（与服务端口径同源，ADR-0026） */
 export function computeSurchargeFen(groups: PackageSkuGroup[], selections: PackageSkuSelections): number {
   let sum = 0
   for (const g of groups) {
     if (isFixed(g)) continue
     for (const skuId of selections[String(g.id)] ?? []) {
       const item = g.items.find((it) => it.id === skuId)
-      sum += item?.priceFen ?? 0
+      sum += (item?.priceFen ?? 0) * (item?.perQty ?? 1)
     }
   }
   return sum
 }
 
-/** 已选 OPTIONAL 项名称顿号拼接 */
+/** 已选 OPTIONAL 项名称顿号拼接；单次选中份数 >1 时带 ×N */
 export function buildSelectedText(groups: PackageSkuGroup[], selections: PackageSkuSelections): string {
   const names: string[] = []
   for (const g of groups) {
     if (isFixed(g)) continue
     for (const skuId of selections[String(g.id)] ?? []) {
       const item = g.items.find((it) => it.id === skuId)
-      if (item) names.push(item.name)
+      if (!item) continue
+      const n = item.perQty ?? 1
+      names.push(n > 1 ? `${item.name}×${n}` : item.name)
     }
   }
   return names.join('、')
 }
 
-/** 加价标签：「+¥X」（元，去尾零）；无加价返回空串 */
+/** 加价标签：「+¥X」（元，去尾零）——每份口径（perQty>1 时实收为 X×N，合计预览兜底），无加价返回空串 */
 export function surchargeLabel(item: PackageSkuItem): string {
   const fen = item.priceFen ?? 0
   if (fen <= 0) return ''

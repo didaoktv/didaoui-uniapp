@@ -89,6 +89,23 @@ function main(): void {
   assert(buildSelectedText(groups, { g2: ['a', 'b'] }) === '可乐、啤酒', '摘要顿号拼接（上限点击拦截，此处仅测合计）')
   assert(computeSurchargeFen(groups, two) === 1000, '两项合计 1000 分')
 
+  // === 单次选中份数 perQty（ADR-0026）===
+  const optPerQty: PackageSkuGroup = {
+    id: 'g3', name: '加料', minSel: 1, maxSel: 2,
+    items: [
+      { id: 'x', name: '大果盘', priceFen: 1000, perQty: 2, enabled: true },
+      { id: 'y', name: '可乐', priceFen: 0, perQty: 1, enabled: true },
+      { id: 'z', name: '薯条', priceFen: 500, enabled: true },
+    ],
+  }
+  const g3x: PackageSkuSelections = { g3: ['x'] }
+  const g3z: PackageSkuSelections = { g3: ['z'] }
+  assert(computeSurchargeFen([optPerQty], g3x) === 2000, 'perQty=2 加价按份×2（1000×2）')
+  assert(computeSurchargeFen([optPerQty], g3z) === 500, 'perQty 缺省视为 1')
+  assert(buildSelectedText([optPerQty], g3x) === '大果盘×2', 'perQty>1 摘要带 ×N')
+  assert(buildSelectedText([optPerQty], g3z) === '薯条', 'perQty 缺省摘要不带 ×')
+  assert(isItemDisabled({ id: 'w', name: 'w', perQty: 2, qty: 0 }) === true, 'perQty 不影响置灰判定（qty 语义正交）')
+
   if (failed > 0) {
     throw new Error(`${failed} assertion(s) failed`)
   }
