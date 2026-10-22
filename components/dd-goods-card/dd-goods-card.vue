@@ -43,9 +43,11 @@
             </text>
           </view>
           <!-- 价格行右侧扩展位（步进器/加购等与价格同排贴底）；未用时回退已选数量 -->
-          <slot name="price-right">
-            <text v-if="num" class="dd-goods-card__num">×{{ num }}</text>
-          </slot>
+          <view class="dd-goods-card__price-right">
+            <slot name="price-right">
+              <text v-if="num" class="dd-goods-card__num">×{{ num }}</text>
+            </slot>
+          </view>
         </view>
 
         <view v-if="$slots.bottom" class="dd-goods-card__bottom">
@@ -206,11 +208,8 @@ function onClick(e: Event) {
     color: var(--dd-text-secondary, #{$dd-text-secondary});
     font-size: 24rpx;
     line-height: 1.4;
-    // 两行省略
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
+    // 单行省略：给价格行（现价+划线价）留足横向空间，避免挤出右侧操作位
+    @include dd-ellipsis;
   }
 
   &__price-row {
@@ -221,6 +220,9 @@ function onClick(e: Event) {
   }
 
   &__price {
+    // 占满剩余宽度且可收缩，划线价过长时自身省略，不把右侧操作位挤出
+    flex: 1;
+    min-width: 0;
     display: inline-flex;
     align-items: baseline;
     color: var(--dd-error-400, #{$dd-error-400});
@@ -233,10 +235,18 @@ function onClick(e: Event) {
     font-size: 22rpx;
     font-weight: 400;
     text-decoration: line-through;
+    // 空间不足时划线价自身省略
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__price-right {
+    flex-shrink: 0;
+    margin-left: $dd-space-2;
   }
 
   &__num {
-    margin-left: $dd-space-2;
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     font-size: 24rpx;
   }

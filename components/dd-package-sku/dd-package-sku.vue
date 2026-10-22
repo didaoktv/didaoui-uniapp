@@ -22,6 +22,7 @@
             <view class="dd-package-sku__header__info__price">
               <text class="dd-package-sku__header__info__price__symbol">¥</text>
               <text class="dd-package-sku__header__info__price__value">{{ price }}</text>
+              <text v-if="originPrice" class="dd-package-sku__header__info__price__origin">¥{{ originPrice }}</text>
             </view>
             <view v-if="stock !== undefined && stock !== null" class="dd-package-sku__header__info__stock">
               库存 {{ stock }} 件
@@ -146,6 +147,8 @@ const price = computed(
       surchargeFen.value) /
     100,
 )
+/** 划线原价（元）：套餐级营销价，不随加价联动；originPrice|origin_price，缺省不显示 */
+const originPrice = computed(() => props.goodsInfo.originPrice || props.goodsInfo.origin_price || '')
 /** 库存：缺省不显示库存行（套餐可能无台账库存，如房时套餐） */
 const stock = computed(() => props.goodsInfo.stock ?? props.goodsInfo.quantity)
 /** 已选项实时摘要（确认前即联动展示） */
@@ -277,6 +280,15 @@ defineExpose({ open, close, reset })
           font-size: 36rpx;
           color: var(--dd-error-400, #{$dd-error-400});
           font-weight: bold;
+        }
+
+        // 划线原价（样式对齐 dd-goods-card / dd-goods-sku）
+        &__origin {
+          margin-left: $dd-space-2;
+          color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+          font-size: 22rpx;
+          font-weight: 400;
+          text-decoration: line-through;
         }
       }
 

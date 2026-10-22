@@ -22,6 +22,7 @@
               <view class="dd-goods-sku__header__info__price">
                 <text class="dd-goods-sku__header__info__price__symbol">¥</text>
                 <text class="dd-goods-sku__header__info__price__value">{{ price }}</text>
+                <text v-if="originPrice" class="dd-goods-sku__header__info__price__origin">¥{{ originPrice }}</text>
               </view>
               <view class="dd-goods-sku__header__info__stock">库存 {{ stock }} 件</view>
               <view class="dd-goods-sku__header__info__selected">已选: {{ selectedSkuText }}</view>
@@ -139,16 +140,23 @@ const price = computed(() => {
   return props.goodsInfo.price || props.goodsInfo.price_fee || 0
 })
 
+// 划线原价：随选中组合（originPrice|origin_price），缺省回退商品级；不传不显示
+const originPrice = computed(() => {
+  const comb = getSelectedSkuComb()
+  if (comb) return comb.originPrice || comb.origin_price || ''
+  return props.goodsInfo.originPrice || props.goodsInfo.origin_price || ''
+})
+
 // 头图：缺图时文字占位（与 dd-package-sku / dd-goods-card 同规则）——随机主题底色 + 名称前 2 字
 const headerImage = computed(() => props.goodsInfo.image || props.goodsInfo.picture || '')
 const avatarHue = ref<string>(pickAvatarHue())
 const avatarText = computed(() => calcAvatarText(props.goodsInfo.name))
 
-// 当前库存
+// 当前库存：库存 0 是合法值（售罄规格），必须用 ?? 兜底——|| 会把 0 误判缺省落到 undefined，模板渲染成「库存  件」
 const stock = computed(() => {
   const comb = getSelectedSkuComb()
-  if (comb) return comb.stock || comb.quantity
-  return props.goodsInfo.stock || props.goodsInfo.quantity || 0
+  if (comb) return comb.stock ?? comb.quantity ?? 0
+  return props.goodsInfo.stock ?? props.goodsInfo.quantity ?? 0
 })
 
 // 最大购买数量
@@ -187,21 +195,23 @@ function isSelected(skuKey: string, skuValueId: string | number) {
   return selectedSku[skuKey] === skuValueId
 }
 
-// 判断SKU是否禁用
+// 判断SKU是否禁用：组合不存在或库存为 0（售罄）均不可选；库存 0 是合法值，取值须用 ?? 防穿透
 function isDisabled(skuKey: string, skuValueId: string | number) {
   // 构造一个临时的已选中SKU对象
   const tempSelected: Record<string, any> = { ...selectedSku, [skuKey]: skuValueId }
+  const stockOf = (s: Record<string, any>) => s.stock ?? s.quantity ?? 0
 
   // 检查是否还有未选择的SKU维度
   const selectedCount = Object.keys(tempSelected).filter((key) => tempSelected[key]).length
   const totalSkuCount = props.skuTree.length
 
-  // 如果所有SKU都已选择，则检查组合是否存在
+  // 如果所有SKU都已选择，则检查组合是否存在且有货
   if (selectedCount === totalSkuCount) {
-    return !getSkuComb(tempSelected)
+    const comb = getSkuComb(tempSelected)
+    return !comb || stockOf(comb) <= 0
   }
 
-  // 检查当前选择的SKU是否会导致无法组成有效组合
+  // 部分选择预检：存在任一有货的匹配行即可选；匹配行全售罄等同组合不存在，一并禁用
   for (let i = 0; i < props.skuList.length; i++) {
     const sku = props.skuList[i]
     let match = true
@@ -213,7 +223,7 @@ function isDisabled(skuKey: string, skuValueId: string | number) {
       }
     }
 
-    if (match) {
+    if (match && stockOf(sku) > 0) {
       return false
     }
   }
@@ -373,6 +383,15 @@ defineExpose({ open, close, reset })
           font-size: 36rpx;
           color: var(--dd-error-400, #{$dd-error-400});
           font-weight: bold;
+        }
+
+        // 划线原价（样式对齐 dd-goods-card）
+        &__origin {
+          margin-left: $dd-space-2;
+          color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+          font-size: 22rpx;
+          font-weight: 400;
+          text-decoration: line-through;
         }
       }
 
