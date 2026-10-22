@@ -309,7 +309,6 @@ function onSubmit() {
   justify-content: center;
   width: 88rpx;
   height: 88rpx;
-  transform: translateY(-14rpx);
   border-radius: $dd-radius-full;
   background: var(--dd-primary, #{$dd-primary});
   color: var(--dd-primary-contrast, #{$dd-primary-contrast});
