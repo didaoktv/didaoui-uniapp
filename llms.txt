@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，97 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，98 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -18,7 +18,7 @@
 ```ts
 // main.ts —— 两端（uniapp-staff/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
-app.use(ui) // 97 个 dd-* 全局注册，模板直接写 <dd-xxx>
+app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 // App.vue <style> —— 运行时主题（不引入则组件用 SCSS 兜底值渲染）
 // @import '@didaoktv/didaoui-uniapp/scss/theme';
@@ -69,7 +69,7 @@ app.use(ui) // 97 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-dropdown-menu](components/dd-dropdown-menu/dd-dropdown-menu.vue) / [dd-dropdown-item](components/dd-dropdown-item/dd-dropdown-item.vue): 下拉筛选菜单
 - [dd-sidebar](components/dd-sidebar/dd-sidebar.vue) / [dd-sidebar-item](components/dd-sidebar-item/dd-sidebar-item.vue): 侧边栏导航（垂直一级导航；tree-select 左列同款，v-model 索引、title/dot/badge/disabled）
 
-### 布局/卡片/业务 (10)
+### 布局/卡片/业务 (11)
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
@@ -81,6 +81,7 @@ app.use(ui) // 97 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-calendar](components/dd-calendar/dd-calendar.vue): 月历+时段选择（日期多选区间/禁选/时段格）
 - [dd-qrcode](components/dd-qrcode/dd-qrcode.vue): canvas 二维码（内容/尺寸/前景背景色/logo；前景背景色是库内仅有的硬编码色值例外）
 - [dd-submit-bar](components/dd-submit-bar/dd-submit-bar.vue): 提交订单栏（底部固定：合计价格+提交按钮+tip 提示）。price(分)/label/currency/decimalLength/suffixLabel、buttonText/buttonType/buttonColor/loading/disabled、tip/tipIcon、textAlign、placeholder/safeAreaInsetBottom；emit submit；slots top/tip/default/button（价格区由 dd-price 渲染）
+- [dd-cart-bar](components/dd-cart-bar/dd-cart-bar.vue): 购物车栏（外卖式：入口圆钮+数量角标 → 弹出已选商品弹层）。items: DdCartItem[](id/name/image/price(分)/count/specs) 受控、v-model 弹层显隐、label/suffixLabel/tips/title/clearText/clearConfirm、buttonText/buttonType/buttonColor/loading/disabled（空车自动禁）、maxListHeight/placeholder/safeAreaInsetBottom；emit update:modelValue/change(items，减到0剔除)/submit/clear/item-click/open/close；类型 DdCartItem 从 index.ts 导出；弹层复用 dd-popup、行内 dd-stepper，清空走 uni.showModal 二次确认
 
 ### 数据展示 (25)
 

@@ -43,7 +43,7 @@ import DdDropdownItem from './components/dd-dropdown-item/dd-dropdown-item.vue'
 import DdSidebar from './components/dd-sidebar/dd-sidebar.vue'
 import DdSidebarItem from './components/dd-sidebar-item/dd-sidebar-item.vue'
 
-// === Layout (10) ===
+// === Layout (11) ===
 import DdCard from './components/dd-card/dd-card.vue'
 import DdRoomCard from './components/dd-room-card/dd-room-card.vue'
 import DdGoodsCard from './components/dd-goods-card/dd-goods-card.vue'
@@ -54,6 +54,7 @@ import DdWorkorderCard from './components/dd-workorder-card/dd-workorder-card.vu
 import DdCalendar from './components/dd-calendar/dd-calendar.vue'
 import DdQrcode from './components/dd-qrcode/dd-qrcode.vue'
 import DdSubmitBar from './components/dd-submit-bar/dd-submit-bar.vue'
+import DdCartBar from './components/dd-cart-bar/dd-cart-bar.vue'
 
 // === Display (25) ===
 import DdTag from './components/dd-tag/dd-tag.vue'
@@ -124,6 +125,7 @@ const components = {
   DdSidebar, DdSidebarItem,
   DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
   DdSubmitBar,
+  DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
   DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
@@ -156,6 +158,7 @@ export {
   DdSidebar, DdSidebarItem,
   DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
   DdSubmitBar,
+  DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
   DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
@@ -183,6 +186,9 @@ export type {
   PackageSkuGroup,
   PackageSkuOption,
 } from './components/dd-package-sku/package-sku'
+
+// 购物车条目类型（dd-cart-bar 配套）
+export type { DdCartItem } from './components/dd-cart-bar/cart-bar'
 
 // 图标元数据（供 demo/文档消费，与 dd-icon.vue 内 SCSS &-- 规则保持一致）
 export { iconNames, iconGroups, iconLabels } from './components/dd-icon/dd-icon.vue'
