@@ -65,6 +65,8 @@
         </view>
       </view>
     </dd-popup>
+    <!-- 库内 toast（toast 档 2040，恒高于自身 popup 面板）；单例状态，页面另有 dd-toast 时自动共用 -->
+    <dd-toast />
   </view>
 </template>
 
@@ -78,6 +80,7 @@
 import { computed, reactive, ref } from 'vue'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdButton from '../dd-button/dd-button.vue'
+import DdToast, { showToast } from '../dd-toast/dd-toast.vue'
 import { pickAvatarHue, avatarText as calcAvatarText } from '../../libs/utils'
 import {
   type PackageSkuGroup,
@@ -180,7 +183,7 @@ function onItemClick(group: PackageSkuGroup, item: PackageSkuItem): void {
   const key = String(group.id)
   const next = nextSelection(group, selections[key] ?? [], item.id)
   if (next === null) {
-    uni.showToast({ title: `最多选择${groupMax(group)}项`, icon: 'none' })
+    showToast({ message: `最多选择${groupMax(group)}项`, type: 'text' })
     return
   }
   selections[key] = next

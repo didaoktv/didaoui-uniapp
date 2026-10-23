@@ -3,6 +3,7 @@
     class="dd-goods-card"
     :class="[
       `dd-goods-card--${layout}`,
+      `dd-goods-card--${size}`,
       { 'dd-goods-card--disabled': disabled },
     ]"
     :style="customStyle"
@@ -37,6 +38,7 @@
               :rate="price"
               :currency="currency"
               :decimal-length="decimalLength"
+              :size="size"
             ></dd-price>
             <text v-if="originPrice" class="dd-goods-card__price-origin">
               {{ currency }}{{ originPrice }}
@@ -84,6 +86,8 @@ interface Props {
   tag?: string
   /** 布局：horizontal 横向（左图右文）/ vertical 竖向（上图下文） */
   layout?: 'horizontal' | 'vertical'
+  /** 尺寸：md 常规 / sm 小号（横向用于购物车列表行且不渲染描述，竖向用于一行三列宫格） */
+  size?: 'sm' | 'md'
   /** 已选数量（右下角，不传不渲染） */
   num?: string | number
   /** 置灰（售罄等不可点场景） */
@@ -106,6 +110,7 @@ const props = withDefaults(defineProps<Props>(), {
   decimalLength: 2,
   tag: '',
   layout: 'horizontal',
+  size: 'md',
   num: '',
   disabled: false,
   thumbMode: 'aspectFill',
@@ -288,6 +293,51 @@ function onClick(e: Event) {
 
   .dd-goods-card__body {
     padding: $dd-space-3;
+  }
+}
+
+// 小号卡：划线价随小号档缩小（价格字号由 dd-price size 联动）
+.dd-goods-card--sm {
+  .dd-goods-card__price-origin {
+    font-size: 20rpx;
+  }
+}
+
+// 小号横向（购物车列表行）：96rpx 紧凑图 + 小字号，不渲染描述
+.dd-goods-card--horizontal.dd-goods-card--sm {
+  padding: $dd-space-2;
+
+  .dd-goods-card__thumb {
+    width: 96rpx;
+    height: 96rpx;
+  }
+
+  .dd-goods-card__body {
+    padding-left: $dd-space-2;
+  }
+
+  .dd-goods-card__title {
+    font-size: 26rpx;
+  }
+
+  .dd-goods-card__num {
+    font-size: 22rpx;
+  }
+}
+
+// 小号竖向（一行三列宫格）：方图 + 标题最多两行（对齐点选套餐页三列规格卡）
+.dd-goods-card--vertical.dd-goods-card--sm {
+  .dd-goods-card__body {
+    padding: $dd-space-2;
+  }
+
+  .dd-goods-card__title {
+    font-size: 24rpx;
+    @include dd-ellipsis(2);
+  }
+
+  .dd-goods-card__desc {
+    font-size: 20rpx;
   }
 }
 </style>

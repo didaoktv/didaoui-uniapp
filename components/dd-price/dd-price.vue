@@ -1,5 +1,5 @@
 <template>
-  <view v-if="pricePair" class="dd-price">
+  <view v-if="pricePair" class="dd-price" :class="'dd-price--' + size">
     <text v-if="prefix" class="dd-price__prefix">{{ prefix }}</text>
     <text class="dd-price__currency">{{ currency }}</text>
     <text class="dd-price__integer">{{ pricePair[0] }}</text>
@@ -24,6 +24,8 @@ interface Props {
   prefix?: string
   /** 额外后缀文案（如「起」） */
   suffix?: string
+  /** 尺寸：sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   mark: '.',
   prefix: '',
   suffix: '',
+  size: 'md',
 })
 
 const pricePair = computed<string[] | null>(() => {
@@ -79,6 +82,34 @@ const pricePair = computed<string[] | null>(() => {
 
   &__integer {
     font-size: 36rpx;
+  }
+
+  // sm：购物车列表行 / 小号商品卡
+  &--sm {
+    .dd-price__prefix,
+    .dd-price__suffix,
+    .dd-price__currency,
+    .dd-price__decimal {
+      font-size: 20rpx;
+    }
+
+    .dd-price__integer {
+      font-size: 30rpx;
+    }
+  }
+
+  // lg：结算条 / 合计
+  &--lg {
+    .dd-price__prefix,
+    .dd-price__suffix,
+    .dd-price__currency,
+    .dd-price__decimal {
+      font-size: 28rpx;
+    }
+
+    .dd-price__integer {
+      font-size: 44rpx;
+    }
   }
 }
 </style>

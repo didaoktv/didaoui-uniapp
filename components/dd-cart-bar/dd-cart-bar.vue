@@ -49,6 +49,7 @@
     @update:model-value="onPopupUpdate"
     @open="emit('open')"
     @close="emit('close')"
+    @closed="onPanelClosed"
   >
     <view class="dd-cart-bar__panel">
       <view class="dd-cart-bar__header">
@@ -67,45 +68,30 @@
         scroll-y
         :style="{ maxHeight: maxListHeight }"
       >
-        <view
+        <!-- 商品行复用 dd-goods-card 小号横卡（96rpx 紧凑图、不渲染描述、价格小一号）；规格随卡 desc 传入（sm 档不显示），数量步进器走 price-right 插槽 -->
+        <dd-goods-card
           v-for="item in items"
           :key="item.id"
-          class="dd-cart-bar__item"
+          class="dd-cart-bar__item-card"
+          size="sm"
+          :thumb="item.image"
+          :title="item.name"
+          :desc="item.specs"
+          :price="item.price / 100"
+          :currency="currency"
           @click="emit('item-click', item)"
         >
-          <dd-image
-            v-if="item.image"
-            class="dd-cart-bar__item-image"
-            :src="item.image"
-            width="120rpx"
-            height="120rpx"
-            radius="16rpx"
-            fit="cover"
-          />
-          <view v-else class="dd-cart-bar__item-image dd-cart-bar__item-image--empty">
-            <dd-icon name="shopping-cart-o" class="dd-cart-bar__item-image-icon" />
-          </view>
-          <view class="dd-cart-bar__item-info">
-            <text class="dd-cart-bar__item-name">{{ item.name }}</text>
-            <text v-if="item.specs" class="dd-cart-bar__item-specs">{{ item.specs }}</text>
-            <view class="dd-cart-bar__item-footer">
-              <dd-price
-                class="dd-cart-bar__item-price"
-                :rate="item.price / 100"
-                :currency="currency"
-              />
-              <!-- 减到 1 再减由 onMinus 移除该项（min=1 时 stepper 只发 minus 不发 change） -->
-              <dd-stepper
-                :model-value="item.count"
-                :min="1"
-                size="sm"
-                @click.stop
-                @change="onCountChange(item, $event)"
-                @minus="onMinus(item)"
-              />
-            </view>
-          </view>
-        </view>
+          <template #price-right>
+            <dd-stepper
+              :model-value="item.count"
+              :min="1"
+              size="sm"
+              @click.stop
+              @change="onCountChange(item, $event)"
+              @minus="onMinus(item)"
+            />
+          </template>
+        </dd-goods-card>
       </scroll-view>
       <view v-else class="dd-cart-bar__empty">
         <dd-icon name="shopping-cart-o" class="dd-cart-bar__empty-icon" />
@@ -113,15 +99,26 @@
       </view>
     </view>
   </dd-popup>
+
+  <!-- 清空二次确认：库内 dd-dialog（dialog 档 2011，恒高于本组件 popup 面板 2002），不用 uni.showModal（H5 端 z-index 999 会被自家面板盖住） -->
+  <dd-dialog
+    v-model="clearDialogVisible"
+    title="提示"
+    message="确定清空购物车吗？"
+    confirm-text="确定"
+    :show-cancel-button="true"
+    @confirm="doClear"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import DdBadge from '../dd-badge/dd-badge.vue'
 import DdButton from '../dd-button/dd-button.vue'
+import DdDialog from '../dd-dialog/dd-dialog.vue'
+import DdGoodsCard from '../dd-goods-card/dd-goods-card.vue'
 import DdIcon from '../dd-icon/dd-icon.vue'
-import DdImage from '../dd-image/dd-image.vue'
 import DdPopup from '../dd-popup/dd-popup.vue'
 import DdPrice from '../dd-price/dd-price.vue'
 import DdStepper from '../dd-stepper/dd-stepper.vue'
@@ -144,7 +141,7 @@ interface Props {
   title?: string
   /** 清空按钮文案 */
   clearText?: string
-  /** 清空前是否二次确认（uni.showModal） */
+  /** 清空前是否二次确认（库内 dd-dialog） */
   clearConfirm?: boolean
   /** 货币符号 */
   currency?: string
@@ -170,7 +167,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-  label: '合计：',
+  label: '',
   suffixLabel: '',
   tips: '',
   title: '已选商品',
@@ -207,8 +204,23 @@ const totalYuan = computed(() => props.items.reduce((sum, it) => sum + (it.price
 
 const buttonDisabled = computed(() => props.disabled || totalCount.value === 0)
 
+// 弹层打开时栏抬升到 popup 档 +1，且保持到关闭动画结束（popup 的 closed 事件）才降回 sticky 档：
+// 否则关闭瞬间栏先掉档，下滑中的面板(2001)会盖在栏(100)上面收起
+const barElevated = ref(props.modelValue)
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) barElevated.value = true
+  },
+)
+
+function onPanelClosed() {
+  barElevated.value = false
+}
+
 const barStyle = computed<CSSProperties>(() => ({
-  zIndex: props.modelValue ? zIndexConfig.popup + 1 : zIndexConfig.sticky,
+  zIndex: barElevated.value ? zIndexConfig.popup + 1 : zIndexConfig.sticky,
 }))
 
 const buttonStyle = computed(() => (props.buttonColor ? { background: props.buttonColor } : undefined))
@@ -240,16 +252,13 @@ function emitChange(items: DdCartItem[]) {
   if (items.length === 0 && props.modelValue) emit('update:modelValue', false)
 }
 
+/** 清空二次确认弹窗显隐（dd-dialog 在模板尾部独立渲染，经 portal 提到页面根节点） */
+const clearDialogVisible = ref(false)
+
 function onClear() {
   if (!props.items.length) return
   if (!props.clearConfirm) return doClear()
-  uni.showModal({
-    title: '提示',
-    content: '确定清空购物车吗？',
-    success: (res) => {
-      if (res.confirm) doClear()
-    },
-  })
+  clearDialogVisible.value = true
 }
 
 function doClear() {
@@ -364,8 +373,8 @@ function onSubmit() {
 
 .dd-cart-bar__panel {
   // 底部留出栏高 + 安全区：弹层面板(popup 档)压在栏下方，内容不被栏遮挡
-  padding: $dd-space-3 $dd-space-3 calc(100rpx + constant(safe-area-inset-bottom));
-  padding: $dd-space-3 $dd-space-3 calc(100rpx + env(safe-area-inset-bottom));
+  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*2 + constant(safe-area-inset-bottom));
+  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*2 + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
@@ -411,66 +420,11 @@ function onSubmit() {
   box-sizing: border-box;
 }
 
-.dd-cart-bar__item {
-  display: flex;
-  align-items: center;
-  padding: $dd-space-3 0;
-}
-
-.dd-cart-bar__item-image {
-  flex-shrink: 0;
-  margin-right: $dd-space-3;
-  overflow: hidden;
-
-  &--empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120rpx;
-    height: 120rpx;
-    border-radius: 16rpx;
-    background: var(--dd-surface-container-low, #{$dd-surface-container-low});
+// 列表行卡片间距（行本体是 dd-goods-card 小号横卡）
+.dd-cart-bar__item-card {
+  & + & {
+    margin-top: $dd-space-2;
   }
-}
-
-.dd-cart-bar__item-image-icon {
-  color: var(--dd-text-secondary, #{$dd-text-secondary});
-  font-size: 48rpx;
-}
-
-.dd-cart-bar__item-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.dd-cart-bar__item-name {
-  display: block;
-  overflow: hidden;
-  color: var(--dd-text-primary, #{$dd-text-primary});
-  font-size: $dd-font-size-body;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.dd-cart-bar__item-specs {
-  display: block;
-  margin-top: $dd-space-1;
-  overflow: hidden;
-  color: var(--dd-text-secondary, #{$dd-text-secondary});
-  font-size: $dd-font-size-caption;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.dd-cart-bar__item-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: $dd-space-2;
-}
-
-.dd-cart-bar__item-price {
-  color: var(--dd-error, #{$dd-error});
 }
 
 .dd-cart-bar__empty {

@@ -73,7 +73,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
-- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、thumb/title/desc/price/originPrice/tag/num/disabled；价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom 插槽
+- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格）、thumb/title/desc/price/originPrice/tag/num/disabled；价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price-right 插槽
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
@@ -81,7 +81,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-calendar](components/dd-calendar/dd-calendar.vue): 月历+时段选择（日期多选区间/禁选/时段格）
 - [dd-qrcode](components/dd-qrcode/dd-qrcode.vue): canvas 二维码（内容/尺寸/前景背景色/logo；前景背景色是库内仅有的硬编码色值例外）
 - [dd-submit-bar](components/dd-submit-bar/dd-submit-bar.vue): 提交订单栏（底部固定：合计价格+提交按钮+tip 提示）。price(分)/label/currency/decimalLength/suffixLabel、buttonText/buttonType/buttonColor/loading/disabled、tip/tipIcon、textAlign、placeholder/safeAreaInsetBottom；emit submit；slots top/tip/default/button（价格区由 dd-price 渲染）
-- [dd-cart-bar](components/dd-cart-bar/dd-cart-bar.vue): 购物车栏（外卖式：入口圆钮+数量角标 → 弹出已选商品弹层）。items: DdCartItem[](id/name/image/price(分)/count/specs) 受控、v-model 弹层显隐、label/suffixLabel/tips/title/clearText/clearConfirm、buttonText/buttonType/buttonColor/loading/disabled（空车自动禁）、maxListHeight/placeholder/safeAreaInsetBottom；emit update:modelValue/change(items，减到0剔除)/submit/clear/item-click/open/close；类型 DdCartItem 从 index.ts 导出；弹层复用 dd-popup、行内 dd-stepper，清空走 uni.showModal 二次确认
+- [dd-cart-bar](components/dd-cart-bar/dd-cart-bar.vue): 购物车栏（外卖式：入口圆钮+数量角标 → 弹出已选商品弹层）。items: DdCartItem[](id/name/image/price(分)/count/specs) 受控、v-model 弹层显隐、label/suffixLabel/tips/title/clearText/clearConfirm、buttonText/buttonType/buttonColor/loading/disabled（空车自动禁）、maxListHeight/placeholder/safeAreaInsetBottom；emit update:modelValue/change(items，减到0剔除)/submit/clear/item-click/open/close；类型 DdCartItem 从 index.ts 导出；弹层复用 dd-popup，商品行复用 dd-goods-card 小号横卡（stepper 走 price-right 插槽），清空走库内 dd-dialog 二次确认（H5 恒在弹层之上）
 
 ### 数据展示 (25)
 
@@ -106,7 +106,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-coupon](components/dd-coupon/dd-coupon.vue): 优惠券票券。amount/unit/unitPosition/limit/title/desc/time/actionText/shape/disabled；emit click
 - [dd-parse](components/dd-parse/dd-parse.vue): 富文本 HTML 渲染（H5 的 uni 时序问题已修为惰性初始化）
 - [dd-markdown](components/dd-markdown/dd-markdown.vue): Markdown 渲染（内置 marked.esm.mjs）
-- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix；颜色 inherit 跟随上下文；submit-bar 内部亦用它
+- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix、size sm/md/lg；颜色 inherit 跟随上下文；submit-bar 内部亦用它
 
 ### 浮层反馈 (11)
 

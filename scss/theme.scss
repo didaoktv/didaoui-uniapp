@@ -12,11 +12,92 @@
 // ============================================================
 @import './variables';
 @import './theme-tokens';
+@import './mixins';
 
 /* #ifdef H5 */
 :root {
   @include dd-theme($dd-vars-base);
   @include dd-theme($dd-theme-dark);
+}
+
+// 平台提示类弹层补丁：uni 的 showModal/showToast/showActionSheet 在 H5 固定 z-index 999，
+// 会被库内弹层（overlay 2000+，如购物车面板）压住；统一抬到 2050（高于本库最高档 toast 2040），
+// 确保所有提示类弹框恒在最顶层。档位表见 libs/config/zIndex.js。
+uni-modal,
+uni-toast,
+uni-actionsheet {
+  z-index: 2050 !important;
+}
+
+// 平台弹层主题对齐：uni H5 的 showModal/showToast/showActionSheet 写死白底蓝按钮，
+// 按选择器（取自 @dcloudio/uni-h5/style/api/*.css）覆写为库内 token，明暗主题跟随换肤。
+// 选择器带元素前缀提高特异性，免 !important（z-index 除外，见上）。
+uni-modal {
+  .uni-modal {
+    background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  }
+
+  .uni-modal__title {
+    color: var(--dd-text-primary, #{$dd-text-primary});
+  }
+
+  .uni-modal__bd {
+    color: var(--dd-text-secondary, #{$dd-text-secondary});
+  }
+
+  .uni-modal__ft:after,
+  .uni-modal__btn:after {
+    border-color: var(--dd-border-default, #{$dd-border-default});
+  }
+
+  // ponytail: uni-h5 给按钮写内联 color（confirmColor 机制），只能 !important 压掉；
+  // 代价是 uni.showModal({ confirmColor }) 自定义色会被忽略（需要自定义色时用库内 dd-dialog）
+  .uni-modal__btn,
+  .uni-modal__btn_default {
+    color: var(--dd-text-primary, #{$dd-text-primary}) !important;
+  }
+
+  .uni-modal__btn_primary {
+    color: var(--dd-primary, #{$dd-primary}) !important;
+  }
+
+  .uni-modal__btn:active {
+    background-color: var(--dd-border-strong, #{$dd-border-strong});
+  }
+}
+
+// 平台 toast 对齐库内 dd-toast 的玻璃胶囊风格
+uni-toast {
+  .uni-toast,
+  .uni-simple-toast__text {
+    @include dd-glass;
+    border-radius: $dd-radius-full;
+  }
+}
+
+uni-actionsheet {
+  .uni-actionsheet__menu,
+  .uni-actionsheet__action {
+    background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
+  }
+
+  .uni-actionsheet__title {
+    color: var(--dd-text-primary, #{$dd-text-primary});
+    background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
+    border-bottom: 1px solid var(--dd-border-default, #{$dd-border-default});
+  }
+
+  .uni-actionsheet__cell {
+    color: var(--dd-text-primary, #{$dd-text-primary});
+  }
+
+  .uni-actionsheet__cell:before {
+    border-top-color: var(--dd-border-subtle, #{$dd-border-subtle});
+  }
+
+  .uni-actionsheet__cell:active {
+    background-color: var(--dd-border-strong, #{$dd-border-strong});
+  }
 }
 /* #endif */
 
