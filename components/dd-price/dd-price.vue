@@ -24,8 +24,8 @@ interface Props {
   prefix?: string
   /** 额外后缀文案（如「起」） */
   suffix?: string
-  /** 尺寸：sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
-  size?: 'sm' | 'md' | 'lg'
+  /** 尺寸：xs 最小号（一行四列小卡）/ sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -95,6 +95,20 @@ const pricePair = computed<string[] | null>(() => {
 
     .dd-price__integer {
       font-size: 30rpx;
+    }
+  }
+
+  // xs：超小号商品卡（一行四列），字号再压一档
+  &--xs {
+    .dd-price__prefix,
+    .dd-price__suffix,
+    .dd-price__currency,
+    .dd-price__decimal {
+      font-size: 18rpx;
+    }
+
+    .dd-price__integer {
+      font-size: 24rpx;
     }
   }
 

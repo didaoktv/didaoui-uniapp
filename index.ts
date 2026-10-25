@@ -51,6 +51,7 @@ import DdFeatureGrid from './components/dd-feature-grid/dd-feature-grid.vue'
 import DdSticky from './components/dd-sticky/dd-sticky.vue'
 import DdBillDetail from './components/dd-bill-detail/dd-bill-detail.vue'
 import DdWorkorderCard from './components/dd-workorder-card/dd-workorder-card.vue'
+import DdOrderList from './components/dd-order-list/dd-order-list.vue'
 import DdCalendar from './components/dd-calendar/dd-calendar.vue'
 import DdQrcode from './components/dd-qrcode/dd-qrcode.vue'
 import DdSubmitBar from './components/dd-submit-bar/dd-submit-bar.vue'
@@ -123,7 +124,7 @@ const components = {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
@@ -156,7 +157,7 @@ export {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
@@ -189,6 +190,9 @@ export type {
 
 // 购物车条目类型（dd-cart-bar 配套）
 export type { DdCartItem } from './components/dd-cart-bar/cart-bar'
+
+// 订单列表条目类型（dd-order-list 配套）
+export type { DdOrderItem, DdOrderLine } from './components/dd-order-list/order-list'
 
 // 图标元数据（供 demo/文档消费，与 dd-icon.vue 内 SCSS &-- 规则保持一致）
 export { iconNames, iconGroups, iconLabels } from './components/dd-icon/dd-icon.vue'

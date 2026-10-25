@@ -69,15 +69,16 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-dropdown-menu](components/dd-dropdown-menu/dd-dropdown-menu.vue) / [dd-dropdown-item](components/dd-dropdown-item/dd-dropdown-item.vue): 下拉筛选菜单
 - [dd-sidebar](components/dd-sidebar/dd-sidebar.vue) / [dd-sidebar-item](components/dd-sidebar-item/dd-sidebar-item.vue): 侧边栏导航（垂直一级导航；tree-select 左列同款，v-model 索引、title/dot/badge/disabled）
 
-### 布局/卡片/业务 (11)
+### 布局/卡片/业务 (12)
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
-- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格）、thumb/title/desc/price/originPrice/tag/num/disabled；价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price-right 插槽
+- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md/xs（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格，xs 竖向=一行四列订单卡缩略图无底色阴影且价格用 dd-price xs 档）、thumb/title/desc/price/originPrice/tag/num/disabled；价格在左数量在右，价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price-right 插槽
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
 - [dd-workorder-card](components/dd-workorder-card/dd-workorder-card.vue): 工单卡。title、type service/repair/feedback/decoration/todo、status、checklist、progress、time；emit check({item, done})/click
+- [dd-order-list](components/dd-order-list/dd-order-list.vue): 订单列表（外卖平台式订单卡，收银合并收款场景）。选择器在卡片最左侧垂直居中；内容三行（订单号+收款状态 / 商品卡横向滚动+右侧渐变蒙版总价件数 / 账单信息与时间左右分列）。orders: DdOrderItem[](id/title/statusText/timeText/remark/lines{name,qty/thumb/price(分)}/total(分))、v-model:selected 已选 id 集合（点卡片切换，选中态主色描边）、checkable；emit update:selected/item-click；金额经 dd-price 渲染；类型 DdOrderItem/DdOrderLine 从 index.ts 导出；空列表走 empty 插槽
 - [dd-calendar](components/dd-calendar/dd-calendar.vue): 月历+时段选择（日期多选区间/禁选/时段格）
 - [dd-qrcode](components/dd-qrcode/dd-qrcode.vue): canvas 二维码（内容/尺寸/前景背景色/logo；前景背景色是库内仅有的硬编码色值例外）
 - [dd-submit-bar](components/dd-submit-bar/dd-submit-bar.vue): 提交订单栏（底部固定：合计价格+提交按钮+tip 提示）。price(分)/label/currency/decimalLength/suffixLabel、buttonText/buttonType/buttonColor/loading/disabled、tip/tipIcon、textAlign、placeholder/safeAreaInsetBottom；emit submit；slots top/tip/default/button（价格区由 dd-price 渲染）
@@ -106,7 +107,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-coupon](components/dd-coupon/dd-coupon.vue): 优惠券票券。amount/unit/unitPosition/limit/title/desc/time/actionText/shape/disabled；emit click
 - [dd-parse](components/dd-parse/dd-parse.vue): 富文本 HTML 渲染（H5 的 uni 时序问题已修为惰性初始化）
 - [dd-markdown](components/dd-markdown/dd-markdown.vue): Markdown 渲染（内置 marked.esm.mjs）
-- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix、size sm/md/lg；颜色 inherit 跟随上下文；submit-bar 内部亦用它
+- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix、size xs/sm/md/lg；颜色 inherit 跟随上下文；submit-bar 内部亦用它
 
 ### 浮层反馈 (11)
 

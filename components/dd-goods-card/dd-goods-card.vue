@@ -45,7 +45,7 @@
             </text>
           </view>
           <!-- 价格行右侧扩展位（步进器/加购等与价格同排贴底）；未用时回退已选数量 -->
-          <view class="dd-goods-card__price-right">
+          <view class="dd-goods-card__price-right flex_m">
             <slot name="price-right">
               <text v-if="num" class="dd-goods-card__num">×{{ num }}</text>
             </slot>
@@ -86,8 +86,8 @@ interface Props {
   tag?: string
   /** 布局：horizontal 横向（左图右文）/ vertical 竖向（上图下文） */
   layout?: 'horizontal' | 'vertical'
-  /** 尺寸：md 常规 / sm 小号（横向用于购物车列表行且不渲染描述，竖向用于一行三列宫格） */
-  size?: 'sm' | 'md'
+  /** 尺寸：md 常规 / sm 小号（横向用于购物车列表行且不渲染描述，竖向用于一行三列宫格） / xs 超小号（竖向一行四列缩略图，订单卡商品行） */
+  size?: 'sm' | 'md' | 'xs'
   /** 已选数量（右下角，不传不渲染） */
   num?: string | number
   /** 置灰（售罄等不可点场景） */
@@ -337,6 +337,47 @@ function onClick(e: Event) {
   }
 
   .dd-goods-card__desc {
+    font-size: 20rpx;
+  }
+}
+
+// 超小号竖向（一行四列缩略图，订单卡商品行）：去掉卡片底色/阴影，只留圆角方图 + 两行内名称
+.dd-goods-card--vertical.dd-goods-card--xs {
+  background: transparent;
+  box-shadow: none;
+
+  .dd-goods-card__thumb {
+    border-radius: $dd-radius-md;
+  }
+
+  .dd-goods-card__thumb-text {
+    font-size: 28rpx;
+  }
+
+  .dd-goods-card__body {
+    padding: $dd-space-1 0 0;
+  }
+
+  .dd-goods-card__title {
+    font-size: 22rpx;
+    font-weight: 400;
+    @include dd-ellipsis(2);
+  }
+
+  // 四列宽度下描述无处安放，超小号不渲染
+  .dd-goods-card__desc {
+    display: none;
+  }
+
+  .dd-goods-card__price-row {
+    height: 40rpx;
+  }
+  // 一条窄卡里价格占满剩余宽度，过长时自身裁切，避免把右侧数量挤出
+  .dd-goods-card__price {
+    overflow: hidden;
+  }
+
+  .dd-goods-card__num {
     font-size: 20rpx;
   }
 }
