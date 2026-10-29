@@ -25,7 +25,7 @@
 
         <!-- 第二行：商品卡片横向滚动（竖向超小号）+ 右侧总价与件数（渐变蒙版压在最右侧） -->
         <view class="dd-order-list__goods">
-          <scroll-view scroll-x class="dd-order-list__goods-scroll">
+          <scroll-view scroll-x :show-scrollbar="false" class="dd-order-list__goods-scroll">
             <view class="dd-order-list__goods-track">
               <view v-for="line in item.lines" :key="line.id" class="dd-order-list__goods-cell">
                 <dd-goods-card
@@ -193,6 +193,14 @@ function onCardTap(item: DdOrderItem): void {
 .dd-order-list__goods-scroll {
   width: 100%;
   white-space: nowrap;
+  // 隐藏滚动条、保留横向滚动：H5/App-vue 走 CSS，小程序默认不显，App-nvue 由 show-scrollbar=false 兜底
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 .dd-order-list__goods-track {

@@ -28,21 +28,29 @@
     <!-- 信息区 -->
     <view class="dd-goods-card__body">
       <slot name="default">
-        <text v-if="title" class="dd-goods-card__title">{{ title }}</text>
+        <!-- 名称行：有 title-suffix 插槽时与名称同排（名称占满并省略，后缀贴右），否则等同原单行名称 -->
+        <view v-if="title || $slots['title-suffix']" class="dd-goods-card__title-row">
+          <text v-if="title" class="dd-goods-card__title">{{ title }}</text>
+          <slot name="title-suffix"></slot>
+        </view>
         <text v-if="desc" class="dd-goods-card__desc">{{ desc }}</text>
 
         <view class="dd-goods-card__price-row">
           <view class="dd-goods-card__price">
-            <dd-price
-              v-if="price !== undefined && price !== null && price !== ''"
-              :rate="price"
-              :currency="currency"
-              :decimal-length="decimalLength"
-              :size="size"
-            ></dd-price>
-            <text v-if="originPrice" class="dd-goods-card__price-origin">
-              {{ currency }}{{ originPrice }}
-            </text>
+            <!-- 价格位插槽：默认渲染 dd-price（+划线原价）；使用方自定义（如赠品改「赠送」标签）时整块替换，
+                 此时 price / originPrice / currency 均不生效（插槽内容自负责展示） -->
+            <slot name="price">
+              <dd-price
+                v-if="price !== undefined && price !== null && price !== ''"
+                :rate="price"
+                :currency="currency"
+                :decimal-length="decimalLength"
+                :size="size"
+              ></dd-price>
+              <text v-if="originPrice" class="dd-goods-card__price-origin">
+                {{ currency }}{{ originPrice }}
+              </text>
+            </slot>
           </view>
           <!-- 价格行右侧扩展位（步进器/加购等与价格同排贴底）；未用时回退已选数量 -->
           <view class="dd-goods-card__price-right flex_m">
@@ -200,7 +208,16 @@ function onClick(e: Event) {
     flex-direction: column;
   }
 
+  // 名称行：名称占满剩余宽度（自身省略），title-suffix 贴右不被压缩
+  &__title-row {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
   &__title {
+    flex: 1;
+    min-width: 0;
     color: var(--dd-text-primary, #{$dd-text-primary});
     font-size: 28rpx;
     font-weight: 600;

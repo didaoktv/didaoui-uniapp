@@ -269,6 +269,7 @@ $dd-size-icon-lg: 24px !default;
 $dd-size-icon-xl: 32px !default;
 
 // 控件高度档位真源（ADR 0019）：输入类与按钮类同档消费同一变量；值 = css.json size × 2（1px=2rpx）
+$dd-size-control-xs: 52rpx !default;
 $dd-size-control-sm: 64rpx !default;
 $dd-size-control-compact: 72rpx !default;
 $dd-size-control-md: 88rpx !default;

@@ -32,7 +32,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 ### 表单输入 (25)
 
-- [dd-button](components/dd-button/dd-button.vue): 按钮。type primary/secondary/ghost/text/success/warning/danger；size sm/md/lg；block/round/loading/disabled/icon/iconPosition
+- [dd-button](components/dd-button/dd-button.vue): 按钮。type primary/secondary/ghost/text/success/warning/danger；size xs/sm/md/lg；block/round/loading/disabled/icon/iconPosition
 - [dd-code-button](components/dd-code-button/dd-code-button.vue): 获取验证码按钮（倒计时防重）。time/startText/changeText(X占位秒数)/endText/keepRunning(跨页续跑,存储恢复)/uniqueKey；事件 click/start/change/finish；ref: start/reset/canGetCode。验证码场景选它而非 dd-count-down
 - [dd-input](components/dd-input/dd-input.vue): 输入框，v-model。type text/password/search/number；clearable/showPassword/error/maxlength
 - [dd-field](components/dd-field/dd-field.vue): 表单单元格（配合 dd-form 校验）。label/required(true|'auto')/isLink/size；default 插槽可放任意控件（radio-group 等）参与校验
@@ -73,7 +73,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
-- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md/xs（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格，xs 竖向=一行四列订单卡缩略图无底色阴影且价格用 dd-price xs 档）、thumb/title/desc/price/originPrice/tag/num/disabled；价格在左数量在右，价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price-right 插槽
+- [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md/xs（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格，xs 竖向=一行四列订单卡缩略图无底色阴影且价格用 dd-price xs 档）、thumb/title/desc/price/originPrice/tag/num/disabled；价格在左数量在右，价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price/price-right 插槽（price 可整块替换价格位，如赠品改「赠送」标签）
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
@@ -107,7 +107,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-coupon](components/dd-coupon/dd-coupon.vue): 优惠券票券。amount/unit/unitPosition/limit/title/desc/time/actionText/shape/disabled；emit click
 - [dd-parse](components/dd-parse/dd-parse.vue): 富文本 HTML 渲染（H5 的 uni 时序问题已修为惰性初始化）
 - [dd-markdown](components/dd-markdown/dd-markdown.vue): Markdown 渲染（内置 marked.esm.mjs）
-- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix、size xs/sm/md/lg；颜色 inherit 跟随上下文；submit-bar 内部亦用它
+- [dd-price](components/dd-price/dd-price.vue): 价格。rate(元,直接展示)/decimalLength(0 隐藏小数)/currency/mark/prefix/suffix、size xxs/xs/sm/md/lg、color(主色，整数/货币符/小数同色；默认 inherit)；submit-bar 内部亦用它
 
 ### 浮层反馈 (11)
 

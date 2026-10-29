@@ -1,8 +1,8 @@
 <template>
   <dd-portal>
   <view class="dd-dp" :class="{ 'dd-dp--open': show }">
-    <view class="dd-dp__mask" :style="{ zIndex: zIndexConfig.overlay }" @click="onMaskClick"></view>
-    <view class="dd-dp__sheet" :style="{ zIndex: zIndexConfig.popup }">
+    <view class="dd-dp__mask" :style="{ zIndex: maskZIndex }" @click="onMaskClick"></view>
+    <view class="dd-dp__sheet" :style="{ zIndex: sheetZIndex }">
       <view class="dd-dp__toolbar">
         <text class="dd-dp__cancel" @click="onCancel">取消</text>
         <text class="dd-dp__title">{{ title }}</text>
@@ -61,6 +61,10 @@ const indicatorStyle =
   'height:80rpx;background:rgba(255,193,7,0.08);border-top:1px solid rgba(255,193,7,0.3);border-bottom:1px solid rgba(255,193,7,0.3);box-shadow:0 0 20rpx rgba(255,193,7,0.15);'
 
 const indexes = ref<number[]>([])
+// 与 dd-picker 同理：常从 dd-popup 面板内打开，遮罩需压过父面板（popup 档 2001）才能点击关闭
+// ponytail: 上限低于 dialog 档（2010），若要在 dd-dialog 内打开需再抬一档
+const maskZIndex = zIndexConfig.popup + 1
+const sheetZIndex = zIndexConfig.popup + 1
 
 const yearList = computed(() => {
   const arr: string[] = []
@@ -139,7 +143,8 @@ watch(() => props.show, (v) => {
 
 function onPickerChange(e: any) {
   const val = (e?.detail?.value ?? []).slice()
-  const dayIdx = props.type === 'date' || props.type === 'range' ? 2 : props.type === 'datetime' ? 3 : -1
+  // 列序：date/range = [年,月,日] → 日=2；datetime = [年,月,日,时,分] → 日=2；time 无日列
+  const dayIdx = props.type === 'date' || props.type === 'range' || props.type === 'datetime' ? 2 : -1
   if (dayIdx >= 0) {
     const y = startYear + (val[0] ?? 0)
     const m = (val[1] ?? 0) + 1

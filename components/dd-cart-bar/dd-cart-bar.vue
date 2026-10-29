@@ -68,7 +68,7 @@
         scroll-y
         :style="{ maxHeight: maxListHeight }"
       >
-        <!-- 商品行复用 dd-goods-card 小号横卡（96rpx 紧凑图、不渲染描述、价格小一号）；规格随卡 desc 传入（sm 档不显示），数量步进器走 price-right 插槽 -->
+        <!-- 商品行复用 dd-goods-card 小号横卡（96rpx 紧凑图、不渲染描述、价格小一号）；规格随卡 desc 传入（sm 档不显示）；数量步进器走 price-right 插槽 -->
         <dd-goods-card
           v-for="item in items"
           :key="item.id"
@@ -288,9 +288,12 @@ function onSubmit() {
   }
 }
 
+// 占位块高度必须与固定栏实际高度一致：栏高由「操作钮 88rpx + 上下内边距」决定（min-height 不生效），
+// 原占位块固定 100rpx 比真实栏矮约 16px，页面底部内容会被栏遮住
 .dd-cart-bar__placeholder {
   width: 100%;
-  height: 100rpx;
+  height: $dd-size-control-md;
+  padding: $dd-space-2 0;
   box-sizing: content-box;
 
   &--safe {
@@ -301,6 +304,9 @@ function onSubmit() {
 .dd-cart-bar__bar {
   display: flex;
   align-items: center;
+  // 显式 border-box：栏高 = 88rpx + 上下内边距，与占位块的 content-box 镜像计算一致，
+  // 不受消费端是否引入 _reset.scss（全局 border-box）影响
+  box-sizing: border-box;
   min-height: 100rpx;
   padding: $dd-space-2 $dd-space-3;
 }
@@ -373,8 +379,8 @@ function onSubmit() {
 
 .dd-cart-bar__panel {
   // 底部留出栏高 + 安全区：弹层面板(popup 档)压在栏下方，内容不被栏遮挡
-  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*2 + constant(safe-area-inset-bottom));
-  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*2 + env(safe-area-inset-bottom));
+  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*3 + constant(safe-area-inset-bottom));
+  padding: $dd-space-3 $dd-space-3 calc(100rpx + $dd-space-2*3 + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 

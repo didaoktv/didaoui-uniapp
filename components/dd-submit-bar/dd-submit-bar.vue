@@ -137,9 +137,12 @@ function onSubmit() {
   }
 }
 
+// 占位块高度必须与固定条实际高度一致：条高由「按钮高度 + 上下内边距」决定（min-height 反而不生效），
+// 原占位块固定 100rpx，在真机上是 100rpx + 安全区，比真实条矮约 16px，底部内容被遮住
 .dd-submit-bar__placeholder {
   width: 100%;
-  height: 100rpx;
+  height: $dd-size-control-md;
+  padding: $dd-space-2 0;
   box-sizing: content-box;
 
   &--safe {
@@ -165,6 +168,9 @@ function onSubmit() {
 .dd-submit-bar__bar {
   display: flex;
   align-items: center;
+  // 显式 border-box：条高 = 按钮 88rpx + 上下内边距，与占位块的 content-box 镜像计算一致，
+  // 不受消费端是否引入 _reset.scss（全局 border-box）影响
+  box-sizing: border-box;
   min-height: 100rpx;
   padding: $dd-space-2 $dd-space-3;
 }

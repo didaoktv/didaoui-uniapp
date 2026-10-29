@@ -33,7 +33,7 @@ import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
   type?: 'default' | 'primary' | 'secondary' | 'ghost' | 'text' | 'success' | 'warning' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   block?: boolean
   round?: boolean
   plain?: boolean
@@ -123,6 +123,20 @@ function onClick(e: Event) {
 @keyframes dd-btn-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.dd-btn--xs {
+  height: $dd-size-control-xs;
+  padding: 0 $dd-space-2;
+  font-size: $dd-font-size-caption;
+  &.dd-btn--icon-only {
+    width: $dd-size-control-xs;
+  }
+  .dd-btn__loading {
+    width: 18rpx;
+    height: 18rpx; // size-exempt: loading 圈内部件，非控件高度
+    border-width: 2rpx;
   }
 }
 

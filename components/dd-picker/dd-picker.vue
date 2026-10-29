@@ -1,8 +1,8 @@
 <template>
   <dd-portal>
   <view class="dd-picker" :class="{ 'dd-picker--open': show }">
-    <view class="dd-picker__mask" :style="{ zIndex: zIndexConfig.overlay }" @click="onMaskClick"></view>
-    <view class="dd-picker__sheet" :style="{ zIndex: zIndexConfig.popup }">
+    <view class="dd-picker__mask" :style="{ zIndex: maskZIndex }" @click="onMaskClick"></view>
+    <view class="dd-picker__sheet" :style="{ zIndex: sheetZIndex }">
       <view class="dd-picker__toolbar">
         <text class="dd-picker__cancel" @click="onCancel">取消</text>
         <text class="dd-picker__title">{{ title }}</text>
@@ -75,6 +75,12 @@ const normalizedColumns = computed<PickerItem[][]>(() => {
 })
 
 const indexes = ref<number[]>([])
+
+// picker 常从 dd-popup 内打开（父面板同属 popup 档 2001）：遮罩必须高于父面板，否则被面板盖住、
+// 点到面板无法关闭；取 popup+1 派生，sheet 与 mask 同档但 DOM 在后，仍压在遮罩之上。
+// ponytail: 上限低于 dialog 档（2010），若将来 picker 要从 dd-dialog 内打开需再抬一档。
+const maskZIndex = zIndexConfig.popup + 1
+const sheetZIndex = zIndexConfig.popup + 1
 
 watch(
   () => normalizedColumns.value,

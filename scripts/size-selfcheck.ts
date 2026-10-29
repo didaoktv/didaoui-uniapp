@@ -7,8 +7,8 @@
 //  2) 旧尺寸 token（$dd-size-button* / $dd-size-input-height / $dd-input-height / $dd-button-height*）
 //     在 components/、scss/、libs/ 与根 README/llms.txt/uni.scss/index.ts 零残留
 //     （ponytail: 不扫 scripts/，本脚本自身含旧名清单）
-//  3) 档位等式：_variables.scss sm/compact/md/lg = 64/72/88/100rpx，
-//     且分别 = 设计真源 css.json size 块 32/36/44/50px × 2（1px=2rpx）
+//  3) 档位等式：_variables.scss xs/sm/compact/md/lg = 52/64/72/88/100rpx，
+//     且分别 = 设计真源 css.json size 块 26/32/36/44/50px × 2（1px=2rpx）
 // 尺寸 token 不发射为 CSS 变量（编译期消费），故组件写裸 $dd-size-control-* 不违反 theme-selfcheck 断言 3。
 // ponytail: 用 require shim 免引 @types/node；__dirname 仅 CommonJS 输出下有效
 declare function require(id: string): any
@@ -102,6 +102,7 @@ function scssVal(name: string): string | null {
 }
 // [scss 档位名, css.json size 键, 期望 rpx, 设计源 px]
 const TIERS: [string, string, number, number][] = [
+  ['size-control-xs', 'size-button-xs', 52, 26],
   ['size-control-sm', 'size-button-sm', 64, 32],
   ['size-control-compact', 'size-control-compact', 72, 36],
   ['size-control-md', 'size-button-md', 88, 44],

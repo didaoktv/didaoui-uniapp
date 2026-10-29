@@ -3,6 +3,7 @@
     class="dd-card"
     :class="[
       `dd-card--${variant}`,
+      padClass,
       {
         'dd-card--border': border,
         'dd-card--active': active,
@@ -13,20 +14,30 @@
     :hover-stay-time="120"
     @click="onClick"
   >
-    <view v-if="$slots.header || $slots.extra" class="dd-card__header">
+    <view
+      v-if="$slots.header || $slots.extra"
+      class="dd-card__header"
+      :style="padStyle"
+    >
       <view class="dd-card__header-inner"><slot name="header"></slot></view>
       <view v-if="$slots.extra" class="dd-card__extra"><slot name="extra"></slot></view>
     </view>
-    <view class="dd-card__body"><slot></slot></view>
-    <view v-if="$slots.footer" class="dd-card__footer"><slot name="footer"></slot></view>
+    <view class="dd-card__body" :style="padStyle"><slot></slot></view>
+    <view v-if="$slots.footer" class="dd-card__footer" :style="padStyle"><slot name="footer"></slot></view>
   </view>
 </template>
 
 <script setup lang="ts">
-import { useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
 
 interface Props {
   variant?: 'vertical' | 'horizontal' | 'compact'
+  /**
+   * 内边距（与 variant 正交，统一作用于 header/body/footer）：
+   * 档位 none 贴边 / sm 12px / md 16px / lg 24px；也可直接给数字（按 px，如 `padding="24"` 或 `:padding="24"`）
+   * 不传=沿用 variant 默认档
+   */
+  padding?: '' | 'none' | 'sm' | 'md' | 'lg' | number | `${number}`
   border?: boolean
   active?: boolean
   hover?: boolean
@@ -35,11 +46,32 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'vertical',
+  padding: '',
   border: true,
   active: false,
   hover: false,
   hoverable: false,
 })
+
+/** 数字入参（或数字字符串）解析为 px；档位键/空值返回 null */
+const customPadPx = computed<number | null>(() => {
+  const v = props.padding
+  if (typeof v === 'number') return v
+  if (typeof v === 'string' && /^\d+(\.\d+)?$/.test(v)) return Number(v)
+  return null
+})
+
+/** 档位键拼对应类名；数字入参走行内 style（见 padStyle）；空值不覆盖 variant 默认档 */
+const padClass = computed(() => {
+  const v = props.padding
+  if (!v || customPadPx.value !== null) return ''
+  return `dd-card--padding-${v}`
+})
+
+/** 自定义 px 用行内 style 直接落到三区（不依赖 CSS 变量，兼容各端） */
+const padStyle = computed(() =>
+  customPadPx.value === null ? '' : { padding: `${customPadPx.value}px` },
+)
 
 const emit = defineEmits<{ (e: 'click', val: Event): void }>()
 
@@ -146,6 +178,17 @@ function onClick(e: Event) {
 
   .dd-card__footer {
     padding: $dd-space-3 $dd-space-4;
+  }
+}
+
+// 内边距档：与 variant 正交，显式覆盖头/体/尾三区（不传=沿用 variant 默认档；同权重靠后声明覆盖上面的 variant 规则）
+@each $size, $pad in ('none': 0, 'sm': $dd-space-3, 'md': $dd-space-4, 'lg': $dd-space-5) {
+  .dd-card--padding-#{$size} {
+    .dd-card__header,
+    .dd-card__body,
+    .dd-card__footer {
+      padding: $pad;
+    }
   }
 }
 

@@ -1,5 +1,10 @@
 <template>
-  <view v-if="pricePair" class="dd-price" :class="'dd-price--' + size">
+  <view
+    v-if="pricePair"
+    class="dd-price"
+    :class="['dd-price--' + size, { 'dd-price--custom-color': color }]"
+    :style="color ? { color } : undefined"
+  >
     <text v-if="prefix" class="dd-price__prefix">{{ prefix }}</text>
     <text class="dd-price__currency">{{ currency }}</text>
     <text class="dd-price__integer">{{ pricePair[0] }}</text>
@@ -24,8 +29,10 @@ interface Props {
   prefix?: string
   /** 额外后缀文案（如「起」） */
   suffix?: string
-  /** 尺寸：xs 最小号（一行四列小卡）/ sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  /** 尺寸：xxs 紧凑行最小号（房态卡片等 22rpx 正文旁）/ xs 最小号（一行四列小卡）/ sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
+  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg'
+  /** 主色（CSS 颜色/变量）：整数、货币符、小数一起变色；不传则 inherit 跟随上下文（货币符/小数保持次级灰） */
+  color?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -36,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   prefix: '',
   suffix: '',
   size: 'md',
+  color: '',
 })
 
 const pricePair = computed<string[] | null>(() => {
@@ -80,6 +88,14 @@ const pricePair = computed<string[] | null>(() => {
     font-size: 24rpx;
   }
 
+  // 自定义主色：货币符/小数默认是次级灰，传 color 时统一跟随主色
+  &--custom-color {
+    .dd-price__currency,
+    .dd-price__decimal {
+      color: inherit;
+    }
+  }
+
   &__integer {
     font-size: 36rpx;
   }
@@ -109,6 +125,20 @@ const pricePair = computed<string[] | null>(() => {
 
     .dd-price__integer {
       font-size: 24rpx;
+    }
+  }
+
+  // xxs：紧凑行最小号（房态卡片等 22rpx 正文旁，整数对齐正文、符号再压一档）
+  &--xxs {
+    .dd-price__prefix,
+    .dd-price__suffix,
+    .dd-price__currency,
+    .dd-price__decimal {
+      font-size: 16rpx;
+    }
+
+    .dd-price__integer {
+      font-size: 22rpx;
     }
   }
 
