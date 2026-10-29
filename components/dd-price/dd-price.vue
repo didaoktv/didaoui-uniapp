@@ -5,11 +5,11 @@
     :class="['dd-price--' + size, { 'dd-price--custom-color': color }]"
     :style="color ? { color } : undefined"
   >
-    <text v-if="prefix" class="dd-price__prefix">{{ prefix }}</text>
+    <text v-if="prefix" class="dd-price__prefix" :style="prefixColor ? { color: prefixColor } : undefined">{{ prefix }}</text>
     <text class="dd-price__currency">{{ currency }}</text>
     <text class="dd-price__integer">{{ pricePair[0] }}</text>
     <text v-if="pricePair[1]" class="dd-price__decimal">{{ mark }}{{ pricePair[1] }}</text>
-    <text v-if="suffix" class="dd-price__suffix">{{ suffix }}</text>
+    <text v-if="suffix" class="dd-price__suffix" :style="suffixColor ? { color: suffixColor } : undefined">{{ suffix }}</text>
   </view>
 </template>
 
@@ -31,8 +31,12 @@ interface Props {
   suffix?: string
   /** 尺寸：xxs 紧凑行最小号（房态卡片等 22rpx 正文旁）/ xs 最小号（一行四列小卡）/ sm 小号（购物车行/小卡）/ md 常规 / lg 大号（结算条/合计） */
   size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg'
-  /** 主色（CSS 颜色/变量）：整数、货币符、小数一起变色；不传则 inherit 跟随上下文（货币符/小数保持次级灰） */
+  /** 主色（CSS 颜色/变量）：整数、货币符、小数、前缀、后缀一起变色；不传则 inherit 跟随上下文（货币符/小数/前后缀保持次级灰） */
   color?: string
+  /** 前缀颜色：不传默认跟随 color（color 也不传时保持次级灰） */
+  prefixColor?: string
+  /** 后缀颜色：不传默认跟随 color（color 也不传时保持次级灰） */
+  suffixColor?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -44,6 +48,8 @@ const props = withDefaults(defineProps<Props>(), {
   suffix: '',
   size: 'md',
   color: '',
+  prefixColor: '',
+  suffixColor: '',
 })
 
 const pricePair = computed<string[] | null>(() => {
@@ -88,8 +94,11 @@ const pricePair = computed<string[] | null>(() => {
     font-size: 24rpx;
   }
 
-  // 自定义主色：货币符/小数默认是次级灰，传 color 时统一跟随主色
+  // 自定义主色：前后缀/货币符/小数默认是次级灰，传 color 时统一跟随主色
+  // prefixColor / suffixColor 单独传入时由行内 style 覆盖这里的 inherit
   &--custom-color {
+    .dd-price__prefix,
+    .dd-price__suffix,
     .dd-price__currency,
     .dd-price__decimal {
       color: inherit;
