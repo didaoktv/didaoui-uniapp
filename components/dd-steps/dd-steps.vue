@@ -13,6 +13,8 @@ interface Props {
   direction?: 'horizontal' | 'vertical'
   activeColor?: string
   inactiveColor?: string
+  /** 圆点与文字尺寸档位 */
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   direction: 'horizontal',
   activeColor: '',
   inactiveColor: '',
+  size: 'md',
 })
 
 const count = ref(0)
@@ -34,8 +37,9 @@ function register(): number {
 provide('ddSteps', {
   active: computed(() => props.active),
   direction: computed(() => props.direction),
-  activeColor: computed(() => props.activeColor || '#F5A623'),
-  inactiveColor: computed(() => props.inactiveColor || '#9E9E9E'),
+  activeColor: computed(() => props.activeColor),
+  inactiveColor: computed(() => props.inactiveColor),
+  size: computed(() => props.size),
   count,
   register,
 })
