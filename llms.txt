@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，98 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，99 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -93,6 +93,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-badge](components/dd-badge/dd-badge.vue): 徽标
 - [dd-cell](components/dd-cell/dd-cell.vue) / [dd-cell-group](components/dd-cell-group/dd-cell-group.vue): 单元格
 - [dd-list-cell](components/dd-list-cell/dd-list-cell.vue): 列表单元格（title/subtitle/value/icon、size xs|sm|md|lg 行高 32/44/48/56、arrow/isLink/borderless）
+- [dd-fold](components/dd-fold/dd-fold.vue): 定高折叠容器（maxHeight rpx + 底部渐变遮罩 + 展开/收起入口，v-model:expanded 受控，自动量高、未超高不折叠）
 - [dd-count-down](components/dd-count-down/dd-count-down.vue): 倒计时
 - [dd-divider](components/dd-divider/dd-divider.vue): 分割线
 - [dd-image](components/dd-image/dd-image.vue): 图片（加载态/失败态）

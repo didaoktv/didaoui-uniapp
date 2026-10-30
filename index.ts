@@ -57,7 +57,7 @@ import DdQrcode from './components/dd-qrcode/dd-qrcode.vue'
 import DdSubmitBar from './components/dd-submit-bar/dd-submit-bar.vue'
 import DdCartBar from './components/dd-cart-bar/dd-cart-bar.vue'
 
-// === Display (25) ===
+// === Display (26) ===
 import DdTag from './components/dd-tag/dd-tag.vue'
 import DdStatCard from './components/dd-stat-card/dd-stat-card.vue'
 import DdChampionCard from './components/dd-champion-card/dd-champion-card.vue'
@@ -67,6 +67,7 @@ import DdBadge from './components/dd-badge/dd-badge.vue'
 import DdListCell from './components/dd-list-cell/dd-list-cell.vue'
 import DdCell from './components/dd-cell/dd-cell.vue'
 import DdCellGroup from './components/dd-cell-group/dd-cell-group.vue'
+import DdFold from './components/dd-fold/dd-fold.vue'
 import DdCountDown from './components/dd-count-down/dd-count-down.vue'
 import DdDivider from './components/dd-divider/dd-divider.vue'
 import DdImage from './components/dd-image/dd-image.vue'
@@ -128,7 +129,7 @@ const components = {
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
-  DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
+  DdListCell, DdCell, DdCellGroup, DdFold, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
   DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown, DdPrice,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
@@ -161,7 +162,7 @@ export {
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
-  DdListCell, DdCell, DdCellGroup, DdCountDown, DdDivider,
+  DdListCell, DdCell, DdCellGroup, DdFold, DdCountDown, DdDivider,
   DdImage, DdProgress, DdSkeleton, DdEmptyState, DdStep, DdSteps,
   DdText, DdLink, DdCopy, DdAlbum, DdCoupon, DdParse, DdMarkdown, DdPrice,
   DdModal, DdActionSheet, DdToast, DdAlert, DdLoading,
