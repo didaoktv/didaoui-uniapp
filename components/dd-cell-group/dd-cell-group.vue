@@ -21,7 +21,7 @@ interface Props {
   /** 通栏模式下的首尾外框发丝线 */
   border?: boolean
   /** 分节标题尺寸档，只影响标题排版，不向子 cell 传递 */
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 withDefaults(defineProps<Props>(), {
@@ -68,6 +68,12 @@ withDefaults(defineProps<Props>(), {
   }
 
   // 尺寸档只调标题排版（竖直 padding + 字号），不级联到子 cell
+  &--xs {
+    padding-top: $dd-space-2;
+    padding-bottom: 0;
+    font-size: $dd-font-size-overline;
+  }
+
   &--sm {
     padding-top: $dd-space-3;
     padding-bottom: $dd-space-1;

@@ -140,8 +140,8 @@ interface Props {
   clickable?: boolean
   isLink?: boolean
   arrowDirection?: 'left' | 'right' | 'up' | 'down'
-  /** 单元格尺寸档，与 dd-cell 的 sm/md/lg 同一套竖直 rhythm（8/12/16px） */
-  size?: 'sm' | 'md' | 'lg'
+  /** 单元格尺寸档，与 dd-cell 同一套竖直 rhythm（xs/sm/md/lg = 4/8/12/16px） */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   icon?: string
   leftIcon?: string
   rightIcon?: string
@@ -455,6 +455,13 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     left: $dd-space-4;
     border-bottom: 1px solid var(--dd-border-subtle, #{$dd-border-subtle});
     transform: scaleY(0.5);
+  }
+
+  // xs：36px 紧凑行（低于 44px 触控下限，仅限非交互展示），竖直留白 4px
+  &--xs {
+    min-height: $dd-size-control-compact;
+    padding-top: $dd-space-1;
+    padding-bottom: $dd-space-1;
   }
 
   &--sm {

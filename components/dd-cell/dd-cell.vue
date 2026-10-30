@@ -51,8 +51,8 @@ interface Props {
   label?: string
   value?: string
   icon?: string
-  /** 尺寸档：sm 紧凑 / md 默认 / lg 宽松，同时改变行高与字号 */
-  size?: 'sm' | 'md' | 'lg'
+  /** 尺寸档：xs 紧凑展示 / sm 紧凑 / md 默认 / lg 宽松，同时改变行高与字号 */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   isLink?: boolean
   arrowDirection?: 'left' | 'right' | 'up' | 'down'
   required?: boolean | 'auto'
@@ -134,6 +134,13 @@ function handleClick(e: Event) {
   // 子元素字号统一用 em 跟随根字号，避免逐档重复声明
   padding-top: $dd-space-3;
   padding-bottom: $dd-space-3;
+
+  // xs：最低档，竖直留白 4px，用于详情卡内的密集键值行；低于 44px 触控下限，仅限非交互展示
+  &--xs {
+    padding-top: $dd-space-1;
+    padding-bottom: $dd-space-1;
+    font-size: $dd-font-size-caption;
+  }
 
   &--sm {
     padding-top: $dd-space-2;

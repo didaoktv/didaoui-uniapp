@@ -41,8 +41,8 @@ interface Props {
   subtitle?: string
   value?: string
   icon?: string
-  /** 尺寸档：sm 紧凑 / md 默认 / lg 宽松，同时改变行高与字号 */
-  size?: 'sm' | 'md' | 'lg'
+  /** 尺寸档：xs 紧凑展示 / sm 紧凑 / md 默认 / lg 宽松，同时改变行高与字号 */
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   arrow?: boolean
   isLink?: boolean
   borderless?: boolean
@@ -85,7 +85,14 @@ function onClick(e: Event) {
   font-size: $dd-font-size-body;
   @include dd-hairline-bottom(var(--dd-border-default, #{$dd-border-default}));
 
-  // 三档：44/48/56px（sm 取控件 md 档 = 44px 触控下限），字号 12/14/16px 同步缩放
+  // 四档：32/44/48/56px（md 48px = 原值；xs 32px 为紧凑元信息行，低于 44px 触控下限，仅限非交互展示），字号 12/12/14/16px
+  &--xs {
+    min-height: $dd-size-control-sm;
+    padding-top: $dd-space-1;
+    padding-bottom: $dd-space-1;
+    font-size: $dd-font-size-caption;
+  }
+
   &--sm {
     min-height: $dd-size-control-md;
     padding-top: $dd-space-2;
