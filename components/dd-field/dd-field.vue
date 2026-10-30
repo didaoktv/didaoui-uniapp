@@ -3,6 +3,7 @@
     class="dd-field"
     :class="[
       rootClass,
+      `dd-field--${size}`,
       {
         'dd-field--error': errorState,
         'dd-field--disabled': disabledState,
@@ -11,7 +12,6 @@
         'dd-field--center': center,
         'dd-field--label-top': effectiveLabelPosition === 'top',
         'dd-field--clickable': clickableState,
-        'dd-field--large': size === 'large',
       },
     ]"
     :hover-class="clickableState ? 'dd-field--active' : ''"
@@ -140,8 +140,8 @@ interface Props {
   clickable?: boolean
   isLink?: boolean
   arrowDirection?: 'left' | 'right' | 'up' | 'down'
-  /** 单元格尺寸，large 增大行高（与 dd-cell 对齐） */
-  size?: 'normal' | 'large'
+  /** 单元格尺寸档，与 dd-cell 的 sm/md/lg 同一套竖直 rhythm（8/12/16px） */
+  size?: 'sm' | 'md' | 'lg'
   icon?: string
   leftIcon?: string
   rightIcon?: string
@@ -193,7 +193,7 @@ const props = withDefaults(defineProps<Props>(), {
   clickable: false,
   isLink: false,
   arrowDirection: 'right',
-  size: 'normal',
+  size: 'md',
   icon: '',
   leftIcon: '',
   rightIcon: '',
@@ -437,7 +437,7 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
   width: 100%;
   // 单行/多行统一以 md 档为下限（border-box 下 padding 已含）；textarea 靠内容自然增高，min-height 不限高
   min-height: $dd-size-control-md;
-  padding: 20rpx $dd-space-4;
+  padding: $dd-space-3 $dd-space-4;
   overflow: hidden;
   font-size: $dd-font-size-body;
   line-height: $dd-line-height-lead;
@@ -457,9 +457,14 @@ defineExpose({ validate, validateWithTrigger, resetValidation, scrollIntoView, f
     transform: scaleY(0.5);
   }
 
-  &--large {
-    padding-top: $dd-space-3;
-    padding-bottom: $dd-space-3;
+  &--sm {
+    padding-top: $dd-space-2;
+    padding-bottom: $dd-space-2;
+  }
+
+  &--lg {
+    padding-top: $dd-space-4;
+    padding-bottom: $dd-space-4;
   }
 
   &--center {

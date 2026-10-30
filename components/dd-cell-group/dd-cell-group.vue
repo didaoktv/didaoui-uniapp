@@ -1,6 +1,10 @@
 <template>
   <view>
-    <view v-if="title || $slots.title" class="dd-cell-group__title" :class="{ 'dd-cell-group__title--inset': inset }">
+    <view
+      v-if="title || $slots.title"
+      class="dd-cell-group__title"
+      :class="[`dd-cell-group__title--${size}`, { 'dd-cell-group__title--inset': inset }]"
+    >
       <slot name="title">{{ title }}</slot>
     </view>
     <view class="dd-cell-group" :class="{ 'dd-cell-group--inset': inset, 'dd-cell-group--border': border && !inset }">
@@ -16,12 +20,15 @@ interface Props {
   inset?: boolean
   /** 通栏模式下的首尾外框发丝线 */
   border?: boolean
+  /** 分节标题尺寸档，只影响标题排版，不向子 cell 传递 */
+  size?: 'sm' | 'md' | 'lg'
 }
 
 withDefaults(defineProps<Props>(), {
   title: '',
   inset: false,
   border: true,
+  size: 'md',
 })
 </script>
 
@@ -51,12 +58,26 @@ withDefaults(defineProps<Props>(), {
 }
 
 .dd-cell-group__title {
-  padding: 32rpx 32rpx 16rpx;
+  padding: $dd-space-4 $dd-space-4 $dd-space-2;
   font-size: $dd-font-size-caption;
   color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 
   &--inset {
-    padding: 32rpx 24rpx 16rpx;
+    padding-left: $dd-space-3;
+    padding-right: $dd-space-3;
+  }
+
+  // 尺寸档只调标题排版（竖直 padding + 字号），不级联到子 cell
+  &--sm {
+    padding-top: $dd-space-3;
+    padding-bottom: $dd-space-1;
+    font-size: $dd-font-size-overline;
+  }
+
+  &--lg {
+    padding-top: $dd-space-5;
+    padding-bottom: $dd-space-3;
+    font-size: $dd-font-size-body;
   }
 }
 </style>

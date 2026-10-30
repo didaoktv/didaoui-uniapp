@@ -17,8 +17,12 @@
         </view>
       </view>
       <view class="dd-step__content">
-        <text class="dd-step__title">{{ title }}</text>
-        <text v-if="description" class="dd-step__desc">{{ description }}</text>
+        <!-- 默认插槽：传内容即整体接管标题/描述区（如自定义 tag、右对齐时间等富文本行）；
+             未传内容时渲染 title/description 兜底，保持既有用法不变 -->
+        <slot>
+          <text class="dd-step__title">{{ title }}</text>
+          <text v-if="description" class="dd-step__desc">{{ description }}</text>
+        </slot>
       </view>
     </template>
 
@@ -39,8 +43,10 @@
         ></view>
       </view>
       <view class="dd-step__content dd-step__content--vertical">
-        <text class="dd-step__title">{{ title }}</text>
-        <text v-if="description" class="dd-step__desc">{{ description }}</text>
+        <slot>
+          <text class="dd-step__title">{{ title }}</text>
+          <text v-if="description" class="dd-step__desc">{{ description }}</text>
+        </slot>
       </view>
     </template>
   </view>

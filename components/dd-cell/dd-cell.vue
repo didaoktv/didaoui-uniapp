@@ -51,7 +51,8 @@ interface Props {
   label?: string
   value?: string
   icon?: string
-  size?: 'normal' | 'large'
+  /** 尺寸档：sm 紧凑 / md 默认 / lg 宽松，同时改变行高与字号 */
+  size?: 'sm' | 'md' | 'lg'
   isLink?: boolean
   arrowDirection?: 'left' | 'right' | 'up' | 'down'
   required?: boolean | 'auto'
@@ -70,7 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
   label: '',
   value: '',
   icon: '',
-  size: 'normal',
+  size: 'md',
   isLink: false,
   arrowDirection: 'right',
   required: false,
@@ -129,15 +130,21 @@ function handleClick(e: Event) {
   color: var(--dd-text-primary, #{$dd-text-primary});
   @include dd-hairline-bottom(var(--dd-border-subtle, #{$dd-border-subtle}));
 
-  // 高度 = 垂直 padding + 行高（12/16px × 2 + 23.8px ≈ 96/112rpx），内容天然居中
-  &--normal {
-    padding-top: $dd-space-3;
-    padding-bottom: $dd-space-3;
+  // 尺寸档由竖直 padding（8/12/16px）+ 根字号（12/14/16px）派生，横向留白恒定；
+  // 子元素字号统一用 em 跟随根字号，避免逐档重复声明
+  padding-top: $dd-space-3;
+  padding-bottom: $dd-space-3;
+
+  &--sm {
+    padding-top: $dd-space-2;
+    padding-bottom: $dd-space-2;
+    font-size: $dd-font-size-caption;
   }
 
-  &--large {
+  &--lg {
     padding-top: $dd-space-4;
     padding-bottom: $dd-space-4;
+    font-size: $dd-font-size-lead;
   }
 
   &--center {
@@ -164,14 +171,14 @@ function handleClick(e: Event) {
   }
 
   &__icon-text {
-    font-size: 36rpx;
+    font-size: 1.286em;
     line-height: 1;
     color: var(--dd-primary-400, #{$dd-primary-400});
   }
 
   &__required {
     color: var(--dd-error, #{$dd-error});
-    font-size: $dd-font-size-body;
+    font-size: 1em;
     margin-right: 4rpx;
     line-height: inherit;
     text {
@@ -188,14 +195,14 @@ function handleClick(e: Event) {
   }
 
   &__title {
-    font-size: $dd-font-size-body;
+    font-size: 1em;
     color: var(--dd-text-primary, #{$dd-text-primary});
     @include dd-ellipsis(1);
   }
 
   &__label {
     margin-top: 4rpx;
-    font-size: $dd-font-size-caption;
+    font-size: 0.857em;
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
     @include dd-ellipsis(1);
   }
@@ -209,12 +216,12 @@ function handleClick(e: Event) {
   }
 
   &__value {
-    font-size: $dd-font-size-body;
+    font-size: 1em;
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
   }
 
   &__arrow {
-    font-size: $dd-font-size-h4;
+    font-size: 1.143em;
 
     &--right {
       transform: rotate(0deg);

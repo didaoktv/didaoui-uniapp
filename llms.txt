@@ -92,7 +92,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-avatar](components/dd-avatar/dd-avatar.vue) / [dd-avatar-group](components/dd-avatar-group/dd-avatar-group.vue): 头像/头像组
 - [dd-badge](components/dd-badge/dd-badge.vue): 徽标
 - [dd-cell](components/dd-cell/dd-cell.vue) / [dd-cell-group](components/dd-cell-group/dd-cell-group.vue): 单元格
-- [dd-list-cell](components/dd-list-cell/dd-list-cell.vue): 列表单元格（title/subtitle/value/icon/arrow/isLink/borderless）
+- [dd-list-cell](components/dd-list-cell/dd-list-cell.vue): 列表单元格（title/subtitle/value/icon、size sm|md|lg 行高 44/48/56、arrow/isLink/borderless）
 - [dd-count-down](components/dd-count-down/dd-count-down.vue): 倒计时
 - [dd-divider](components/dd-divider/dd-divider.vue): 分割线
 - [dd-image](components/dd-image/dd-image.vue): 图片（加载态/失败态）
