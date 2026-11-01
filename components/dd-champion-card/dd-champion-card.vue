@@ -13,7 +13,7 @@
       </view>
       <text class="dd-champ__name">{{ name }}</text>
       <text class="dd-champ__score">{{ score }}</text>
-      <view class="dd-champ__rank-badge" :style="rankBadgeStyle">
+      <view class="dd-champ__rank-badge">
         <text class="dd-champ__rank-num">{{ rank }}</text>
       </view>
     </template>
@@ -31,7 +31,7 @@
 
     <!-- LIST: 无边框行, 小排名徽标+头像+名字+右对齐分数 -->
     <template v-else>
-      <view class="dd-champ__rank-badge dd-champ__rank-badge--sm" :style="rankBadgeStyle">
+      <view class="dd-champ__rank-badge dd-champ__rank-badge--sm">
         <text class="dd-champ__rank-num">{{ rank }}</text>
       </view>
       <view class="dd-champ__avatar dd-champ__avatar--sm" :style="avatarStyle">
@@ -65,31 +65,17 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{ (e: 'click', val: { rank: number }): void }>()
 
-// 金/银/铜 字面量色
-const tierColors: Record<number, { border: string; glow: string; score: string; badgeStart: string; badgeEnd: string }> = {
-  1: { border: '#FFD700', glow: '0 0 40rpx rgba(255,215,0,0.4)', score: '#FFD700', badgeStart: '#FFD700', badgeEnd: '#B8860B' },
-  2: { border: '#C0C0C0', glow: '0 0 32rpx rgba(192,192,192,0.4)', score: '#C0C0C0', badgeStart: '#C0C0C0', badgeEnd: '#808080' },
-  3: { border: '#CD7F32', glow: '0 0 24rpx rgba(205,127,50,0.4)', score: '#CD7F32', badgeStart: '#CD7F32', badgeEnd: '#8B4513' },
-}
-
 // podium 头像尺寸: rank1=72, rank2=60, rank3=52
 const podiumSizeMap: Record<number, number> = { 1: 144, 2: 120, 3: 104 }
 
-const tier = computed(() => tierColors[props.rank] || tierColors[1])
-
+// 奖牌色（头像描边/发光/徽标渐变/分数）由 SCSS 按 rank 修饰符取 token
 const avatarStyle = computed(() => {
   const size = props.variant === 'podium' ? (podiumSizeMap[props.rank] || 144) : 80
   return {
     width: `${size}rpx`,
     height: `${size}rpx`,
-    borderColor: tier.value.border,
-    boxShadow: tier.value.glow,
   }
 })
-
-const rankBadgeStyle = computed(() => ({
-  background: `linear-gradient(135deg, ${tier.value.badgeStart} 0%, ${tier.value.badgeEnd} 100%)`,
-}))
 
 const initial = computed(() => {
   if (!props.name) return ''
@@ -139,6 +125,8 @@ function onClick() {
   overflow: hidden;
   border-width: 6rpx;
   border-style: solid;
+  border-color: var(--dd-medal-gold, #{$dd-medal-gold});
+  box-shadow: 0 0 40rpx rgba($dd-medal-gold, 0.4);
   background: var(--dd-surface-container-high, #{$dd-surface-container-high});
   box-sizing: border-box;
 
@@ -186,14 +174,49 @@ function onClick() {
   }
 }
 
+// === 奖牌色：默认金（rank ≥4 沿用金），rank2/3 覆写银/铜 ===
 .dd-champ--rank1 .dd-champ__score {
-  color: #FFD700;
+  color: var(--dd-medal-gold, #{$dd-medal-gold});
 }
 .dd-champ--rank2 .dd-champ__score {
-  color: #C0C0C0;
+  color: var(--dd-medal-silver, #{$dd-medal-silver});
 }
 .dd-champ--rank3 .dd-champ__score {
-  color: #CD7F32;
+  color: var(--dd-medal-bronze, #{$dd-medal-bronze});
+}
+
+.dd-champ--rank1 .dd-champ__rank-badge {
+  background: linear-gradient(
+    135deg,
+    var(--dd-medal-gold, #{$dd-medal-gold}) 0%,
+    var(--dd-medal-gold-deep, #{$dd-medal-gold-deep}) 100%
+  );
+}
+.dd-champ--rank2 {
+  .dd-champ__avatar {
+    border-color: var(--dd-medal-silver, #{$dd-medal-silver});
+    box-shadow: 0 0 32rpx rgba($dd-medal-silver, 0.4);
+  }
+  .dd-champ__rank-badge {
+    background: linear-gradient(
+      135deg,
+      var(--dd-medal-silver, #{$dd-medal-silver}) 0%,
+      var(--dd-medal-silver-deep, #{$dd-medal-silver-deep}) 100%
+    );
+  }
+}
+.dd-champ--rank3 {
+  .dd-champ__avatar {
+    border-color: var(--dd-medal-bronze, #{$dd-medal-bronze});
+    box-shadow: 0 0 24rpx rgba($dd-medal-bronze, 0.4);
+  }
+  .dd-champ__rank-badge {
+    background: linear-gradient(
+      135deg,
+      var(--dd-medal-bronze, #{$dd-medal-bronze}) 0%,
+      var(--dd-medal-bronze-deep, #{$dd-medal-bronze-deep}) 100%
+    );
+  }
 }
 
 .dd-champ__rank-badge {
@@ -207,6 +230,11 @@ function onClick() {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(
+    135deg,
+    var(--dd-medal-gold, #{$dd-medal-gold}) 0%,
+    var(--dd-medal-gold-deep, #{$dd-medal-gold-deep}) 100%
+  );
 
   &--sm {
     position: static;
@@ -227,7 +255,7 @@ function onClick() {
 .dd-champ__rank-inline {
   font-size: $dd-font-size-h3;
   font-weight: 800;
-  color: #FFD700;
+  color: var(--dd-medal-gold, #{$dd-medal-gold});
   flex-shrink: 0;
   width: $dd-size-icon-lg;
   text-align: center;

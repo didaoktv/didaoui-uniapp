@@ -71,350 +71,370 @@
 	</view>
 </template>
 
-<script>
-	export default {
-		name: 'dd-signature',
-		props: {
-			// 画布宽度
-			width: {
-				type: [String, Number],
-				default: 300
-			},
-			// 画布高度
-			height: {
-				type: [String, Number],
-				default: 200
-			},
-			// 背景颜色
-			bgColor: {
-				type: String,
-				default: '#ffffff'
-			},
-			// 默认笔画颜色
-			color: {
-				type: String,
-				default: '#000000'
-			},
-			// 默认笔画粗细
-			thickness: {
-				type: [String, Number],
-				default: 3
-			},
-			// 是否显示工具栏
-			showToolbar: {
-				type: Boolean,
-				default: true
-			}
-		},
-		data() {
-			return {
-				canvasId: 'dd-signature-' + Math.random().toString(36).substr(2, 9),
-				canvasWidth: 300,
-				canvasHeight: 200,
-				lineColor: '',
-				lineWidth: 3,
-				isDrawing: false,
-				pathStack: [], // 存储绘制路径用于回退
-				currentPath: [], // 当前绘制路径
-				isEmpty: true,
-				presetColors: [
-					'#000000', // 黑色
-					'#ff0000', // 红色
-					'#00ff00', // 绿色
-					'#0000ff', // 蓝色
-					'#ffff00', // 黄色
-					'#00ffff', // 青色
-					'#ff00ff', // 紫色
-					'#ffffff'  // 白色
-				],
-				showBrushSettings: false,
-				showColorSettings: false,
-				lastPoint: null, // 保存上一个点的坐标
-				canvasInstance: null // 缓存canvas实例
-			}
-		},
-		computed: {
-			// ponytail: 剥离运行时主题；签名画布默认保持白底（导出图片需白底）
-			resolvedBgColor() {
-				return this.bgColor
-			},
-			iconDefaultColor() {
-				return '#999999'
-			},
-			iconDisabledColor() {
-				return '#5c5c5c'
-			}
-		},
-		mounted() {
-			// 初始化时获取canvas实例
-			this.$nextTick(() => {
-				this.getCanvasInstance();
-				this.clearCanvas();
-			});
-		},
-		watch: {
-			width: {
-				handler(newVal) {
-					this.canvasWidth = Number(newVal)
-				},
-				immediate: true
-			},
-			height: {
-				handler(newVal) {
-					this.canvasHeight = Number(newVal)
-				},
-				immediate: true
-			},
-			color: {
-				handler(newVal) {
-					this.lineColor = this.resolveStrokeColor(newVal)
-				},
-				immediate: true
-			},
-			thickness: {
-				handler(newVal) {
-					this.lineWidth = Number(newVal)
-				},
-				immediate: true
-			}
-		},
-		methods: {
-			resolveStrokeColor(color) {
-				return color
-			},
-			
-			// 获取签名画布实例
-			getCanvasInstance() {
-				if (this.canvasInstance) {
-					return this.canvasInstance;
-				}
-				
-				const canvasRef = this.$refs.signatureCanvas;
-				if (canvasRef) {
-					this.canvasInstance = canvasRef;
-					return canvasRef;
-				}
-				return null;
-			},
-			
-			touchStart(e) {
-				if (!this.canvasInstance || !this.canvasInstance.ctx) {
-					this.getCanvasInstance();
-				}
-				
-				if (!this.canvasInstance || !this.canvasInstance.ctx) return;
-				
-				this.isDrawing = true;
-				this.isEmpty = false;
-				this.currentPath = [];
-				
-				const { x, y } = this.getCanvasPoint(e);
-				
-				// 设置线条样式
-				this.canvasInstance.setLineStyle(this.lineColor, this.lineWidth);
-				
-				// 开始路径
-				this.canvasInstance.beginPath();
-				this.canvasInstance.moveTo(x, y);
-				
-				// 记录起始点
-				this.currentPath.push({
-					x,
-					y,
-					type: 'start',
-					color: this.lineColor,
-					width: this.lineWidth
-				});
-				
-				// 保存上一个点
-				this.lastPoint = { x, y };
-				
-				// 阻止默认事件以提高性能
-				e.preventDefault();
-			},
-			
-			touchMove(e) {
-				if (!this.isDrawing || !this.canvasInstance || !this.canvasInstance.ctx) return;
-				
-				// 阻止默认事件以提高性能
-				e.preventDefault();
-				
-				const { x, y } = this.getCanvasPoint(e);
-				
-				// 从上一个点画线到当前点
-				this.canvasInstance.lineTo(x, y);
-				this.canvasInstance.stroke(); // 实时绘制当前线段
-				this.currentPath.push({
-					x,
-					y,
-					type: 'move'
-				});
-				this.canvasInstance.draw(false);
-				
-				// 更新上一个点
-				this.lastPoint = { x, y };
-			},
-			
-			touchEnd(e) {
-				if (!this.isDrawing || !this.canvasInstance || !this.canvasInstance.ctx) return;
-				
-				this.isDrawing = false;
-				this.canvasInstance.closePath();
-				this.lastPoint = null;
-				
-				// 将当前路径加入栈中用于回退
-				if (this.currentPath.length > 0) {
-					this.pathStack.push([...this.currentPath]);
-				}
-				
-				// 最后统一执行一次绘制
-				this.canvasInstance.draw(true);
-			},
-			
-			// 同步获取canvas坐标点（兼容处理）
-			getCanvasPoint(e) {
-				let touch;
-				// #ifdef MP-WEIXIN
-				touch = e.touches && e.touches[0] ? e.touches[0] : e.mp.touches[0];
-				// #endif
-				// #ifndef MP-WEIXIN
-				touch = e.touches[0];
-				// #endif
-				
-				// 计算相对于canvas的坐标
-				// 由于无法直接获取canvas位置，这里简化处理
-				// 实际应用中可能需要通过uni.createSelectorQuery获取canvas位置
-				return {
-					x: touch.x,
-					y: touch.y
-				};
-			},
-			
-			// 选择颜色
-			selectColor(color) {
-				this.lineColor = color
-			},
-			
-			// 回退操作
-			undo() {
-				if (this.pathStack.length === 0) return
-				
-				// 弹出最后一个路径
-				this.pathStack.pop()
-				
-				// 重新绘制
-				this.redraw()
-			},
-			
-			// 重新绘制所有路径
-			redraw() {
-				if (!this.canvasInstance) {
-					this.getCanvasInstance();
-				}
-				
-				if (!this.canvasInstance) return;
-				
-				// 先清空画布
-				this.canvasInstance.clearCanvas();
-				
-				if (this.pathStack.length === 0) {
-					this.isEmpty = true;
-					return;
-				}
-				
-				this.isEmpty = false;
-				
-				// 逐个绘制路径
-				this.pathStack.forEach(path => {
-					if (path.length === 0) return;
-					
-					this.canvasInstance.beginPath();
-					
-					let lastPoint = null;
-					path.forEach((point, index) => {
-						if (index === 0 && point.type === 'start') {
-							// 设置线条样式
-							this.canvasInstance.setLineStyle(point.color, point.width);
-							this.canvasInstance.moveTo(point.x, point.y);
-							lastPoint = { x: point.x, y: point.y };
-						} else if (point.type === 'move') {
-							this.canvasInstance.lineTo(point.x, point.y);
-							lastPoint = { x: point.x, y: point.y };
-						}
-					});
-					this.canvasInstance.stroke();
-					this.canvasInstance.draw(true);
-				});
-			},
-			
-			// 清空画布内容
-			clearCanvas() {
-				if (!this.canvasInstance) {
-					this.getCanvasInstance();
-				}
-				
-				if (!this.canvasInstance) return;
-				
-				this.canvasInstance.clearCanvas();
-			},
+<script setup lang="ts">
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
-			// 对外暴露的清空方法（供工具栏与ref调用）
-			clear() {
-				this.pathStack = []
-				this.currentPath = []
-				this.lastPoint = null
-				this.isDrawing = false
-				this.isEmpty = true
-				this.clearCanvas()
-				this.$emit('clear')
-			},
-			
-			// 导出签名图片
-			async exportSignature() {
-				if (this.isEmpty) {
-					console.warn('签名为空，无法导出');
-					return;
-				}
-				
-				if (!this.canvasInstance) {
-					this.getCanvasInstance();
-				}
-				
-				if (!this.canvasInstance) {
-					console.error('无法获取画布实例');
-					return;
-				}
-				
-				try {
-					// 先重绘整个签名内容
-					this.redraw();
-					
-					// 导出图片
-					const imagePath = await this.canvasInstance.exportImage('png', 1);
-					this.$emit('confirm', imagePath);
-				} catch (error) {
-					console.error('导出签名图片失败:', error);
-					this.$emit('error', error);
-				}
-			},
-			
-			// 切换笔画设置显示
-			toggleBrushSettings() {
-				this.showBrushSettings = !this.showBrushSettings;
-				if (this.showBrushSettings) {
-					this.showColorSettings = false;
-				}
-			},
-			
-			// 切换颜色设置显示
-			toggleColorSettings() {
-				this.showColorSettings = !this.showColorSettings;
-				if (this.showColorSettings) {
-					this.showBrushSettings = false;
-				}
-			},
-		}
+interface Props {
+	// 画布宽度
+	width?: string | number
+	// 画布高度
+	height?: string | number
+	// 背景颜色
+	bgColor?: string
+	// 默认笔画颜色
+	color?: string
+	// 默认笔画粗细
+	thickness?: string | number
+	// 是否显示工具栏
+	showToolbar?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	width: 300,
+	height: 200,
+	bgColor: '#ffffff',
+	color: '#000000',
+	thickness: 3,
+	showToolbar: true,
+})
+
+const emit = defineEmits<{
+	(e: 'clear'): void
+	(e: 'confirm', path: string): void
+	(e: 'error', error: unknown): void
+}>()
+
+const canvasId = 'dd-signature-' + Math.random().toString(36).substr(2, 9)
+const canvasWidth = ref(300)
+const canvasHeight = ref(200)
+const lineColor = ref('')
+const lineWidth = ref(3)
+const isDrawing = ref(false)
+const pathStack = ref<any[]>([]) // 存储绘制路径用于回退
+const currentPath = ref<any[]>([]) // 当前绘制路径
+const isEmpty = ref(true)
+const presetColors = [
+	'#000000', // 黑色
+	'#ff0000', // 红色
+	'#00ff00', // 绿色
+	'#0000ff', // 蓝色
+	'#ffff00', // 黄色
+	'#00ffff', // 青色
+	'#ff00ff', // 紫色
+	'#ffffff'  // 白色
+]
+const showBrushSettings = ref(false)
+const showColorSettings = ref(false)
+const lastPoint = ref<any>(null) // 保存上一个点的坐标
+const canvasInstance = ref<any>(null) // 缓存canvas实例
+const signatureCanvas = ref<any>(null)
+
+// ponytail: 剥离运行时主题；签名画布默认保持白底（导出图片需白底）
+const resolvedBgColor = computed(() => props.bgColor)
+const iconDefaultColor = computed(() => '#999999')
+const iconDisabledColor = computed(() => '#5c5c5c')
+
+onMounted(() => {
+	// 初始化时获取canvas实例
+	nextTick(() => {
+		getCanvasInstance()
+		clearCanvas()
+	})
+})
+
+watch(
+	() => props.width,
+	(newVal: any) => {
+		canvasWidth.value = Number(newVal)
+	},
+	{ immediate: true }
+)
+watch(
+	() => props.height,
+	(newVal: any) => {
+		canvasHeight.value = Number(newVal)
+	},
+	{ immediate: true }
+)
+watch(
+	() => props.color,
+	(newVal: any) => {
+		lineColor.value = resolveStrokeColor(newVal)
+	},
+	{ immediate: true }
+)
+watch(
+	() => props.thickness,
+	(newVal: any) => {
+		lineWidth.value = Number(newVal)
+	},
+	{ immediate: true }
+)
+
+function resolveStrokeColor(color: any) {
+	return color
+}
+
+// 获取签名画布实例
+function getCanvasInstance() {
+	if (canvasInstance.value) {
+		return canvasInstance.value
 	}
+
+	const canvasRef = signatureCanvas.value
+	if (canvasRef) {
+		canvasInstance.value = canvasRef
+		return canvasRef
+	}
+	return null
+}
+
+function touchStart(e: any) {
+	if (!canvasInstance.value || !canvasInstance.value.ctx) {
+		getCanvasInstance()
+	}
+
+	if (!canvasInstance.value || !canvasInstance.value.ctx) return
+
+	isDrawing.value = true
+	isEmpty.value = false
+	currentPath.value = []
+
+	const { x, y } = getCanvasPoint(e)
+
+	// 设置线条样式
+	canvasInstance.value.setLineStyle(lineColor.value, lineWidth.value)
+
+	// 开始路径
+	canvasInstance.value.beginPath()
+	canvasInstance.value.moveTo(x, y)
+
+	// 记录起始点
+	currentPath.value.push({
+		x,
+		y,
+		type: 'start',
+		color: lineColor.value,
+		width: lineWidth.value
+	})
+
+	// 保存上一个点
+	lastPoint.value = { x, y }
+
+	// 阻止默认事件以提高性能
+	e.preventDefault()
+}
+
+function touchMove(e: any) {
+	if (!isDrawing.value || !canvasInstance.value || !canvasInstance.value.ctx) return
+
+	// 阻止默认事件以提高性能
+	e.preventDefault()
+
+	const { x, y } = getCanvasPoint(e)
+
+	// 从上一个点画线到当前点
+	canvasInstance.value.lineTo(x, y)
+	canvasInstance.value.stroke() // 实时绘制当前线段
+	currentPath.value.push({
+		x,
+		y,
+		type: 'move'
+	})
+	canvasInstance.value.draw(false)
+
+	// 更新上一个点
+	lastPoint.value = { x, y }
+}
+
+function touchEnd(e: any) {
+	if (!isDrawing.value || !canvasInstance.value || !canvasInstance.value.ctx) return
+
+	isDrawing.value = false
+	canvasInstance.value.closePath()
+	lastPoint.value = null
+
+	// 将当前路径加入栈中用于回退
+	if (currentPath.value.length > 0) {
+		pathStack.value.push([...currentPath.value])
+	}
+
+	// 最后统一执行一次绘制
+	canvasInstance.value.draw(true)
+}
+
+// 同步获取canvas坐标点（兼容处理）
+function getCanvasPoint(e: any) {
+	let touch
+	// #ifdef MP-WEIXIN
+	touch = e.touches && e.touches[0] ? e.touches[0] : e.mp.touches[0]
+	// #endif
+	// #ifndef MP-WEIXIN
+	touch = e.touches[0]
+	// #endif
+
+	// 计算相对于canvas的坐标
+	// 由于无法直接获取canvas位置，这里简化处理
+	// 实际应用中可能需要通过uni.createSelectorQuery获取canvas位置
+	return {
+		x: touch.x,
+		y: touch.y
+	}
+}
+
+// 选择颜色
+function selectColor(color: string) {
+	lineColor.value = color
+}
+
+// 回退操作
+function undo() {
+	if (pathStack.value.length === 0) return
+
+	// 弹出最后一个路径
+	pathStack.value.pop()
+
+	// 重新绘制
+	redraw()
+}
+
+// 重新绘制所有路径
+function redraw() {
+	if (!canvasInstance.value) {
+		getCanvasInstance()
+	}
+
+	if (!canvasInstance.value) return
+
+	// 先清空画布
+	canvasInstance.value.clearCanvas()
+
+	if (pathStack.value.length === 0) {
+		isEmpty.value = true
+		return
+	}
+
+	isEmpty.value = false
+
+	// 逐个绘制路径
+	pathStack.value.forEach((path: any) => {
+		if (path.length === 0) return
+
+		canvasInstance.value.beginPath()
+
+		let lastPoint = null
+		path.forEach((point: any, index: number) => {
+			if (index === 0 && point.type === 'start') {
+				// 设置线条样式
+				canvasInstance.value.setLineStyle(point.color, point.width)
+				canvasInstance.value.moveTo(point.x, point.y)
+				lastPoint = { x: point.x, y: point.y }
+			} else if (point.type === 'move') {
+				canvasInstance.value.lineTo(point.x, point.y)
+				lastPoint = { x: point.x, y: point.y }
+			}
+		})
+		canvasInstance.value.stroke()
+		canvasInstance.value.draw(true)
+	})
+}
+
+// 清空画布内容
+function clearCanvas() {
+	if (!canvasInstance.value) {
+		getCanvasInstance()
+	}
+
+	if (!canvasInstance.value) return
+
+	canvasInstance.value.clearCanvas()
+}
+
+// 对外暴露的清空方法（供工具栏与ref调用）
+function clear() {
+	pathStack.value = []
+	currentPath.value = []
+	lastPoint.value = null
+	isDrawing.value = false
+	isEmpty.value = true
+	clearCanvas()
+	emit('clear')
+}
+
+// 导出签名图片
+async function exportSignature() {
+	if (isEmpty.value) {
+		console.warn('签名为空，无法导出')
+		return
+	}
+
+	if (!canvasInstance.value) {
+		getCanvasInstance()
+	}
+
+	if (!canvasInstance.value) {
+		console.error('无法获取画布实例')
+		return
+	}
+
+	try {
+		// 先重绘整个签名内容
+		redraw()
+
+		// 导出图片
+		const imagePath = await canvasInstance.value.exportImage('png', 1)
+		emit('confirm', imagePath)
+	} catch (error) {
+		console.error('导出签名图片失败:', error)
+		emit('error', error)
+	}
+}
+
+// 切换笔画设置显示
+function toggleBrushSettings() {
+	showBrushSettings.value = !showBrushSettings.value
+	if (showBrushSettings.value) {
+		showColorSettings.value = false
+	}
+}
+
+// 切换颜色设置显示
+function toggleColorSettings() {
+	showColorSettings.value = !showColorSettings.value
+	if (showColorSettings.value) {
+		showBrushSettings.value = false
+	}
+}
+
+defineExpose({
+	canvasId,
+	canvasWidth,
+	canvasHeight,
+	lineColor,
+	lineWidth,
+	isDrawing,
+	pathStack,
+	currentPath,
+	isEmpty,
+	presetColors,
+	showBrushSettings,
+	showColorSettings,
+	lastPoint,
+	resolveStrokeColor,
+	getCanvasInstance,
+	touchStart,
+	touchMove,
+	touchEnd,
+	getCanvasPoint,
+	selectColor,
+	undo,
+	redraw,
+	clearCanvas,
+	clear,
+	exportSignature,
+	toggleBrushSettings,
+	toggleColorSettings,
+})
 </script>
 
 <style lang="scss" scoped>
@@ -426,7 +446,7 @@
 		
 		&__canvas-wrap {
 			border: 1px solid var(--dd-border-default, #{$dd-border-default});
-			border-radius: 4px;
+			border-radius: $dd-radius-md;
 			overflow: hidden;
 		}
 		
@@ -436,7 +456,7 @@
 		}
 		
 		&__toolbar {
-			margin-top: 5px;
+			margin-top: 10rpx;
             background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
 		}
 		
@@ -446,38 +466,38 @@
 			align-items: center;
 			padding: 1px 0;
 			// border: 1px solid #e0e0e0;
-			border-radius: 4px;
+			border-radius: $dd-radius-md;
 		}
 		
 		&__toolbar-icon {
-			padding: 5px;
+			padding: 10rpx;
 		}
 		
 		&__brush-settings,
 		&__color-settings {
-			margin-top: 15px;
+			margin-top: 30rpx;
 			padding: 1px;
 			// border: 1px solid #e0e0e0;
-			border-radius: 4px;
+			border-radius: $dd-radius-md;
 		}
 		
 		&__progress {
 			&-label {
 				display: block;
-				margin-bottom: 10px;
-				font-size: 14px;
+				margin-bottom: 20rpx;
+				font-size: $dd-font-size-body;
 				color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 			}
 		}
 		
 		&__color-picker {
-			margin-bottom: 10px;
+			margin-bottom: 20rpx;
 		}
 		
 		&__color-label {
 			display: block;
-			margin-bottom: 10px;
-			font-size: 14px;
+			margin-bottom: 20rpx;
+			font-size: $dd-font-size-body;
 			color: var(--dd-text-tertiary, #{$dd-text-tertiary});
 		}
 		
@@ -485,12 +505,12 @@
 			display: flex;
             flex-direction: row;
 			flex-wrap: wrap;
-			gap: 10px;
+			gap: 20rpx;
 		}
 		
 		&__color-item {
-			width: 30px;
-			height: 30px;
+			width: 60rpx;
+			height: 60rpx;
 			border-radius: 50%;
 			border: 2px solid var(--dd-border-default, #{$dd-border-default});
 			cursor: pointer;
@@ -504,7 +524,7 @@
 		&__actions {
 			display: flex;
             flex-direction: row;
-			gap: 10px;
+			gap: 20rpx;
 			justify-content: center;
 		}
 	}

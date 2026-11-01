@@ -31,11 +31,11 @@
 	</view>
 </template>
 
-<script>
-	import { props } from './props';
-	import { mpMixin } from '../../libs/mixin/mpMixin';
-	import { mixin } from '../../libs/mixin/mixin';
-	import { addUnit } from '../../libs/function/index';
+<script setup lang="ts">
+	import { computed } from 'vue'
+	import DdAvatar from '../dd-avatar/dd-avatar.vue'
+	import DdText from '../dd-text/dd-text.vue'
+	import { addUnit } from '../../libs/function/index.js';
 	import test from '../../libs/function/test';
 	/**
 	 * AvatarGroup  头像组
@@ -53,39 +53,61 @@
 	 * @event    {Function}        showMore 头像组更多点击
 	 * @example  <dd-avatar-group:urls="urls" size="35" gap="0.4" ></dd-avatar-group:urls=>
 	 */
-	export default {
-		name: 'dd-avatar-group',
-		mixins: [mpMixin, mixin, props],
-		data() {
-			return {
-
-			}
-		},
-		computed: {
-			showUrl() {
-				return this.urls.slice(0, this.maxCount)
-			}
-		},
-		emits: ["showMore"],
-		methods: {
-			addUnit,
-			testObject: test.object,
-			clickHandler() {
-				this.$emit('showMore')
-			}
-		},
+	interface Props {
+		// 头像图片组
+		urls?: any[]
+		// 最多展示的头像数量
+		maxCount?: any
+		// 头像形状
+		shape?: string
+		// 图片裁剪模式
+		mode?: string
+		// 超出maxCount时是否显示查看更多的提示
+		showMore?: boolean
+		// 头像大小
+		size?: any
+		// 指定从数组的对象元素中读取哪个属性作为图片地址
+		keyName?: string
+		// 头像之间的遮挡比例
+		gap?: any
+		// 需额外显示的值
+		extraValue?: any
 	}
+
+	const props = withDefaults(defineProps<Props>(), {
+		urls: () => [],
+		maxCount: 5,
+		shape: 'circle',
+		mode: 'scaleToFill',
+		showMore: true,
+		size: 40,
+		keyName: '',
+		gap: 0.5,
+		extraValue: 0,
+	})
+
+	const emit = defineEmits<{ (e: 'showMore'): void }>()
+
+	const testObject = test.object
+
+	const showUrl = computed(() => props.urls.slice(0, props.maxCount))
+
+	function clickHandler() {
+		emit('showMore')
+	}
+
+	defineExpose({ showUrl, clickHandler })
 </script>
 
 <style lang="scss" scoped>
 @import '../../scss/variables';
-@import '../../scss/dd-shared';
+@import '../../scss/mixins';
 
 	.dd-avatar-group {
-		@include flex;
+		@include dd-flex;
 
 		&__item {
-			margin-left: -10px;
+			margin-left: -20rpx;
 			position: relative;
 
 			&--no-indent {
@@ -100,10 +122,10 @@
 				left: 0;
 				right: 0;
 				background-color: rgba(0, 0, 0, 0.3);
-				@include flex;
+				@include dd-flex;
 				align-items: center;
 				justify-content: center;
-				border-radius: 100px;
+				border-radius: $dd-radius-full;
 			}
 		}
 	}

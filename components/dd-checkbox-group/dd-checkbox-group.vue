@@ -51,6 +51,8 @@ provide('dd-checkbox-group', {
 </script>
 
 <style lang="scss" scoped>
+@import '../../scss/variables';
+@import '../../scss/mixins';
 .dd-checkbox-group {
   display: flex;
   flex-wrap: wrap;

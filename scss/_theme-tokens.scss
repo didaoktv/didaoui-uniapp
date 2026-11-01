@@ -28,6 +28,13 @@ $dd-vars-base: (
   'error': $dd-error,
   'info': $dd-info,
   'vip': $dd-vip-500,
+  // 排行榜奖牌色（明暗不翻转）
+  'medal-gold': $dd-medal-gold,
+  'medal-gold-deep': $dd-medal-gold-deep,
+  'medal-silver': $dd-medal-silver,
+  'medal-silver-deep': $dd-medal-silver-deep,
+  'medal-bronze': $dd-medal-bronze,
+  'medal-bronze-deep': $dd-medal-bronze-deep,
   // 对比色（明暗不翻转；品牌主题可覆盖，如红金主题配白字）
   'primary-contrast': $dd-primary-contrast,
   'accent-contrast': $dd-accent-contrast,

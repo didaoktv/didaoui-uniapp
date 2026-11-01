@@ -34,6 +34,7 @@
 import { computed, ref, watch } from 'vue'
 // z-index 统一取 libs/config/zIndex.js（内容层 base 档内 +1，下拉头垫底取 base 档）
 import zIndexConfig from '../../libs/config/zIndex.js'
+import { rpxToPx } from '../../libs/function/index.js'
 
 type Status = 'pulling' | 'loosing' | 'loading' | 'success'
 
@@ -75,15 +76,6 @@ const scrollTop = ref(0)
 let startY = 0
 let startTop = 0
 let successTimer: ReturnType<typeof setTimeout> | null = null
-
-function rpxToPx(rpx: number): number {
-  try {
-    const info = uni.getWindowInfo()
-    return (rpx / 750) * info.windowWidth
-  } catch {
-    return rpx / 2
-  }
-}
 
 const headHeightPx = computed(() => rpxToPx(props.headHeight))
 const maxStretchPx = computed(() => headHeightPx.value * 1.5)

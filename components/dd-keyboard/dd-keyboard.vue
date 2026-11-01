@@ -53,10 +53,10 @@
 	</dd-popup>
 </template>
 
-<script>
-	import { props } from './props';
-	import { mpMixin } from '../../libs/mixin/mpMixin';
-	import { mixin } from '../../libs/mixin/mixin';
+<script setup lang="ts">
+	import { computed } from 'vue'
+	import DdPopup from '../dd-popup/dd-popup.vue'
+	import DdNumberKeyboard from '../dd-number-keyboard/dd-number-keyboard.vue'
 
 	/**
 	 * keyboard 键盘
@@ -82,53 +82,102 @@
 	 * @event {Function} backspace 键盘退格键被点击
 	 * @example <dd-keyboard mode="number" v-model="show"></dd-keyboard>
 	 */
-	export default {
-		name: "dd-keyboard",
-		data() {
-			return {
-
-			}
-		},
-		mixins: [mpMixin, mixin, props],
-		computed: {
-			// ponytail: 剥离运行时主题；面板底色由 dd-popup（$dd-bg-elevated）承担
-			popupShow: {
-				get() {
-					return this.show;
-				},
-				set(val) {
-					if (!val) this.$emit('close');
-				}
-			}
-		},
-		emits: ["change", "close", "confirm", "cancel", "backspace"],
-		methods: {
-			change(e) {
-				this.$emit('change', e);
-			},
-			// 键盘关闭
-			popupClose() {
-				this.$emit('close');
-			},
-			// 输入完成
-			onConfirm() {
-				this.$emit('confirm');
-			},
-			// 取消输入
-			onCancel() {
-				this.$emit('cancel');
-			},
-			// 退格键
-			backspace() {
-				this.$emit('backspace');
-			}
-		}
+	interface Props {
+		// 键盘的类型，number-数字键盘，card-身份证键盘，car-车牌号键盘
+		mode?: string
+		// 是否显示键盘的"."符号
+		dotDisabled?: boolean
+		// 是否显示顶部工具条
+		tooltip?: boolean
+		// 是否显示工具条中间的提示
+		showTips?: boolean
+		// 工具条中间的提示文字
+		tips?: string
+		// 是否显示工具条左边的"取消"按钮
+		showCancel?: boolean
+		// 是否显示工具条右边的"完成"按钮
+		showConfirm?: boolean
+		// 是否打乱键盘按键的顺序
+		random?: boolean
+		// 是否开启底部安全区适配，开启的话，会在iPhoneX机型底部添加一定的内边距
+		safeAreaInsetBottom?: boolean
+		// 是否允许通过点击遮罩关闭键盘
+		closeOnClickOverlay?: boolean
+		// 控制键盘的弹出与收起
+		show?: boolean
+		// 是否显示遮罩，某些时候数字键盘时，用户希望看到自己的数值，所以可能不想要遮罩
+		overlay?: boolean
+		// 取消按钮的文字
+		cancelText?: string
+		// 确认按钮的文字
+		confirmText?: string
 	}
+
+	const props = withDefaults(defineProps<Props>(), {
+		mode: 'number',
+		dotDisabled: false,
+		tooltip: true,
+		showTips: true,
+		tips: '',
+		showCancel: true,
+		showConfirm: true,
+		random: false,
+		safeAreaInsetBottom: true,
+		closeOnClickOverlay: true,
+		show: false,
+		overlay: true,
+		cancelText: '取消',
+		confirmText: '确定',
+	})
+
+	const emit = defineEmits<{
+		(e: 'change', val: any): void;
+		(e: 'close'): void;
+		(e: 'confirm'): void;
+		(e: 'cancel'): void;
+		(e: 'backspace'): void;
+	}>()
+
+	// ponytail: 剥离运行时主题；面板底色由 dd-popup（$dd-bg-elevated）承担
+	const popupShow = computed({
+		get() {
+			return props.show;
+		},
+		set(val) {
+			if (!val) emit('close');
+		}
+	})
+
+	function change(e: any) {
+		emit('change', e);
+	}
+
+	// 键盘关闭
+	function popupClose() {
+		emit('close');
+	}
+
+	// 输入完成
+	function onConfirm() {
+		emit('confirm');
+	}
+
+	// 取消输入
+	function onCancel() {
+		emit('cancel');
+	}
+
+	// 退格键
+	function backspace() {
+		emit('backspace');
+	}
+
+	defineExpose({ popupShow, change, popupClose, onConfirm, onCancel, backspace })
 </script>
 
 <style lang="scss" scoped>
 @import '../../scss/variables';
-@import '../../scss/dd-shared';
+@import '../../scss/mixins';
 
 	.dd-keyboard {
 		// 工具条按钮点击反馈（text 不支持 hover-class，由外层 view 承担）
@@ -137,16 +186,16 @@
 		}
 
 		&__tooltip {
-			@include flex;
+			@include dd-flex;
 			justify-content: space-between;
 			background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
-			padding: 14px 12px;
+			padding: 28rpx $dd-space-3;
 
 			&__item {
 				color: var(--dd-text-primary, #{$dd-text-primary});
 				flex: 1;
 				text-align: center;
-				font-size: 15px;
+				font-size: 30rpx;
 			}
 
 			&__submit {

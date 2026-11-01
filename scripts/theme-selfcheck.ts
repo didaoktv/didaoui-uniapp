@@ -1,9 +1,9 @@
 // 主题机制自检（可运行校验）
-// 用法：npx tsc scripts/theme-selfcheck.ts --module commonjs --target es2020 --lib es2020 --outDir .check --skipLibCheck
+// 用法：npx tsc scripts/theme-selfcheck.ts --module commonjs --target es2020 --lib es2020,dom --outDir .check --skipLibCheck
 //       然后 node .check/theme-selfcheck.js
 // 断言：
 //  1) theme.scss 编译通过
-//  2) 产物结构：:root/page = base(59) ∪ dark(45)；.dark/.light 键集一致且恰为 45 翻转 delta；
+//  2) 产物结构：:root/page = base(65) ∪ dark(45)；.dark/.light 键集一致且恰为 45 翻转 delta；
 //     明暗核心值确实翻转（bg/fg/surface/border-default/muted），品牌色不翻转
 //  3) 组件源码无变量全集内 token 的裸引用（必须 var(--dd-x, #{$dd-x}) 形态；
 //     rgba($dd-x) 编译期包裹为已知豁免——见下方 ponytail）
@@ -53,8 +53,8 @@ const pageVars = varsOf('page')
 const darkVars = varsOf('\\.dark')
 const lightVars = varsOf('\\.light')
 
-assert(rootVars.size === 104, `:root 应发射 104 个变量（base 59 + dark 45），实际 ${rootVars.size}`)
-assert(pageVars.size === 104, `page 应发射 104 个变量，实际 ${pageVars.size}`)
+assert(rootVars.size === 110, `:root 应发射 110 个变量（base 65 + dark 45），实际 ${rootVars.size}`)
+assert(pageVars.size === 110, `page 应发射 110 个变量，实际 ${pageVars.size}`)
 assert(darkVars.size === 45, `.dark 应恰为 45 个翻转 delta，实际 ${darkVars.size}`)
 assert(lightVars.size === 45, `.light 应恰为 45 个翻转 delta，实际 ${lightVars.size}`)
 
@@ -67,15 +67,17 @@ for (const [k, v] of darkVars) {
   assert(rootVars.has(k), `:root 缺少翻转变量 --dd-${k}`)
   assert(rootVars.get(k) === v, `:root 与 .dark 的 --dd-${k} 值不一致`)
 }
-// base = :root − dark，恰 59 个
+// base = :root − dark，恰 65 个
 const baseKeys = [...rootVars.keys()].filter((k) => !darkVars.has(k))
-assert(baseKeys.length === 59, `base 集应为 59 个，实际 ${baseKeys.length}`)
+assert(baseKeys.length === 65, `base 集应为 65 个，实际 ${baseKeys.length}`)
 
 // 明暗核心值确实翻转（暗色为默认值）
-assert(darkVars.get('bg') === '#0A0A0A', `.dark --dd-bg 应为 #0A0A0A，实际 ${darkVars.get('bg')}`)
-assert(lightVars.get('bg') === '#FAFAFA', `.light --dd-bg 应为 #FAFAFA，实际 ${lightVars.get('bg')}`)
-assert(lightVars.get('fg') === '#0A0A0A', `.light --dd-fg 应为 #0A0A0A，实际 ${lightVars.get('fg')}`)
-assert(lightVars.get('surface') === '#FFFFFF', `.light --dd-surface 应为 #FFFFFF，实际 ${lightVars.get('surface')}`)
+// sass 产出的十六进制为小写而断言按大写书写，比较前统一大写：大小写差异不是值差异
+const hexOf = (v?: string): string => (v || '').toUpperCase()
+assert(hexOf(darkVars.get('bg')) === '#0A0A0A', `.dark --dd-bg 应为 #0A0A0A，实际 ${darkVars.get('bg')}`)
+assert(hexOf(lightVars.get('bg')) === '#FAFAFA', `.light --dd-bg 应为 #FAFAFA，实际 ${lightVars.get('bg')}`)
+assert(hexOf(lightVars.get('fg')) === '#0A0A0A', `.light --dd-fg 应为 #0A0A0A，实际 ${lightVars.get('fg')}`)
+assert(hexOf(lightVars.get('surface')) === '#FFFFFF', `.light --dd-surface 应为 #FFFFFF，实际 ${lightVars.get('surface')}`)
 assert(lightVars.get('border-default') !== darkVars.get('border-default'), 'border-default 明暗必须不同')
 assert(lightVars.get('muted') !== darkVars.get('muted'), 'muted 明暗必须不同')
 assert(lightVars.get('primary') === darkVars.get('primary'), '品牌色 primary 明暗不翻转')
@@ -92,6 +94,10 @@ function listVueFiles(dir: string): string[] {
 }
 
 const emitted = new Set<string>([...rootVars.keys()])
+// 组件 <style> 里的 @import 形如 '../../scss/variables'（个别组件用双引号，如 dd-button），
+// 改写为 loadPaths 可解析的 'scss/xxx'：compileString 无 url 基准，原样保留会以 cwd 相对解析直接崩
+const normalizeImports = (src: string): string =>
+  src.replace(/@import\s+(["'])(?:\.\.\/)+scss\//g, (_m: string, q: string) => `@import ${q}scss/`)
 const consumed = new Set<string>()
 const localAssigned = new Set<string>() // 组件私有 --dd-*（--dd-loading-color 等，非主题变量）
 // 组件私有且「只消费不赋值」的公开定制变量（消费者可覆盖；新增时在此登记）
@@ -134,7 +140,7 @@ for (const file of listVueFiles(COMP)) {
   // 编译后收集消费的变量名（含 mixin 动态拼名的产物）
   const blocks = [...src.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m: any) => m[1])
   if (!blocks.length) continue
-  const content = blocks.join('\n').replace(/@import '\.\.\/\.\.\/scss\//g, "@import 'scss/")
+  const content = normalizeImports(blocks.join('\n'))
   const css = sass.compileString(content, {
     loadPaths: [ROOT],
     logger: sass.Logger.silent,
@@ -150,14 +156,22 @@ assert(unconsumed.length === 0, `组件消费了未发射且非组件私有的�
 assert(consumed.size > 50, `消费变量数异常偏少（${consumed.size}），扫描可能失效`)
 
 // ---------- 5) _variables.scss 全量 !default ----------
-const varLines = fs
+// 按「声明语句」而非「单行」扫描：linear-gradient(...) 等多行声明的 !default; 落在末行，
+// 只看首行会把 35 条合法多行声明误报为缺失（逐行拼到首个 ';' 收口）
+const varFileLines: string[] = fs
   .readFileSync(path.join(ROOT, 'scss/_variables.scss'), 'utf8')
   .split('\n')
-  .map((l: string, i: number) => ({ l, i: i + 1 }))
-  .filter(({ l }: { l: string }) => /^\s*\$dd-[a-z0-9-]+\s*:/.test(l))
-const noDefault = varLines.filter(({ l }: { l: string }) => !/!\s*default\s*;/.test(l))
-assert(varLines.length > 250, `_variables.scss 声明数异常（${varLines.length}）`)
-assert(noDefault.length === 0, `缺 !default 的声明 ${noDefault.length} 条:\n${noDefault.map((x: any) => `line ${x.i}: ${x.l.trim()}`).join('\n')}`)
+const varDecls: { line: number; text: string }[] = []
+for (let i = 0; i < varFileLines.length; i++) {
+  if (!/^\s*\$dd-[a-z0-9-]+\s*:/.test(varFileLines[i])) continue
+  let text = varFileLines[i]
+  let j = i
+  while (!text.includes(';') && j + 1 < varFileLines.length) text += ' ' + varFileLines[++j]
+  varDecls.push({ line: i + 1, text: text.trim() })
+}
+const noDefault = varDecls.filter(({ text }) => !/!\s*default\s*;/.test(text))
+assert(varDecls.length > 250, `_variables.scss 声明数异常（${varDecls.length}）`)
+assert(noDefault.length === 0, `缺 !default 的声明 ${noDefault.length} 条:\n${noDefault.map((x) => `line ${x.line}: ${x.text}`).join('\n')}`)
 
 // ---------- 6) 编译期覆盖链路：消费者先声明 $dd-primary 再引入库 ----------
 const overrideCss: string = sass.compileString("$dd-primary: #d32f2f;\n@import 'scss/theme';", {
@@ -168,7 +182,7 @@ assert(overrideCss.includes('--dd-primary: #d32f2f'), '编译期覆盖链路失�
 
 // 组件层：var() 兜底也必须是覆盖后的值
 const btnSrc = fs.readFileSync(path.join(COMP, 'dd-button', 'dd-button.vue'), 'utf8')
-const btnStyle = btnSrc.match(/<style[^>]*>([\s\S]*?)<\/style>/)![1].replace(/@import '\.\.\/\.\.\/scss\//g, "@import 'scss/")
+const btnStyle = normalizeImports(btnSrc.match(/<style[^>]*>([\s\S]*?)<\/style>/)![1])
 const btnCss: string = sass.compileString("$dd-primary: #d32f2f;\n" + btnStyle, {
   loadPaths: [ROOT],
   logger: sass.Logger.silent,

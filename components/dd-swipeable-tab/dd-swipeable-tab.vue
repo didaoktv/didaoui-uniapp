@@ -44,6 +44,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 import { getCurrentInstance } from 'vue'
+import { rpxToPx } from '../../libs/function/index.js'
 
 interface Props {
   modelValue?: number
@@ -77,11 +78,6 @@ function onSelect(index: number) {
   emit('update:modelValue', index)
   emit('change', index)
   measure()
-}
-
-function rpxToPx(rpx: number): number {
-  const w = uni.getWindowInfo?.().windowWidth || 375
-  return (rpx * w) / 750
 }
 
 function measure() {

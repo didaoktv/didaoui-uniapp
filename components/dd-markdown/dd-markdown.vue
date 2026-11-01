@@ -15,182 +15,182 @@
   </view>
 </template>
 
-<script>
-import { marked } from './marked.esm.mjs';
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+// @ts-ignore marked.esm.mjs 无类型声明
+import { marked } from './marked.esm.mjs'
 
-export default {
-  name: 'dd-markdown',
-  // #ifdef VUE3
-  emits: ['load', 'ready', 'imgtap', 'linktap', 'play', 'error'],
-  // #endif
-  props: {
-    // markdown内容
-    content: {
-      type: String,
-      default: ''
-    },
-    // 是否启用图片预览
-    previewImg: {
-      type: Boolean,
-      default: true
-    },
-    // 是否允许外部链接被点击时自动打开
-    copyLink: {
-      type: [Boolean, String],
-      default: true
-    },
-    // 主域名，用于 dd-parse 处理相对链接
-    domain: {
-      type: String,
-      default: ''
-    },
-    // 是否显示代码块行号
-    showLineNumber: {
-      type: Boolean,
-      default: false
-    },
-    // 主题样式 'light' | 'dark'
-    theme: {
-      type: String,
-      default: 'light'
-    }
-  },
-  data() {
-    return {
-      parsedContent: ''
-    };
-  },
-  watch: {
-    content: {
-      handler(newVal) {
-        this.parseMarkdown(newVal);
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    // 解析markdown内容
-    parseMarkdown(content) {
-      if (!content) {
-        this.parsedContent = '';
-        return;
-      }
+interface Props {
+  // markdown内容
+  content?: string
+  // 是否启用图片预览
+  previewImg?: boolean
+  // 是否允许外部链接被点击时自动打开
+  copyLink?: boolean | string
+  // 主域名，用于 dd-parse 处理相对链接
+  domain?: string
+  // 是否显示代码块行号
+  showLineNumber?: boolean
+  // 主题样式 'light' | 'dark'
+  theme?: string
+}
 
-      // 使用marked解析markdown
-      let parsed = marked(content);
-      
-      // 处理代码块
-      parsed = this.handleCodeBlock(parsed);
-      
-      // 应用主题样式
-      parsed = this.applyTheme(parsed);
-      
-      this.parsedContent = parsed;
-    },
-    
-    // 处理代码块
-    handleCodeBlock(html) {
-      // 添加代码块样式和行号
-      return html.replace(/<pre><code([^>]*)>([^<]+)<\/code><\/pre>/g, (match, lang, code) => {
-        const language = lang.match(/class="language-([^"]+)"/);
-        const langClass = language ? `language-${language[1]}` : '';
-        
-        let result = `<pre class="dd-markdown-code ${langClass}">`;
-        
-        if (this.showLineNumber) {
-          // 添加行号
-          const lines = code.split('\n').filter(line => line.trim() !== '');
-          result += '<span class="dd-markdown-line-numbers">';
-          lines.push('');
-          lines.forEach((_, index) => {
-            result += `<span class="dd-markdown-line-number">${index + 1}</span>`;
-          });
-          result += '</span>';
-        }
-        
-        result += `<code class='code-lang ${langClass}'>${code}</code></pre>`;
-        return result;
-      });
-    },
-    
-    // 应用主题样式
-    applyTheme(html) {
-      // 可以根据theme属性添加不同的样式类
-      return html;
-    },
-    emitLoad(event) {
-      this.$emit('load', event)
-    },
-    emitReady(event) {
-      this.$emit('ready', event)
-    },
-    emitImgtap(event) {
-      this.$emit('imgtap', event)
-    },
-    emitLinktap(event) {
-      this.$emit('linktap', event)
-    },
-    emitPlay(event) {
-      this.$emit('play', event)
-    },
-    emitError(event) {
-      this.$emit('error', event)
-    }
+const props = withDefaults(defineProps<Props>(), {
+  content: '',
+  previewImg: true,
+  copyLink: true,
+  domain: '',
+  showLineNumber: false,
+  theme: 'light',
+})
+
+const emit = defineEmits<{
+  (e: 'load', event: any): void
+  (e: 'ready', event: any): void
+  (e: 'imgtap', event: any): void
+  (e: 'linktap', event: any): void
+  (e: 'play', event: any): void
+  (e: 'error', event: any): void
+}>()
+
+const parsedContent = ref('')
+
+watch(
+  () => props.content,
+  (newVal: string) => {
+    parseMarkdown(newVal)
+  },
+  { immediate: true }
+)
+
+// 解析markdown内容
+function parseMarkdown(content: string) {
+  if (!content) {
+    parsedContent.value = ''
+    return
   }
-};
+
+  // 使用marked解析markdown
+  let parsed = marked(content)
+
+  // 处理代码块
+  parsed = handleCodeBlock(parsed)
+
+  // 应用主题样式
+  parsed = applyTheme(parsed)
+
+  parsedContent.value = parsed
+}
+
+// 处理代码块
+function handleCodeBlock(html: string) {
+  // 添加代码块样式和行号
+  return html.replace(/<pre><code([^>]*)>([^<]+)<\/code><\/pre>/g, (match, lang, code) => {
+    const language = lang.match(/class="language-([^"]+)"/)
+    const langClass = language ? `language-${language[1]}` : ''
+
+    let result = `<pre class="dd-markdown-code ${langClass}">`
+
+    if (props.showLineNumber) {
+      // 添加行号
+      const lines = code.split('\n').filter((line: any) => line.trim() !== '')
+      result += '<span class="dd-markdown-line-numbers">'
+      lines.push('')
+      lines.forEach((_: any, index: number) => {
+        result += `<span class="dd-markdown-line-number">${index + 1}</span>`
+      })
+      result += '</span>'
+    }
+
+    result += `<code class='code-lang ${langClass}'>${code}</code></pre>`
+    return result
+  })
+}
+
+// 应用主题样式
+function applyTheme(html: string) {
+  // 可以根据theme属性添加不同的样式类
+  return html
+}
+
+function emitLoad(event: any) {
+  emit('load', event)
+}
+
+function emitReady(event: any) {
+  emit('ready', event)
+}
+
+function emitImgtap(event: any) {
+  emit('imgtap', event)
+}
+
+function emitLinktap(event: any) {
+  emit('linktap', event)
+}
+
+function emitPlay(event: any) {
+  emit('play', event)
+}
+
+function emitError(event: any) {
+  emit('error', event)
+}
+
+defineExpose({ parsedContent, parseMarkdown, handleCodeBlock, applyTheme })
 </script>
 
 <style lang="scss" scoped>
 @import '../../scss/variables';
-
+@import '../../scss/mixins';
 .dd-markdown {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 16px;
+  font-size: $dd-font-size-h4;
   line-height: 1.6;
   color: var(--dd-fg, #{$dd-fg});
-  padding: 16px;
+  padding: $dd-space-4;
   word-wrap: break-word;
   
   /* 标题样式 */
   :deep(h1) {
-    font-size: 32px;
-    margin: 8px 0;
+    font-size: $dd-font-size-display;
+    margin: $dd-space-2 0;
     font-weight: bold;
   }
   
   :deep(h2) {
-    font-size: 24px;
-    margin: 8px 0;
+    font-size: $dd-font-size-h1;
+    margin: $dd-space-2 0;
     font-weight: bold;
   }
   
   :deep(h3) {
-    font-size: 18px;
-    margin: 7px 0;
+    font-size: $dd-font-size-h3;
+    margin: 14rpx 0;
     font-weight: bold;
   }
   
   :deep(h4) {
-    font-size: 16px;
-    margin: 7px 0;
+    font-size: $dd-font-size-h4;
+    margin: 14rpx 0;
     font-weight: bold;
   }
   
   :deep(h5) {
-    font-size: 13px;
-    margin: 6px 0;
+    font-size: 26rpx;
+    margin: 12rpx 0;
     font-weight: bold;
   }
   
   :deep(h6) {
-    font-size: 10px;
-    margin: 5px 0;
+    font-size: $dd-font-size-overline;
+    margin: 10rpx 0;
     font-weight: bold;
   }
   
   /* 段落样式 */
   :deep(p) {
-    margin: 16px 0;
+    margin: $dd-space-4 0;
   }
   
   /* 链接样式 */
@@ -206,11 +206,11 @@ export default {
   /* 列表样式 */
   :deep(ul,
   :deep ol) {
-    margin: 16px 0;
-    padding-left: 32px;
+    margin: $dd-space-4 0;
+    padding-left: $dd-space-6;
     
     li {
-      margin: 8px 0;
+      margin: $dd-space-2 0;
     }
   }
   
@@ -224,8 +224,8 @@ export default {
   
   /* 引用样式 */
   :deep(blockquote) {
-    margin: 8px 0;
-    padding: 0 10px;
+    margin: $dd-space-2 0;
+    padding: 0 20rpx;
     border-left: 4px solid var(--dd-border-default, #{$dd-border-default});
     color: var(--dd-text-secondary, #{$dd-text-secondary});
   }
@@ -233,10 +233,10 @@ export default {
   /* 代码样式 */
   :deep(&-code) {
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    font-size: 14px;
+    font-size: $dd-font-size-body;
     background-color: var(--dd-surface-container, #{$dd-surface-container});
-    padding: 3px 6px;
-    border-radius: 3px;
+    padding: 6rpx 12rpx;
+    border-radius: 6rpx;
     display: flex;
   }
   :deep(.code-lang) {
@@ -246,12 +246,12 @@ export default {
   
   :deep(pre) {
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    font-size: 14px;
+    font-size: $dd-font-size-body;
     background-color: var(--dd-surface-container, #{$dd-surface-container});
-    padding: 16px;
+    padding: $dd-space-4;
     overflow: auto;
-    border-radius: 6px;
-    margin: 16px 0;
+    border-radius: 12rpx;
+    margin: $dd-space-4 0;
     
     :deep(code) {
       background: none;
@@ -262,12 +262,12 @@ export default {
   /* 表格样式 */
   :deep(table) {
     border-collapse: collapse;
-    margin: 16px 0;
+    margin: $dd-space-4 0;
     width: 100%;
     
     th,
     td {
-      padding: 6px 13px;
+      padding: 12rpx 26rpx;
       border: 1px solid #dfe2e5;
     }
     
@@ -285,14 +285,14 @@ export default {
     max-width: 100%;
     box-sizing: content-box;
     background-color: #fff;
-    margin: 16px 0;
+    margin: $dd-space-4 0;
   }
   
   /* 分割线样式 */
   :deep(hr) {
     height: 1px;
     padding: 0;
-    margin: 24px 0;
+    margin: $dd-space-5 0;
     background-color: var(--dd-rule, #{$dd-rule});
     border: 0;
   }
@@ -306,14 +306,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-right: 10px;
-  margin-right: 10px;
+  padding-right: 20rpx;
+  margin-right: 20rpx;
   border-right: 1px solid #ddd;
   user-select: none;
   
   .dd-markdown-line-number {
     color: #999;
-    font-size: 14px;
+    font-size: $dd-font-size-body;
     line-height: 1.6;
   }
 }

@@ -214,7 +214,7 @@ const iconStyle = computed(() => {
 
 <style lang="scss" scoped>
 @import '../../scss/variables';
-
+@import '../../scss/mixins';
 // ponytail: iconfont.cn 项目(Project id 5222155) base64 woff2 内嵌，避免外链字体请求；在线链接仅供调试，生产应下载字体包自托管备份
 // ceiling: 图标集变更时从 iconfont.cn 该项目重新导出并替换 base64 与回退链接；若字体内码与下方 &--name:before 的 codepoint 不一致，图标需同步校正
 @font-face {

@@ -132,8 +132,7 @@ const noPropFiles = [
   'components/dd-overlay/dd-overlay.vue',
   'components/dd-popover/dd-popover.vue',
   'components/dd-cascader/dd-cascader.vue',
-  'components/dd-keyboard/keyboard.js',
-  'components/dd-keyboard/props.js',
+  'components/dd-keyboard/dd-keyboard.vue',
 ]
 for (const rel of noPropFiles) {
   const src = stripComments(fs.readFileSync(path.join(ROOT, rel), 'utf8'))

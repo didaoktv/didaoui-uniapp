@@ -231,7 +231,7 @@ const lineStyle = computed(() => ({
       text-align: left;
       flex: 1;
       padding-bottom: $dd-space-4;
-      padding-left: $dd-space-1;
+      padding-left: $dd-space-3;
       margin-top: 0;
     }
   }

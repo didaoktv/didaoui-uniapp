@@ -28,41 +28,52 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
-import DdIcon from '../dd-icon/dd-icon.vue'
+import { computed, useSlots } from "vue";
+import DdIcon from "../dd-icon/dd-icon.vue";
 
 interface Props {
-  type?: 'default' | 'primary' | 'secondary' | 'ghost' | 'text' | 'success' | 'warning' | 'danger'
-  size?: 'xs' | 'sm' | 'md' | 'lg'
-  block?: boolean
-  round?: boolean
-  plain?: boolean
-  iconPosition?: 'left' | 'right'
-  icon?: string
-  loading?: boolean
-  disabled?: boolean
+  type?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "ghost"
+    | "text"
+    | "success"
+    | "warning"
+    | "danger";
+  /** 尺寸：xxs 行内附属最小号（复制等）/ xs 最小号 / sm 小号 / md 常规 / lg 大号；默认 md */
+  size?: "xxs" | "xs" | "sm" | "md" | "lg";
+  block?: boolean;
+  round?: boolean;
+  plain?: boolean;
+  iconPosition?: "left" | "right";
+  icon?: string;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'primary',
-  size: 'md',
+  type: "primary",
+  size: "md",
   block: false,
   round: false,
   plain: false,
-  iconPosition: 'left',
-  icon: '',
+  iconPosition: "left",
+  icon: "",
   loading: false,
   disabled: false,
-})
+});
 
-const emit = defineEmits<{ (e: 'click', val: Event): void }>()
+const emit = defineEmits<{ (e: "click", val: Event): void }>();
 
-const slots = useSlots()
-const isIconOnly = computed(() => !slots.default && (!!props.icon || !!slots.icon))
+const slots = useSlots();
+const isIconOnly = computed(
+  () => !slots.default && (!!props.icon || !!slots.icon),
+);
 
 function onClick(e: Event) {
-  if (props.disabled || props.loading) return
-  emit('click', e)
+  if (props.disabled || props.loading) return;
+  emit("click", e);
 }
 </script>
 
@@ -123,6 +134,21 @@ function onClick(e: Event) {
 @keyframes dd-btn-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.dd-btn--xxs {
+  height: $dd-size-control-xxs;
+  padding: 0 $dd-space-1;
+  font-size: $dd-font-size-overline;
+  border-radius: $dd-radius-sm;
+  &.dd-btn--icon-only {
+    width: $dd-size-control-xxs;
+  }
+  .dd-btn__loading {
+    width: 14rpx;
+    height: 14rpx; // size-exempt: loading 圈内部件，非控件高度
+    border-width: 2rpx;
   }
 }
 

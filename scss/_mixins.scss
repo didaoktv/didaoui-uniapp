@@ -122,6 +122,14 @@
   }
 }
 
+// flex 布局（nvue 下由默认 flex 兜底，显式声明方向）
+@mixin dd-flex($direction: row) {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: $direction;
+}
+
 // flex 居中
 @mixin dd-flex-center {
   display: flex;

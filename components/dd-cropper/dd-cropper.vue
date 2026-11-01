@@ -1,30 +1,30 @@
-<template>
+﻿<template>
 	<view class="dd-cropper">
-		<dd-canvas ref="avatarCanvas" :canvas-id="'avatar-canvas-' + instanceId" class="my-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zc }" bg-color="transparent"></dd-canvas>
-		<dd-canvas ref="operCanvas" :canvas-id="'oper-canvas-' + instanceId" class="oper-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zcOper }" bg-color="transparent" @touchstart="start" @touchmove="move" @touchend="end"></dd-canvas>
-		<dd-canvas ref="prvCanvas" :canvas-id="'prv-canvas-' + instanceId" class="prv-canvas" :width="windowWidth || 0" :height="windowHeight || 0" bg-color="transparent" @touchstart="hideImg" :style="{ height: cvsStyleHeight, top: prvTop, zIndex: zcPrv }"></dd-canvas>
-		<view class="oper-wrapper" :style="{ display: styleDisplay, zIndex: zcBar }">
-			<view class="oper">
-				<view class="btn-wrapper" v-if="showOper">
-					<view @click="select" hover-class="hover" :style="{ width: btnWidth }">
+		<dd-canvas ref="avatarCanvas" :canvas-id="'avatar-canvas-' + instanceId" class="dd-cropper__avatar-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zc }" bg-color="transparent"></dd-canvas>
+		<dd-canvas ref="operCanvas" :canvas-id="'oper-canvas-' + instanceId" class="dd-cropper__oper-canvas" :width="windowWidth || 0" :height="windowHeight || 0" :style="{ top: styleTop, height: cvsStyleHeight, zIndex: zcOper }" bg-color="transparent" @touchstart="start" @touchmove="move" @touchend="end"></dd-canvas>
+		<dd-canvas ref="prvCanvas" :canvas-id="'prv-canvas-' + instanceId" class="dd-cropper__preview-canvas" :width="windowWidth || 0" :height="windowHeight || 0" bg-color="transparent" @touchstart="hideImg" :style="{ height: cvsStyleHeight, top: prvTop, zIndex: zcPrv }"></dd-canvas>
+		<view class="dd-cropper__oper-wrapper" :style="{ display: styleDisplay, zIndex: zcBar }">
+			<view class="dd-cropper__oper">
+				<view class="dd-cropper__btn-wrapper" v-if="showOper">
+					<view @click="select" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth }">
 						<text>重选</text>
 					</view>
-					<view @click="close" hover-class="hover" :style="{ width: btnWidth }">
+					<view @click="close" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth }">
 						<text>关闭</text>
 					</view>
-					<view @click="rotate" hover-class="hover" :style="{ width: btnWidth, display: btnDsp }">
+					<view @click="rotate" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth, display: btnDsp }">
 						<text>旋转</text>
 					</view>
-					<view @click="preview" hover-class="hover" :style="{ width: btnWidth }">
+					<view @click="preview" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth }">
 						<text>预览</text>
 					</view>
-					<view @click="confirm" hover-class="hover" :style="{ width: btnWidth }">
+					<view @click="confirm" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth }">
 						<text>确定</text>
 					</view>
 				</view>
-				<view class="clr-wrapper" v-else>
-					<slider class="my-slider" @change="colorChange" block-size="25" value="0" min="-100" max="100" activeColor="red" backgroundColor="green" block-color="grey" show-value></slider>
-					<view @click="prvUpload" hover-class="hover" :style="{ width: btnWidth }">
+				<view class="dd-cropper__clear-wrapper" v-else>
+					<slider class="dd-cropper__slider" @change="colorChange" block-size="25" value="0" min="-100" max="100" activeColor="red" backgroundColor="green" block-color="grey" show-value></slider>
+					<view @click="prvUpload" hover-class="dd-cropper__btn-hover" :style="{ width: btnWidth }">
 						<text>确定</text>
 					</view>
 				</view>
@@ -36,1161 +36,319 @@
 	</view>
 </template>
 
-<script>
+<script setup lang="ts">
+	import { nextTick, onMounted, ref } from 'vue'
 	import zIndexConfig from '../../libs/config/zIndex.js'
 
-	// 画布系组件（dd-canvas / dd-signature / dd-qrcode 同族）统一采用 Options API，
-	// 命令式 canvas 状态挂在 this 上不走响应式，避免触摸高频重绘的代理开销。
+	// 画布系组件（dd-canvas / dd-signature / dd-qrcode 同族）命令式 canvas 状态挂在 setup 作用域的
+	// 普通变量上、不走响应式，避免触摸高频重绘的代理开销。
 
 	// 底部操作条高度（px），与样式 .oper-wrapper 的 height 保持一致
 	const tabHeight = 50;
 
-	// z-index 统一取 libs/config/zIndex.js（cropper 档 + 显式偏移；Options API 经 data 暴露给模板）。
+	// z-index 统一取 libs/config/zIndex.js（cropper 档 + 显式偏移；经 ref 暴露给模板）。
 	// ×2 原语义：预览层须盖过工作画布与操作条。
 	const Z_CROPPER = zIndexConfig.cropper
 	const Z_CROPPER_OPER = Z_CROPPER + 1
 	const Z_CROPPER_PRV = Z_CROPPER * 2
 	const Z_CROPPER_BAR = Z_CROPPER + 9
 
-	export default {
-		name: "dd-cropper",
-		emits: ['avtinit', 'confirm', 'cancel'],
-		props: {
-			// 最小缩放倍数
-			minScale: {
-				type: [Number, String],
-				default: 0.3
-			},
-			// 最大缩放倍数
-			maxScale: {
-				type: [Number, String],
-				default: 4
-			},
-			// 是否允许双指缩放
-			canScale: {
-				type: Boolean,
-				default: true
-			},
-			// 是否允许旋转（inner 模式下不可用）
-			canRotate: {
-				type: Boolean,
-				default: true
-			},
-			lockWidth: {
-				type: String,
-				default: ''
-			},
-			lockHeight: {
-				type: String,
-				default: ''
-			},
-			// 拉伸模式：x / y / long / short / longSel / shortSel
-			stretch: {
-				type: String,
-				default: ''
-			},
-			// 锁定模式：x / y / long / short / longSel / shortSel
-			lock: {
-				type: String,
-				default: ''
-			},
-			// 页面无底部 tabbar 时保持 true
-			noTab: {
-				type: Boolean,
-				default: true
-			},
-			// 内部模式：隐藏旋转按钮、按钮加宽
-			inner: {
-				type: Boolean,
-				default: false
-			},
-			// 导出图片质量（0-1），仅对压缩格式生效
-			quality: {
-				type: [Number, String],
-				default: 0.9
-			},
-			// 实例标识，confirm 事件原样回传
-			index: {
-				type: [Number, String],
-				default: ''
-			},
-			// 是否允许拖拽四角控制点调整裁剪框大小
-			canChangeSize: {
-				type: Boolean,
-				default: false
-			},
-			// 裁剪区域宽度，如 '300rpx'
-			areaWidth: {
-				type: String,
-				default: '300rpx'
-			},
-			// 裁剪区域高度，如 '300rpx'
-			areaHeight: {
-				type: String,
-				default: '300rpx'
-			},
-			// 导出图片宽度，如 '260rpx'
-			exportWidth: {
-				type: String,
-				default: '260rpx'
-			},
-			// 导出图片高度，如 '260rpx'
-			exportHeight: {
-				type: String,
-				default: '260rpx'
-			},
-			// 画布填充色，默认透明，可传 'black'、'#ffffff' 等
-			fillColor: {
-				type: String,
-				default: 'transparent'
-			},
-		},
-		data() {
-			return {
-				// 实例ID用于区分不同实例的 canvas-id
-				instanceId: Date.now() + '-' + Math.random().toString(36).substring(2, 11),
-				cvsStyleHeight: '0px',
-				styleDisplay: 'none',
-				styleTop: '-10000px',
-				prvTop: '-10000px',
-				selStyle: {},
-				showOper: true,
-				// confirm 回载荷（avatar 字段）
-				imgSrc: {
-					imgSrc: ''
-				},
-				btnWidth: '19%',
-				btnDsp: 'flex',
-				// 导出图片宽度（px，经 rpx 换算）
-				expWidth: '',
-				// 导出图片高度（px，经 rpx 换算）
-				expHeight: '',
-				// 是否允许调整裁剪框大小
-				letChangeSize: false,
-				// 底部安全区大小
-				safeAreaInsetsBottom: 0,
-				// z-index 档位（libs/config/zIndex.js cropper 档派生，见 script 头部常量）
-				zc: Z_CROPPER,
-				zcOper: Z_CROPPER_OPER,
-				zcPrv: Z_CROPPER_PRV,
-				zcBar: Z_CROPPER_BAR,
-			};
-		},
-		created() {
-			this.ctxCanvas = null;
-			this.ctxCanvasOper = null;
-			this.ctxCanvasPrv = null;
-			this.qlty = parseInt(this.quality) || 0.9;
-			this.letRotate = (this.canRotate === false || this.inner === true) ? 0 : 1;
-			this.letScale = this.canScale === false ? 0 : 1;
-			this.letChangeSize = this.canChangeSize;
-			this.isin = this.inner === true ? 1 : 0;
-			this.indx = this.index || undefined;
-			this.mnScale = this.minScale || 0.3;
-			this.mxScale = this.maxScale || 4;
-			this.noBar = this.noTab === true ? 1 : 0;
-			this.stc = this.stretch;
-			this.lck = this.lock;
-			if (this.isin) {
-				this.btnWidth = '24%';
-				this.btnDsp = 'none';
-			} else {
-				this.btnWidth = '19%';
-				this.btnDsp = 'flex';
+	interface Props {
+		// 最小缩放倍数
+		minScale?: number | string;
+		// 最大缩放倍数
+		maxScale?: number | string;
+		// 是否允许双指缩放
+		canScale?: boolean;
+		// 是否允许旋转（inner 模式下不可用）
+		canRotate?: boolean;
+		lockWidth?: string;
+		lockHeight?: string;
+		// 拉伸模式：x / y / long / short / longSel / shortSel
+		stretch?: string;
+		// 锁定模式：x / y / long / short / longSel / shortSel
+		lock?: string;
+		// 页面无底部 tabbar 时保持 true
+		noTab?: boolean;
+		// 内部模式：隐藏旋转按钮、按钮加宽
+		inner?: boolean;
+		// 导出图片质量（0-1），仅对压缩格式生效
+		quality?: number | string;
+		// 实例标识，confirm 事件原样回传
+		index?: number | string;
+		// 是否允许拖拽四角控制点调整裁剪框大小
+		canChangeSize?: boolean;
+		// 裁剪区域宽度，如 '300rpx'
+		areaWidth?: string;
+		// 裁剪区域高度，如 '300rpx'
+		areaHeight?: string;
+		// 导出图片宽度，如 '260rpx'
+		exportWidth?: string;
+		// 导出图片高度，如 '260rpx'
+		exportHeight?: string;
+		// 画布填充色，默认透明，可传 'black'、'#ffffff' 等
+		fillColor?: string;
+	}
+
+	const props = withDefaults(defineProps<Props>(), {
+		minScale: 0.3,
+		maxScale: 4,
+		canScale: true,
+		canRotate: true,
+		lockWidth: '',
+		lockHeight: '',
+		stretch: '',
+		lock: '',
+		noTab: true,
+		inner: false,
+		quality: 0.9,
+		index: '',
+		canChangeSize: false,
+		areaWidth: '300rpx',
+		areaHeight: '300rpx',
+		exportWidth: '260rpx',
+		exportHeight: '260rpx',
+		fillColor: 'transparent'
+	});
+
+	const emit = defineEmits<{
+		(e: 'avtinit'): void;
+		(e: 'confirm', val: { avatar: any; path: any; index: any; data: any }): void;
+		(e: 'cancel'): void;
+	}>();
+
+	// 实例ID用于区分不同实例的 canvas-id
+	const instanceId = ref(Date.now() + '-' + Math.random().toString(36).substring(2, 11));
+	const cvsStyleHeight = ref('0px');
+	const styleDisplay = ref('none');
+	const styleTop = ref('-10000px');
+	const prvTop = ref('-10000px');
+	const selStyle = ref<any>({});
+	const showOper = ref(true);
+	// confirm 回载荷（avatar 字段）
+	const imgSrc = ref<any>({
+		imgSrc: ''
+	});
+	const btnWidth = ref('19%');
+	const btnDsp = ref('flex');
+	// 导出图片宽度（px，经 rpx 换算）
+	const expWidth = ref<any>('');
+	// 导出图片高度（px，经 rpx 换算）
+	const expHeight = ref<any>('');
+	// 是否允许调整裁剪框大小
+	const letChangeSize = ref(false);
+	// 底部安全区大小
+	const safeAreaInsetsBottom = ref(0);
+	// z-index 档位（libs/config/zIndex.js cropper 档派生，见 script 头部常量）
+	const zc = ref(Z_CROPPER);
+	const zcOper = ref(Z_CROPPER_OPER);
+	const zcPrv = ref(Z_CROPPER_PRV);
+	const zcBar = ref(Z_CROPPER_BAR);
+
+	// 画布组件实例（原 $refs）
+	const avatarCanvas = ref<any>(null);
+	const operCanvas = ref<any>(null);
+	const prvCanvas = ref<any>(null);
+
+	// 以下状态与 Options API 时期一致：挂在实例上、不走响应式
+	let ctxCanvas: any = null;
+	let ctxCanvasOper: any = null;
+	let ctxCanvasPrv: any = null;
+	let qlty: any = 0.9;
+	let letRotate: any = 1;
+	let letScale: any = 1;
+	let isin: any = 0;
+	let indx: any = undefined;
+	let mnScale: any = 0.3;
+	let mxScale: any = 4;
+	let noBar: any = 1;
+	let stc: any = '';
+	let lck: any = '';
+	let moreHeight = 0;
+	let platform: any = undefined;
+	let pixelRatio: any = undefined;
+	let windowWidth = 0;
+	let windowHeight = 0;
+	let drawTop = 0;
+	let pxRatio = 0;
+	let imgPath: any = undefined;
+	let imgWidth = 0;
+	let imgHeight = 0;
+	let path: any = undefined;
+	let hasSel: any = false;
+	let fixWidth = 0;
+	let fixHeight = 0;
+	let lckWidth = 0;
+	let lckHeight = 0;
+	let scaleWidth = 0;
+	let scaleHeight = 0;
+	let scaleSize = 1;
+	let rotateDeg = 0;
+	let posWidth = 0;
+	let posHeight = 0;
+	let useWidth = 0;
+	let useHeight = 0;
+	let drawTm = 0;
+	let prvTm = 0;
+	let _drawToken = 0;
+	let fSelecting = false;
+	let fUploading = false;
+	let fPrvUploading = false;
+	let fPreviewing = false;
+	let fRotateing = false;
+	let prvImg = '';
+	let prvImgData: any = null;
+	let prvImgTmp: any = null;
+	let target: any = null;
+	let prvX = 0;
+	let prvY = 0;
+	let prvWidth = 0;
+	let prvHeight = 0;
+	let rtn: any = undefined;
+	let resizeHandle: any = null;
+	let touch0: any = null;
+	let touch1: any = null;
+	let fgDistance = 0;
+
+	// created（保持 Options API 时期的初始化时序：setup 阶段即执行）
+	qlty = parseInt(props.quality as any) || 0.9;
+	letRotate = (props.canRotate === false || props.inner === true) ? 0 : 1;
+	letScale = props.canScale === false ? 0 : 1;
+	letChangeSize.value = props.canChangeSize;
+	isin = props.inner === true ? 1 : 0;
+	indx = props.index || undefined;
+	mnScale = props.minScale || 0.3;
+	mxScale = props.maxScale || 4;
+	noBar = props.noTab === true ? 1 : 0;
+	stc = props.stretch;
+	lck = props.lock;
+	if (isin) {
+		btnWidth.value = '24%';
+		btnDsp.value = 'none';
+	} else {
+		btnWidth.value = '19%';
+		btnDsp.value = 'flex';
+	}
+
+	if (noBar) {
+		moreHeight = 0;
+		windowResize();
+	} else {
+		uni.showTabBar({
+			complete: (res: any) => {
+				moreHeight = (res.errMsg === 'showTabBar:ok') ? 50 : 0;
+				windowResize();
 			}
+		});
+	}
 
-			if (this.noBar) {
-				this.moreHeight = 0;
-				this.windowResize();
-			} else {
-				uni.showTabBar({
-					complete: (res) => {
-						this.moreHeight = (res.errMsg === 'showTabBar:ok') ? 50 : 0;
-						this.windowResize();
-					}
-				});
-			}
-		},
-		mounted() {
-			this.initCanvasRefs(true);
-		},
-		methods: {
-			async initCanvasRefs(force = false) {
-				await this.$nextTick();
-				const avatarCanvas = this.$refs.avatarCanvas;
-				const operCanvas = this.$refs.operCanvas;
-				const prvCanvas = this.$refs.prvCanvas;
-				if (!avatarCanvas || !operCanvas || !prvCanvas) return false;
-				await Promise.all([
-					avatarCanvas.initCanvas(force),
-					operCanvas.initCanvas(force),
-					prvCanvas.initCanvas(force)
-				]);
-				this.ctxCanvas = avatarCanvas;
-				this.ctxCanvasOper = operCanvas;
-				this.ctxCanvasPrv = prvCanvas;
-				return true;
-			},
-			windowResize() {
-				let sysInfo = uni.getSystemInfoSync();
-				this.platform = sysInfo.platform;
-				this.pixelRatio = sysInfo.pixelRatio;
-				this.windowWidth = sysInfo.windowWidth;
-				this.safeAreaInsetsBottom = sysInfo.safeAreaInsets.bottom;
-				// #ifdef H5
-				this.drawTop = sysInfo.windowTop;
-				this.windowHeight = sysInfo.windowHeight + sysInfo.windowBottom;
-				this.cvsStyleHeight = this.windowHeight - tabHeight + 'px';
-				// #endif
-				// #ifdef APP-PLUS
-				if (this.platform === 'android') {
-					this.windowHeight = sysInfo.screenHeight + sysInfo.statusBarHeight;
-					this.cvsStyleHeight = this.windowHeight - tabHeight + 'px';
-				} else {
-					this.windowHeight = sysInfo.windowHeight + this.moreHeight;
-					this.cvsStyleHeight = this.windowHeight - tabHeight - this.safeAreaInsetsBottom + 6 + 'px';
-				}
-				// #endif
-				// #ifdef MP
-				this.windowHeight = sysInfo.windowHeight + this.moreHeight;
-				this.cvsStyleHeight = this.windowHeight - tabHeight - this.safeAreaInsetsBottom - 2 + 'px';
-				// #endif
-				this.pxRatio = this.windowWidth / 750;
+	onMounted(() => {
+		initCanvasRefs(true);
+	});
 
-				this.expWidth && (this.expWidth = this.expWidth.indexOf('rpx') >= 0 ? parseInt(this.expWidth) * this.pxRatio : parseInt(this.expWidth));
-				this.expHeight && (this.expHeight = this.expHeight.indexOf('rpx') >= 0 ? parseInt(this.expHeight) * this.pxRatio : parseInt(this.expHeight));
+	async function initCanvasRefs(force = false) {
+		await nextTick();
+		const avatarCanvasRef = avatarCanvas.value;
+		const operCanvasRef = operCanvas.value;
+		const prvCanvasRef = prvCanvas.value;
+		if (!avatarCanvasRef || !operCanvasRef || !prvCanvasRef) return false;
+		await Promise.all([
+			avatarCanvasRef.initCanvas(force),
+			operCanvasRef.initCanvas(force),
+			prvCanvasRef.initCanvas(force)
+		]);
+		ctxCanvas = avatarCanvasRef;
+		ctxCanvasOper = operCanvasRef;
+		ctxCanvasPrv = prvCanvasRef;
+		return true;
+	}
 
-				if (this.styleDisplay === 'flex') {
-					this.drawInit(true);
-				}
-				this.hideImg();
-			},
-			select() {
-				if (this.fSelecting) return;
-				this.fSelecting = true;
-				setTimeout(() => { this.fSelecting = false; }, 500);
-				uni.chooseImage({
-					count: 1,
-					sizeType: ['original', 'compressed'],
-					sourceType: ['album', 'camera'],
-					success: (r) => {
-						uni.showLoading({ mask: true });
-						let path = this.imgPath = r.tempFilePaths[0];
-						uni.getImageInfo({
-							src: path,
-							success: r => {
-								this.imgWidth = r.width;
-								this.imgHeight = r.height;
-								this.path = path;
-								if (!this.hasSel) {
-									let style = this.selStyle || {};
-									if (this.areaWidth && this.areaHeight) {
-										let areaWidth = this.areaWidth.indexOf('rpx') >= 0 ? parseInt(this.areaWidth) * this.pxRatio : parseInt(this.areaWidth),
-											areaHeight = this.areaHeight.indexOf('rpx') >= 0 ? parseInt(this.areaHeight) * this.pxRatio : parseInt(this.areaHeight);
-										style.width = areaWidth + 'px';
-										style.height = areaHeight + 'px';
-										style.top = (this.windowHeight - areaHeight - tabHeight) / 2 + 'px';
-										style.left = (this.windowWidth - areaWidth) / 2 + 'px';
-									} else {
-										uni.showModal({
-											title: "裁剪框的宽或高没有设置",
-											showCancel: false
-										})
-										return;
-									}
-									this.selStyle = style;
-								}
+	function windowResize() {
+		const sysInfo: any = uni.getSystemInfoSync();
+		platform = sysInfo.platform;
+		pixelRatio = sysInfo.pixelRatio;
+		windowWidth = sysInfo.windowWidth;
+		safeAreaInsetsBottom.value = sysInfo.safeAreaInsets.bottom;
+		// #ifdef H5
+		drawTop = sysInfo.windowTop;
+		windowHeight = sysInfo.windowHeight + sysInfo.windowBottom;
+		cvsStyleHeight.value = windowHeight - tabHeight + 'px';
+		// #endif
+		// #ifdef APP-PLUS
+		if (platform === 'android') {
+			windowHeight = sysInfo.screenHeight + sysInfo.statusBarHeight;
+			cvsStyleHeight.value = windowHeight - tabHeight + 'px';
+		} else {
+			windowHeight = sysInfo.windowHeight + moreHeight;
+			cvsStyleHeight.value = windowHeight - tabHeight - safeAreaInsetsBottom.value + 6 + 'px';
+		}
+		// #endif
+		// #ifdef MP
+		windowHeight = sysInfo.windowHeight + moreHeight;
+		cvsStyleHeight.value = windowHeight - tabHeight - safeAreaInsetsBottom.value - 2 + 'px';
+		// #endif
+		pxRatio = windowWidth / 750;
 
-								if (this.noBar) {
-									this.drawInit(true);
-								} else {
-									uni.hideTabBar({
-										complete: () => {
-											this.drawInit(true);
-										}
-									});
-								}
-							},
-							fail: () => {
-								uni.showToast({
-									title: "读取图片失败",
-									duration: 2000,
+		expWidth.value && (expWidth.value = expWidth.value.indexOf('rpx') >= 0 ? parseInt(expWidth.value) * pxRatio : parseInt(expWidth.value));
+		expHeight.value && (expHeight.value = expHeight.value.indexOf('rpx') >= 0 ? parseInt(expHeight.value) * pxRatio : parseInt(expHeight.value));
+
+		if (styleDisplay.value === 'flex') {
+			drawInit(true);
+		}
+		hideImg();
+	}
+
+	function select() {
+		if (fSelecting) return;
+		fSelecting = true;
+		setTimeout(() => { fSelecting = false; }, 500);
+		uni.chooseImage({
+			count: 1,
+			sizeType: ['original', 'compressed'],
+			sourceType: ['album', 'camera'],
+			success: (r: any) => {
+				uni.showLoading({ mask: true });
+				imgPath = r.tempFilePaths[0];
+				const selectedPath = imgPath;
+				uni.getImageInfo({
+					src: selectedPath,
+					success: (res: any) => {
+						imgWidth = res.width;
+						imgHeight = res.height;
+						path = selectedPath;
+						if (!hasSel) {
+							const style = selStyle.value || {};
+							if (props.areaWidth && props.areaHeight) {
+								let areaWidth = props.areaWidth.indexOf('rpx') >= 0 ? parseInt(props.areaWidth) * pxRatio : parseInt(props.areaWidth),
+									areaHeight = props.areaHeight.indexOf('rpx') >= 0 ? parseInt(props.areaHeight) * pxRatio : parseInt(props.areaHeight);
+								style.width = areaWidth + 'px';
+								style.height = areaHeight + 'px';
+								style.top = (windowHeight - areaHeight - tabHeight) / 2 + 'px';
+								style.left = (windowWidth - areaWidth) / 2 + 'px';
+							} else {
+								uni.showModal({
+									title: "裁剪框的宽或高没有设置",
+									showCancel: false
 								})
-							},
-							complete() {
-								uni.hideLoading();
+								return;
 							}
-						});
-					},
-					fail: () => {
-						this.$emit('cancel')
-					}
-				})
-			},
-			async confirm() {
-				if (this.fUploading) return;
-				this.fUploading = true;
-				setTimeout(() => { this.fUploading = false; }, 1000)
-
-				let style = this.selStyle,
-					x = parseInt(style.left),
-					y = parseInt(style.top),
-					width = parseInt(style.width),
-					height = parseInt(style.height),
-					expWidth = this.expWidth || width,
-					expHeight = this.expHeight || height;
-
-				// #ifdef H5
-				expWidth = width;
-				expHeight = height;
-				// #endif
-
-				uni.showLoading({ mask: true });
-				this.styleDisplay = 'none';
-				this.styleTop = '-10000px';
-				this.hasSel = false;
-				this.hideImg();
-				await this.initCanvasRefs();
-				this.ctxCanvas.toTempFilePath({
-					x: x,
-					y: y,
-					width: width,
-					height: height,
-					destWidth: expWidth,
-					destHeight: expHeight,
-					fileType: 'png',
-					quality: this.qlty,
-					success: (r) => {
-						r = r.tempFilePath;
-						// #ifdef H5
-						this.btop(r).then(async (r) => {
-							if (this.expWidth && this.expHeight) {
-								let ctxCanvas = this.ctxCanvas;
-								expWidth = this.expWidth,
-									expHeight = this.expHeight;
-
-								// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
-								ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
-								await ctxCanvas.drawImage(r, 0, 0, expWidth, expHeight);
-								ctxCanvas.draw(false, () => {
-									ctxCanvas.toTempFilePath({
-										x: 0,
-										y: 0,
-										width: expWidth,
-										height: expHeight,
-										destWidth: expWidth,
-										destHeight: expHeight,
-										fileType: 'png',
-										quality: this.qlty,
-										success: (r) => {
-											r = r.tempFilePath;
-											this.btop(r).then((r) => {
-												this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-											});
-										},
-										fail: () => {
-											uni.showToast({
-												title: "导出图片失败",
-												duration: 2000,
-											})
-										}
-									});
-								});
-							} else {
-								this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-							}
-						})
-						// #endif
-						// #ifndef H5
-						this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-						// #endif
-					},
-					fail: () => {
-						uni.showToast({
-							title: "导出图片失败",
-							duration: 2000,
-						})
-					},
-					complete: () => {
-						uni.hideLoading();
-						this.noBar || uni.showTabBar();
-					}
-				});
-			},
-			// 预览模式下点击"确认"：将预览画布的裁剪结果导出
-			async prvUpload() {
-				if (this.fPrvUploading) return;
-				this.fPrvUploading = true;
-				setTimeout(() => { this.fPrvUploading = false; }, 1000)
-
-				let prvX = this.prvX,
-					prvY = this.prvY,
-					prvWidth = this.prvWidth,
-					prvHeight = this.prvHeight,
-					expWidth = this.expWidth || prvWidth,
-					expHeight = this.expHeight || prvHeight;
-
-				// #ifdef H5
-				expWidth = prvWidth;
-				expHeight = prvHeight;
-				// #endif
-
-				uni.showLoading({ mask: true });
-
-				this.styleDisplay = 'none';
-				this.styleTop = '-10000px';
-				this.hasSel = false;
-				this.hideImg();
-				await this.initCanvasRefs();
-				this.ctxCanvasPrv.toTempFilePath({
-					x: prvX,
-					y: prvY,
-					width: prvWidth,
-					height: prvHeight,
-					destWidth: expWidth,
-					destHeight: expHeight,
-					fileType: 'png',
-					quality: this.qlty,
-					success: (r) => {
-						r = r.tempFilePath;
-						// #ifdef H5
-						this.btop(r).then(async (r) => {
-							if (this.expWidth && this.expHeight) {
-								let ctxCanvas = this.ctxCanvas;
-								expWidth = this.expWidth,
-									expHeight = this.expHeight;
-
-								// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
-								ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
-								await ctxCanvas.drawImage(r, 0, 0, expWidth, expHeight);
-								ctxCanvas.draw(false, () => {
-									ctxCanvas.toTempFilePath({
-										x: 0,
-										y: 0,
-										width: expWidth,
-										height: expHeight,
-										destWidth: expWidth,
-										destHeight: expHeight,
-										fileType: 'png',
-										quality: this.qlty,
-										success: (r) => {
-											r = r.tempFilePath;
-											this.btop(r).then((r) => {
-												this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-											});
-										},
-										fail: () => {
-											uni.showToast({
-												title: "导出图片失败",
-												duration: 2000,
-											})
-										}
-									});
-								});
-							} else {
-								this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-							}
-						})
-						// #endif
-						// #ifndef H5
-						this.$emit("confirm", { avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn });
-						// #endif
-					},
-					fail: () => {
-						uni.showToast({
-							title: "导出图片失败",
-							duration: 2000,
-						})
-					},
-					complete: () => {
-						uni.hideLoading();
-						this.noBar || uni.showTabBar();
-					}
-				});
-			},
-			async drawInit(ini = false) {
-				await this.initCanvasRefs();
-				let allWidth = this.windowWidth,
-					allHeight = this.windowHeight,
-					imgWidth = this.imgWidth,
-					imgHeight = this.imgHeight,
-					imgRadio = imgWidth / imgHeight,
-					useWidth = allWidth - 40,
-					useHeight = allHeight - tabHeight - 80,
-					selWidth = parseInt(this.selStyle.width),
-					selHeight = parseInt(this.selStyle.height);
-
-				this.fixWidth = 0;
-				this.fixHeight = 0;
-				this.lckWidth = 0;
-				this.lckHeight = 0;
-				switch (this.stc) {
-					case 'x': this.fixWidth = 1; break;
-					case 'y': this.fixHeight = 1; break;
-					case 'long': if (imgRadio > 1) this.fixWidth = 1; else this.fixHeight = 1; break;
-					case 'short': if (imgRadio > 1) this.fixHeight = 1; else this.fixWidth = 1; break;
-					case 'longSel': if (selWidth > selHeight) this.fixWidth = 1; else this.fixHeight = 1; break;
-					case 'shortSel': if (selWidth > selHeight) this.fixHeight = 1; else this.fixWidth = 1; break;
-				}
-				// lck 锁定裁剪框的宽/高调整方向：
-				// 'x' 锁宽 / 'y' 锁高 / 'long'/'short' 按图片长短边 / 'longSel'/'shortSel' 按选择框长短边
-				switch (this.lck) {
-					case 'x': this.lckWidth = 1; break;
-					case 'y': this.lckHeight = 1; break;
-					case 'long': if (imgRadio > 1) this.lckWidth = 1; else this.lckHeight = 1; break;
-					case 'short': if (imgRadio > 1) this.lckHeight = 1; else this.lckWidth = 1; break;
-					case 'longSel': if (selWidth > selHeight) this.lckWidth = 1; else this.lckHeight = 1; break;
-					case 'shortSel': if (selWidth > selHeight) this.lckHeight = 1; else this.lckWidth = 1; break;
-				}
-				if (this.fixWidth) {
-					useWidth = selWidth;
-					useHeight = useWidth / imgRadio;
-				} else if (this.fixHeight) {
-					useHeight = selHeight;
-					useWidth = useHeight * imgRadio;
-				} else if (imgRadio < 1) {
-					if (imgHeight < useHeight) {
-						useWidth = imgWidth;
-						useHeight = imgHeight;
-					} else {
-						useHeight = useHeight;
-						useWidth = useHeight * imgRadio;
-					}
-				} else {
-					if (imgWidth < useWidth) {
-						useWidth = imgWidth;
-						useHeight = imgHeight;
-					} else {
-						useWidth = useWidth;
-						useHeight = useWidth / imgRadio;
-					}
-				}
-				if (this.isin) {
-					this.scaleWidth = 0;
-					this.scaleHeight = 0;
-					if (useWidth < selWidth) {
-						useWidth = selWidth;
-						useHeight = useWidth / imgRadio;
-						this.lckHeight = 0;
-					}
-					if (useHeight < selHeight) {
-						useHeight = selHeight;
-						useWidth = useHeight * imgRadio;
-						this.lckWidth = 0;
-					}
-				}
-
-				this.scaleSize = 1;
-				this.rotateDeg = 0;
-				this.posWidth = (allWidth - useWidth) / 2;
-				this.posHeight = (allHeight - useHeight - tabHeight) / 2;
-				this.useWidth = useWidth;
-				this.useHeight = useHeight;
-
-				let style = this.selStyle,
-				left = parseInt(style.left),
-				top = parseInt(style.top),
-				width = parseInt(style.width),
-				height = parseInt(style.height),
-				ctxCanvas = this.ctxCanvas,
-				ctxCanvasOper = this.ctxCanvasOper;
-
-			// H5/小程序 type=2d 为立即模式画布，重绘遮罩前须清掉上一帧，否则拖控制点时遮罩残留
-			ctxCanvasOper.clearRect(0, 0, this.windowWidth, this.windowHeight);
-
-			ctxCanvasOper.setLineWidth(3);
-				ctxCanvasOper.setStrokeStyle('grey');
-				ctxCanvasOper.setGlobalAlpha(0.4);
-				ctxCanvasOper.setFillStyle('black');
-				ctxCanvasOper.strokeRect(left, top, width, height);
-				ctxCanvasOper.fillRect(0, 0, this.windowWidth, top);
-				ctxCanvasOper.fillRect(0, top, left, height);
-				ctxCanvasOper.fillRect(0, top + height, this.windowWidth, this.windowHeight - height - top - tabHeight);
-				ctxCanvasOper.fillRect(left + width, top, this.windowWidth - width - left, height);
-				ctxCanvasOper.setStrokeStyle('red');
-				ctxCanvasOper.moveTo(left + 20, top); ctxCanvasOper.lineTo(left, top); ctxCanvasOper.lineTo(left, top + 20);
-				ctxCanvasOper.moveTo(left + width - 20, top); ctxCanvasOper.lineTo(left + width, top); ctxCanvasOper.lineTo(left + width, top + 20);
-				ctxCanvasOper.moveTo(left + 20, top + height); ctxCanvasOper.lineTo(left, top + height); ctxCanvasOper.lineTo(left, top + height - 20);
-				ctxCanvasOper.moveTo(left + width - 20, top + height); ctxCanvasOper.lineTo(left + width, top + height); ctxCanvasOper.lineTo(left + width, top + height - 20);
-
-				// 四角控制点（canChangeSize 时可拖拽调整裁剪框）
-				const controlPointSize = 10;
-				ctxCanvasOper.setFillStyle('white');
-				ctxCanvasOper.setStrokeStyle('grey');
-				ctxCanvasOper.setLineWidth(1);
-				ctxCanvasOper.fillRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.strokeRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.fillRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.strokeRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.fillRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.strokeRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.fillRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
-				ctxCanvasOper.strokeRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
-
-				ctxCanvasOper.stroke();
-
-				ctxCanvasOper.draw(false, () => {
-					if (ini) {
-						this.styleDisplay = 'flex';
-						// #ifdef H5
-						this.styleTop = this.drawTop + 'px';
-						// #endif
-						// #ifndef H5
-						this.styleTop = '0';
-						// #endif
-						if (this.fillColor && this.fillColor !== 'transparent') {
-							ctxCanvas.setFillStyle(this.fillColor);
-						}
-						this.drawImage();
-					}
-				});
-
-				this.$emit("avtinit");
-			},
-			async drawImage() {
-			await this.initCanvasRefs();
-			let tm_now = Date.now();
-			if (tm_now - this.drawTm < 20) return;
-			this.drawTm = tm_now;
-			let ctxCanvas = this.ctxCanvas;
-			// 图片对象先取回（dd-canvas 内部有缓存，二次绘制走同步路径）；
-			// 加载期间若新帧已触发（token 失配）则丢弃本帧，避免旧帧续体把图片画回旧位置
-			const token = this._drawToken = (this._drawToken || 0) + 1;
-			const image = await ctxCanvas.loadImage(this.imgPath).catch(() => null);
-			if (!image || token !== this._drawToken) return;
-			// H5/小程序 type=2d 为立即模式画布，ctx.draw() 在 dd-canvas 内是 no-op，
-			// 上一帧像素不会自动清空——拖动残影的根因，每帧必须先 clearRect
-			ctxCanvas.clearRect(0, 0, this.windowWidth, this.windowHeight);
-			if (this.fillColor && this.fillColor !== 'transparent') {
-				ctxCanvas.fillRect(0, 0, this.windowWidth, this.windowHeight - tabHeight);
-			}
-			ctxCanvas.save();
-			ctxCanvas.translate(this.posWidth + this.useWidth / 2, this.posHeight + this.useHeight / 2);
-			ctxCanvas.scale(this.scaleSize, this.scaleSize);
-			ctxCanvas.rotate(this.rotateDeg * Math.PI / 180);
-			ctxCanvas.drawImage(image, -this.useWidth / 2, -this.useHeight / 2, this.useWidth, this.useHeight);
-			ctxCanvas.restore();
-			ctxCanvas.draw(false);
-		},
-			hideImg() {
-				this.prvImg = '';
-				this.prvTop = '-10000px';
-				this.showOper = true;
-				this.prvImgData = null;
-				this.target = null;
-			},
-			close() {
-				this.styleDisplay = 'none';
-				this.styleTop = '-10000px';
-				this.hasSel = false;
-				this.hideImg();
-				this.noBar || uni.showTabBar();
-				this.$emit('cancel');
-			},
-			async preview() {
-				if (this.fPreviewing) return;
-				this.fPreviewing = true;
-				setTimeout(() => { this.fPreviewing = false; }, 1000);
-				let style = this.selStyle,
-					x = parseInt(style.left),
-					y = parseInt(style.top),
-					width = parseInt(style.width),
-					height = parseInt(style.height);
-
-				uni.showLoading({ mask: true });
-				await this.initCanvasRefs();
-				this.ctxCanvas.toTempFilePath({
-					x: x,
-					y: y,
-					width: width,
-					height: height,
-					fileType: 'png',
-					quality: this.qlty,
-					success: async (r) => {
-						this.prvImgTmp = r = r.tempFilePath;
-
-						let ctxCanvasPrv = this.ctxCanvasPrv,
-						prvX = this.windowWidth,
-						prvY = parseInt(this.cvsStyleHeight),
-						prvWidth = parseInt(this.selStyle.width),
-						prvHeight = parseInt(this.selStyle.height),
-						useWidth = prvX - 40,
-						useHeight = prvY - 80,
-						radio = useWidth / prvWidth,
-						rHeight = prvHeight * radio;
-					// 立即模式画布：清掉上一次预览的残影再画新帧
-					ctxCanvasPrv.clearRect(0, 0, this.windowWidth, this.windowHeight);
-					if (rHeight < useHeight) {
-						prvWidth = useWidth;
-						prvHeight = rHeight;
-					} else {
-						radio = useHeight / prvHeight;
-						prvWidth *= radio;
-						prvHeight = useHeight;
-					}
-					if (this.fillColor && this.fillColor !== 'transparent') {
-							ctxCanvasPrv.setFillStyle(this.fillColor);
-							ctxCanvasPrv.fillRect(0, 0, prvX, prvY);
-							ctxCanvasPrv.fillRect(x, y, width, height);
-						}
-						this.prvX = prvX = (prvX - prvWidth) / 2;
-						this.prvY = prvY = (prvY - prvHeight) / 2;
-						this.prvWidth = prvWidth;
-						this.prvHeight = prvHeight;
-						await ctxCanvasPrv.drawImage(r, prvX, prvY, prvWidth, prvHeight);
-						ctxCanvasPrv.draw(false, () => {
-							// #ifdef H5
-							this.btop(this.prvImgTmp).then(() => {
-								this.showOper = false;
-								this.prvTop = this.drawTop + 'px';
-							})
-							// #endif
-							// #ifndef H5
-							if (this.platform != 'android') {
-								this.showOper = false;
-							}
-							this.prvTop = '0';
-							// #endif
-						});
-					},
-					fail: () => {
-						uni.showToast({
-							title: "生成预览失败",
-							duration: 2000,
-						})
-					},
-					complete: () => {
-						uni.hideLoading();
-					}
-				});
-			},
-			chooseImage(index = undefined, params = undefined, data = undefined) {
-				if (params) {
-					let areaWidth = params.areaWidth || this.areaWidth,
-						areaHeight = params.areaHeight || this.areaHeight,
-						expWidth = params.exportWidth || this.exportWidth,
-						expHeight = params.exportHeight || this.exportHeight,
-						quality = params.quality,
-						canRotate = params.canRotate,
-						canScale = params.canScale,
-						canChangeSize = params.canChangeSize,
-						minScale = params.minScale,
-						maxScale = params.maxScale,
-						stretch = params.stretch,
-						inner = params.inner,
-						lock = params.lock;
-
-					expWidth && (this.expWidth = expWidth.indexOf('rpx') >= 0 ? parseInt(expWidth) * this.pxRatio : parseInt(expWidth));
-					expHeight && (this.expHeight = expHeight.indexOf('rpx') >= 0 ? parseInt(expHeight) * this.pxRatio : parseInt(expHeight));
-					this.isin = inner === true ? 1 : 0;
-					this.letRotate = (canRotate === false || this.isin) ? 0 : 1;
-					this.letScale = canScale === false ? 0 : 1;
-					this.letChangeSize = canChangeSize || false;
-					this.qlty = parseInt(quality) || 0.9;
-					this.mnScale = minScale || 0.3;
-					this.mxScale = maxScale || 4;
-					this.stc = stretch;
-					this.lck = lock;
-					if (this.isin) {
-						this.btnWidth = '24%';
-						this.btnDsp = 'none';
-					} else {
-						this.btnWidth = '19%';
-						this.btnDsp = 'flex';
-					}
-
-					if (areaWidth && areaHeight) {
-						areaWidth = areaWidth.indexOf('rpx') >= 0 ? parseInt(areaWidth) * this.pxRatio : parseInt(areaWidth);
-						areaHeight = areaHeight.indexOf('rpx') >= 0 ? parseInt(areaHeight) * this.pxRatio : parseInt(areaHeight);
-						this.selStyle.width = areaWidth + 'px';
-						this.selStyle.height = areaHeight + 'px';
-						this.selStyle.top = (this.windowHeight - areaHeight - tabHeight) / 2 + 'px';
-						this.selStyle.left = (this.windowWidth - areaWidth) / 2 + 'px';
-						this.hasSel = true;
-					}
-				}
-				this.rtn = data;
-				this.indx = index;
-				this.select();
-			},
-			rotate() {
-				// #ifdef APP-PLUS
-				if (this.platform === 'android') {
-					if (this.fRotateing) return;
-					this.fRotateing = true;
-					setTimeout(() => { this.fRotateing = false; }, 500);
-				}
-				// #endif
-
-				this.rotateDeg += 90 - this.rotateDeg % 90;
-				this.drawImage();
-			},
-			start(e) {
-				let touches = e.touches,
-					touch0 = touches[0],
-					touch1 = touches[1];
-
-				this.touch0 = touch0;
-				this.touch1 = touch1;
-
-				if (touch1) {
-					let x = touch1.x - touch0.x,
-						y = touch1.y - touch0.y;
-					this.fgDistance = Math.sqrt(x * x + y * y);
-				} else if (this.letChangeSize) {
-					// 单指落在四角控制点附近时进入裁剪框调整模式
-					const controlPointSize = 20;
-					const x = touch0.x;
-					const y = touch0.y;
-					const style = this.selStyle;
-					const left = parseInt(style.left);
-					const top = parseInt(style.top);
-					const width = parseInt(style.width);
-					const height = parseInt(style.height);
-
-					if (Math.abs(x - left) < controlPointSize && Math.abs(y - top) < controlPointSize) {
-						this.resizeHandle = 'top-left';
-					} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - top) < controlPointSize) {
-						this.resizeHandle = 'top-right';
-					} else if (Math.abs(x - left) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
-						this.resizeHandle = 'bottom-left';
-					} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
-						this.resizeHandle = 'bottom-right';
-					} else {
-						this.resizeHandle = null;
-					}
-				} else {
-					this.resizeHandle = null;
-				}
-			},
-			move(e) {
-				let touches = e.touches,
-					touch0 = touches[0],
-					touch1 = touches[1];
-
-				if (touch1) {
-					let x = touch1.x - touch0.x,
-						y = touch1.y - touch0.y,
-						fgDistance = Math.sqrt(x * x + y * y),
-						scaleSize = 0.005 * (fgDistance - this.fgDistance),
-						beScaleSize = this.scaleSize + scaleSize;
-
-					do {
-						if (!this.letScale) break;
-						if (beScaleSize < this.mnScale) break;
-						if (beScaleSize > this.mxScale) break;
-						if (this.isin) {
-							let imgWidth = this.useWidth * beScaleSize,
-								imgHeight = this.useHeight * beScaleSize,
-								rx0 = this.posWidth + this.useWidth / 2,
-								ry0 = this.posHeight + this.useHeight / 2,
-								l = rx0 - imgWidth / 2, t = ry0 - imgHeight / 2,
-								r = l + imgWidth, b = t + imgHeight,
-								left = parseInt(this.selStyle.left),
-								top = parseInt(this.selStyle.top),
-								width = parseInt(this.selStyle.width),
-								height = parseInt(this.selStyle.height);
-							if (left < l || left + width > r || top < t || top + height > b) break;
-							this.scaleWidth = (this.useWidth - imgWidth) / 2;
-							this.scaleHeight = (this.useHeight - imgHeight) / 2;
+							selStyle.value = style;
 						}
 
-						this.scaleSize = beScaleSize;
-					} while (0);
-					this.fgDistance = fgDistance;
-
-					if (touch1.x !== touch0.x && this.letRotate) {
-						x = (this.touch1.y - this.touch0.y) / (this.touch1.x - this.touch0.x);
-						y = (touch1.y - touch0.y) / (touch1.x - touch0.x);
-						this.rotateDeg += Math.atan((y - x) / (1 + x * y)) * 180 / Math.PI;
-						this.touch0 = touch0;
-						this.touch1 = touch1;
-					}
-
-					this.drawImage();
-				} else if (this.touch0) {
-					if (this.resizeHandle && this.letChangeSize) {
-						// 拖拽控制点调整裁剪框
-						const style = { ...this.selStyle };
-						const left = parseInt(style.left);
-						const top = parseInt(style.top);
-						const width = parseInt(style.width);
-						const height = parseInt(style.height);
-						const minWidth = 50;
-						const minHeight = 50;
-
-						switch (this.resizeHandle) {
-							case 'top-left':
-								style.left = touch0.x + 'px';
-								style.top = touch0.y + 'px';
-								style.width = (left + width - touch0.x) + 'px';
-								style.height = (top + height - touch0.y) + 'px';
-								break;
-							case 'top-right':
-								style.top = touch0.y + 'px';
-								style.width = (touch0.x - left) + 'px';
-								style.height = (top + height - touch0.y) + 'px';
-								break;
-							case 'bottom-left':
-								style.left = touch0.x + 'px';
-								style.width = (left + width - touch0.x) + 'px';
-								style.height = (touch0.y - top) + 'px';
-								break;
-							case 'bottom-right':
-								style.width = (touch0.x - left) + 'px';
-								style.height = (touch0.y - top) + 'px';
-								break;
-						}
-
-						// 约束裁剪框：最小尺寸、屏幕边界，inner 模式下再限制在图片内
-						let nl = parseInt(style.left);
-						let nt = parseInt(style.top);
-						let nw = parseInt(style.width);
-						let nh = parseInt(style.height);
-
-						if (nl < 0) nl = 0;
-						if (nt < 0) nt = 0;
-						if (nl + nw > this.windowWidth) nw = this.windowWidth - nl;
-						if (nt + nh > this.windowHeight - tabHeight) nh = this.windowHeight - tabHeight - nt;
-
-						if (this.isin) {
-							const imgWidth = this.useWidth * this.scaleSize;
-							const imgHeight = this.useHeight * this.scaleSize;
-							const rx0 = this.posWidth + this.useWidth / 2;
-							const ry0 = this.posHeight + this.useHeight / 2;
-							const imgL = rx0 - imgWidth / 2;
-							const imgT = ry0 - imgHeight / 2;
-							const imgR = imgL + imgWidth;
-							const imgB = imgT + imgHeight;
-							if (nl < imgL) nl = imgL;
-							if (nt < imgT) nt = imgT;
-							if (nl + nw > imgR) nw = imgR - nl;
-							if (nt + nh > imgB) nh = imgB - nt;
-						}
-
-						if (nw >= minWidth && nh >= minHeight) {
-							style.left = nl + 'px';
-							style.top = nt + 'px';
-							style.width = nw + 'px';
-							style.height = nh + 'px';
-							this.selStyle = style;
-							this.drawInit();
-						}
-					} else {
-						// 单指拖动图片
-						let x = touch0.x - this.touch0.x,
-							y = touch0.y - this.touch0.y,
-							beX = this.posWidth + x,
-							beY = this.posHeight + y;
-						if (this.isin) {
-							let imgWidth = this.useWidth * this.scaleSize,
-								imgHeight = this.useHeight * this.scaleSize,
-								rx0 = beX + this.useWidth / 2,
-								ry0 = beY + this.useHeight / 2,
-								l = rx0 - imgWidth / 2, t = ry0 - imgHeight / 2,
-								r = l + imgWidth, b = t + imgHeight,
-								left = parseInt(this.selStyle.left),
-								top = parseInt(this.selStyle.top),
-								width = parseInt(this.selStyle.width),
-								height = parseInt(this.selStyle.height);
-							if (!this.lckWidth && Math.abs(x) < 100) {
-								if (left >= l && left + width <= r) {
-									this.posWidth = beX;
-								} else if (left < l) {
-									this.posWidth = left - this.scaleWidth;
-								} else if (left + width > r) {
-									this.posWidth = left - (imgWidth - width) - this.scaleWidth;
-								}
-							}
-							if (!this.lckHeight && Math.abs(y) < 100) {
-								if (top >= t && top + height <= b) {
-									this.posHeight = beY;
-								} else if (top < t) {
-									this.posHeight = top - this.scaleHeight;
-								} else if (top + height > b) {
-									this.posHeight = top - (imgHeight - height) - this.scaleHeight;
-								}
-							}
+						if (noBar) {
+							drawInit(true);
 						} else {
-							if (Math.abs(x) < 100 && !this.lckWidth) this.posWidth = beX;
-							if (Math.abs(y) < 100 && !this.lckHeight) this.posHeight = beY;
+							uni.hideTabBar({
+								complete: () => {
+									drawInit(true);
+								}
+							});
 						}
-
-						this.touch0 = touch0;
-						this.drawImage();
-					}
-				}
-			},
-			end(e) {
-				let touches = e.touches,
-					touch0 = touches && touches[0];
-				if (touch0) {
-					this.touch0 = touch0;
-				} else {
-					this.touch0 = null;
-					this.touch1 = null;
-					this.resizeHandle = null;
-				}
-			},
-			async getImgData() {
-				await this.initCanvasRefs();
-				return new Promise((resolve, reject) => {
-					let prvX = this.prvX,
-						prvY = this.prvY,
-						prvWidth = this.prvWidth,
-						prvHeight = this.prvHeight;
-					// #ifdef APP-PLUS||H5
-					prvX *= this.pixelRatio;
-					prvY *= this.pixelRatio;
-					prvWidth *= this.pixelRatio;
-					prvHeight *= this.pixelRatio;
-					// #endif
-					this.ctxCanvasPrv.getImageData({
-						x: prvX,
-						y: prvY,
-						width: prvWidth,
-						height: prvHeight,
-						success(res) {
-							resolve(res.data);
-						},
-						fail(err) {
-							reject(err);
-						}
-					});
-				});
-			},
-			// 预览模式饱和度滑杆：HSL 调整后 putImageData 回写预览画布
-			async colorChange(e) {
-				let tm_now = Date.now();
-				if (tm_now - this.prvTm < 100) return;
-				this.prvTm = tm_now;
-
-				uni.showLoading({ mask: true });
-
-				if (!this.prvImgData) {
-					if (!(this.prvImgData = await this.getImgData().catch(() => {
+					},
+					fail: () => {
 						uni.showToast({
 							title: "读取图片失败",
 							duration: 2000,
-						})
-					}))) return;
-					this.target = new Uint8ClampedArray(this.prvImgData.length);
-				}
-
-				let data = this.prvImgData,
-					target = this.target,
-					i = e.detail.value,
-					r, g, b, a, h, s, l, d, p, q, min, max, hK, tR, tG, tB;
-
-				if (i === 0) {
-					target = data;
-				} else {
-					i = (i + 100) / 200;
-					if (i < 0.005) i = 0;
-					if (i > 0.995) i = 1;
-					for (let n = data.length - 1; n >= 0; n -= 4) {
-						r = data[n - 3] / 255;
-						g = data[n - 2] / 255;
-						b = data[n - 1] / 255;
-						max = Math.max(r, g, b);
-						min = Math.min(r, g, b);
-						d = max - min;
-						if (max === min) {
-							h = 0;
-						} else if (max === r && g >= b) {
-							h = 60 * ((g - b) / d);
-						} else if (max === r && g < b) {
-							h = 60 * ((g - b) / d) + 360;
-						} else if (max === g) {
-							h = 60 * ((b - r) / d) + 120;
-						} else if (max === b) {
-							h = 60 * ((r - g) / d) + 240;
-						}
-						l = (max + min) / 2;
-						if (l === 0 || max === min) {
-							s = 0;
-						} else if (0 < l && l <= 0.5) {
-							s = d / (2 * l);
-						} else if (l > 0.5) {
-							s = d / (2 - 2 * l);
-						}
-						data[n] && (a = data[n]);
-
-						if (i < 0.5) {
-							s = s * i / 0.5;
-						} else if (i > 0.5) {
-							s = 2 * s + 2 * i - (s * i / 0.5) - 1;
-						}
-
-						if (s === 0) {
-							r = g = b = Math.round(l * 255);
-						} else {
-							if (l < 0.5) {
-								q = l * (1 + s);
-							} else if (l >= 0.5) {
-								q = l + s - (l * s);
-							}
-							p = 2 * l - q;
-							hK = h / 360;
-							tR = hK + 1 / 3;
-							tG = hK;
-							tB = hK - 1 / 3;
-							let correctRGB = (t) => {
-								if (t < 0) {
-									return t + 1.0;
-								}
-								if (t > 1) {
-									return t - 1.0;
-								}
-								return t;
-							};
-							let createRGB = (t) => {
-								if (t < (1 / 6)) {
-									return p + ((q - p) * 6 * t);
-								} else if (t >= (1 / 6) && t < (1 / 2)) {
-									return q;
-								} else if (t >= (1 / 2) && t < (2 / 3)) {
-									return p + ((q - p) * 6 * ((2 / 3) - t));
-								}
-								return p;
-							};
-							r = tR = Math.round(createRGB(correctRGB(tR)) * 255);
-							g = tG = Math.round(createRGB(correctRGB(tG)) * 255);
-							b = tB = Math.round(createRGB(correctRGB(tB)) * 255);
-						}
-						a && (target[n] = a);
-						target[n - 3] = r;
-						target[n - 2] = g;
-						target[n - 1] = b;
-					}
-				}
-				let prvX = this.prvX,
-					prvY = this.prvY,
-					prvWidth = this.prvWidth,
-					prvHeight = this.prvHeight;
-
-				if (this.fillColor && this.fillColor !== 'transparent') {
-					this.ctxCanvasPrv.setFillStyle(this.fillColor);
-					this.ctxCanvasPrv.fillRect(prvX, prvY, prvWidth, prvHeight);
-				}
-				this.ctxCanvasPrv.draw(true);
-
-				// #ifdef APP-PLUS||H5
-				prvX *= this.pixelRatio;
-				prvY *= this.pixelRatio;
-				prvWidth *= this.pixelRatio;
-				prvHeight *= this.pixelRatio;
-				// #endif
-				this.ctxCanvasPrv.putImageData({
-					x: prvX,
-					y: prvY,
-					width: prvWidth,
-					height: prvHeight,
-					data: target,
-					fail() {
-						uni.showToast({
-							title: "导出图片失败",
-							duration: 2000
 						})
 					},
 					complete() {
@@ -1198,29 +356,960 @@
 					}
 				});
 			},
-			// H5 专用：base64 转 blob URL，规避部分浏览器 canvas 跨域限制
-			btop(base64) {
-				return new Promise(function (resolve) {
-					var arr = base64.split(','),
-						mime = arr[0].match(/:(.*?);/)[1],
-						bstr = atob(arr[1]),
-						n = bstr.length,
-						u8arr = new Uint8Array(n);
-					while (n--) {
-						u8arr[n] = bstr.charCodeAt(n);
+			fail: () => {
+				emit('cancel')
+			}
+		})
+	}
+
+	async function confirm() {
+		if (fUploading) return;
+		fUploading = true;
+		setTimeout(() => { fUploading = false; }, 1000)
+
+		const style = selStyle.value,
+			x = parseInt(style.left),
+			y = parseInt(style.top),
+			width = parseInt(style.width),
+			height = parseInt(style.height);
+		let expW = expWidth.value || width;
+		let expH = expHeight.value || height;
+
+		// #ifdef H5
+		expW = width;
+		expH = height;
+		// #endif
+
+		uni.showLoading({ mask: true });
+		styleDisplay.value = 'none';
+		styleTop.value = '-10000px';
+		hasSel = false;
+		hideImg();
+		await initCanvasRefs();
+		ctxCanvas.toTempFilePath({
+			x: x,
+			y: y,
+			width: width,
+			height: height,
+			destWidth: expW,
+			destHeight: expH,
+			fileType: 'png',
+			quality: qlty,
+			success: (res: any) => {
+				const tempPath = res.tempFilePath;
+				// #ifdef H5
+				btop(tempPath).then(async (url: any) => {
+					if (expWidth.value && expHeight.value) {
+						const canvasRef = ctxCanvas;
+						expW = expWidth.value,
+							expH = expHeight.value;
+
+						// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
+						canvasRef.clearRect(0, 0, windowWidth, windowHeight);
+						await canvasRef.drawImage(url, 0, 0, expW, expH);
+						canvasRef.draw(false, () => {
+							canvasRef.toTempFilePath({
+								x: 0,
+								y: 0,
+								width: expW,
+								height: expH,
+								destWidth: expW,
+								destHeight: expH,
+								fileType: 'png',
+								quality: qlty,
+								success: (out: any) => {
+									const outPath = out.tempFilePath;
+									btop(outPath).then((finalPath: any) => {
+										emit("confirm", { avatar: imgSrc.value, path: finalPath, index: indx, data: rtn });
+									});
+								},
+								fail: () => {
+									uni.showToast({
+										title: "导出图片失败",
+										duration: 2000,
+									})
+								}
+							});
+						});
+					} else {
+						emit("confirm", { avatar: imgSrc.value, path: url, index: indx, data: rtn });
 					}
-					return resolve((window.URL || window.webkitURL).createObjectURL(new Blob([u8arr], { type: mime })));
+				})
+				// #endif
+				// #ifndef H5
+				emit("confirm", { avatar: imgSrc.value, path: tempPath, index: indx, data: rtn });
+				// #endif
+			},
+			fail: () => {
+				uni.showToast({
+					title: "导出图片失败",
+					duration: 2000,
+				})
+			},
+			complete: () => {
+				uni.hideLoading();
+				noBar || uni.showTabBar();
+			}
+		});
+	}
+
+	// 预览模式下点击"确认"：将预览画布的裁剪结果导出
+	async function prvUpload() {
+		if (fPrvUploading) return;
+		fPrvUploading = true;
+		setTimeout(() => { fPrvUploading = false; }, 1000)
+
+		const curX = prvX,
+			curY = prvY,
+			curWidth = prvWidth,
+			curHeight = prvHeight;
+		let expW = expWidth.value || curWidth;
+		let expH = expHeight.value || curHeight;
+
+		// #ifdef H5
+		expW = curWidth;
+		expH = curHeight;
+		// #endif
+
+		uni.showLoading({ mask: true });
+
+		styleDisplay.value = 'none';
+		styleTop.value = '-10000px';
+		hasSel = false;
+		hideImg();
+		await initCanvasRefs();
+		ctxCanvasPrv.toTempFilePath({
+			x: curX,
+			y: curY,
+			width: curWidth,
+			height: curHeight,
+			destWidth: expW,
+			destHeight: expH,
+			fileType: 'png',
+			quality: qlty,
+			success: (res: any) => {
+				const tempPath = res.tempFilePath;
+				// #ifdef H5
+				btop(tempPath).then(async (url: any) => {
+					if (expWidth.value && expHeight.value) {
+						const canvasRef = ctxCanvas;
+						expW = expWidth.value,
+							expH = expHeight.value;
+
+						// 立即模式画布：清掉裁剪大图再画导出小图，防止透明像素透出底图
+						canvasRef.clearRect(0, 0, windowWidth, windowHeight);
+						await canvasRef.drawImage(url, 0, 0, expW, expH);
+						canvasRef.draw(false, () => {
+							canvasRef.toTempFilePath({
+								x: 0,
+								y: 0,
+								width: expW,
+								height: expH,
+								destWidth: expW,
+								destHeight: expH,
+								fileType: 'png',
+								quality: qlty,
+								success: (out: any) => {
+									const outPath = out.tempFilePath;
+									btop(outPath).then((finalPath: any) => {
+										emit("confirm", { avatar: imgSrc.value, path: finalPath, index: indx, data: rtn });
+									});
+								},
+								fail: () => {
+									uni.showToast({
+										title: "导出图片失败",
+										duration: 2000,
+									})
+								}
+							});
+						});
+					} else {
+						emit("confirm", { avatar: imgSrc.value, path: url, index: indx, data: rtn });
+					}
+				})
+				// #endif
+				// #ifndef H5
+				emit("confirm", { avatar: imgSrc.value, path: tempPath, index: indx, data: rtn });
+				// #endif
+			},
+			fail: () => {
+				uni.showToast({
+					title: "导出图片失败",
+					duration: 2000,
+				})
+			},
+			complete: () => {
+				uni.hideLoading();
+				noBar || uni.showTabBar();
+			}
+		});
+	}
+
+	async function drawInit(ini = false) {
+		await initCanvasRefs();
+		const allWidth = windowWidth,
+			allHeight = windowHeight,
+			imgW = imgWidth,
+			imgH = imgHeight,
+			imgRadio = imgW / imgH;
+		let useW = allWidth - 40,
+			useH = allHeight - tabHeight - 80;
+		const selW = parseInt(selStyle.value.width),
+			selH = parseInt(selStyle.value.height);
+
+		fixWidth = 0;
+		fixHeight = 0;
+		lckWidth = 0;
+		lckHeight = 0;
+		switch (stc) {
+			case 'x': fixWidth = 1; break;
+			case 'y': fixHeight = 1; break;
+			case 'long': if (imgRadio > 1) fixWidth = 1; else fixHeight = 1; break;
+			case 'short': if (imgRadio > 1) fixHeight = 1; else fixWidth = 1; break;
+			case 'longSel': if (selW > selH) fixWidth = 1; else fixHeight = 1; break;
+			case 'shortSel': if (selW > selH) fixHeight = 1; else fixWidth = 1; break;
+		}
+		// lck 锁定裁剪框的宽/高调整方向：
+		// 'x' 锁宽 / 'y' 锁高 / 'long'/'short' 按图片长短边 / 'longSel'/'shortSel' 按选择框长短边
+		switch (lck) {
+			case 'x': lckWidth = 1; break;
+			case 'y': lckHeight = 1; break;
+			case 'long': if (imgRadio > 1) lckWidth = 1; else lckHeight = 1; break;
+			case 'short': if (imgRadio > 1) lckHeight = 1; else lckWidth = 1; break;
+			case 'longSel': if (selW > selH) lckWidth = 1; else lckHeight = 1; break;
+			case 'shortSel': if (selW > selH) lckHeight = 1; else lckWidth = 1; break;
+		}
+		if (fixWidth) {
+			useW = selW;
+			useH = useW / imgRadio;
+		} else if (fixHeight) {
+			useH = selH;
+			useW = useH * imgRadio;
+		} else if (imgRadio < 1) {
+			if (imgH < useH) {
+				useW = imgW;
+				useH = imgH;
+			} else {
+				useH = useH;
+				useW = useH * imgRadio;
+			}
+		} else {
+			if (imgW < useW) {
+				useW = imgW;
+				useH = imgH;
+			} else {
+				useW = useW;
+				useH = useW / imgRadio;
+			}
+		}
+		if (isin) {
+			scaleWidth = 0;
+			scaleHeight = 0;
+			if (useW < selW) {
+				useW = selW;
+				useH = useW / imgRadio;
+				lckHeight = 0;
+			}
+			if (useH < selH) {
+				useH = selH;
+				useW = useH * imgRadio;
+				lckWidth = 0;
+			}
+		}
+
+		scaleSize = 1;
+		rotateDeg = 0;
+		posWidth = (allWidth - useW) / 2;
+		posHeight = (allHeight - useH - tabHeight) / 2;
+		useWidth = useW;
+		useHeight = useH;
+
+		const style = selStyle.value,
+			left = parseInt(style.left),
+			top = parseInt(style.top),
+			width = parseInt(style.width),
+			height = parseInt(style.height),
+			canvasRef = ctxCanvas,
+			canvasOperRef = ctxCanvasOper;
+
+		// H5/小程序 type=2d 为立即模式画布，重绘遮罩前须清掉上一帧，否则拖控制点时遮罩残留
+		canvasOperRef.clearRect(0, 0, windowWidth, windowHeight);
+
+		canvasOperRef.setLineWidth(3);
+		canvasOperRef.setStrokeStyle('grey');
+		canvasOperRef.setGlobalAlpha(0.4);
+		canvasOperRef.setFillStyle('black');
+		canvasOperRef.strokeRect(left, top, width, height);
+		canvasOperRef.fillRect(0, 0, windowWidth, top);
+		canvasOperRef.fillRect(0, top, left, height);
+		canvasOperRef.fillRect(0, top + height, windowWidth, windowHeight - height - top - tabHeight);
+		canvasOperRef.fillRect(left + width, top, windowWidth - width - left, height);
+		canvasOperRef.setStrokeStyle('red');
+		canvasOperRef.moveTo(left + 20, top); canvasOperRef.lineTo(left, top); canvasOperRef.lineTo(left, top + 20);
+		canvasOperRef.moveTo(left + width - 20, top); canvasOperRef.lineTo(left + width, top); canvasOperRef.lineTo(left + width, top + 20);
+		canvasOperRef.moveTo(left + 20, top + height); canvasOperRef.lineTo(left, top + height); canvasOperRef.lineTo(left, top + height - 20);
+		canvasOperRef.moveTo(left + width - 20, top + height); canvasOperRef.lineTo(left + width, top + height); canvasOperRef.lineTo(left + width, top + height - 20);
+
+		// 四角控制点（canChangeSize 时可拖拽调整裁剪框）
+		const controlPointSize = 10;
+		canvasOperRef.setFillStyle('white');
+		canvasOperRef.setStrokeStyle('grey');
+		canvasOperRef.setLineWidth(1);
+		canvasOperRef.fillRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.strokeRect(left - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.fillRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.strokeRect(left + width - controlPointSize / 2, top - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.fillRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.strokeRect(left - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.fillRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
+		canvasOperRef.strokeRect(left + width - controlPointSize / 2, top + height - controlPointSize / 2, controlPointSize, controlPointSize);
+
+		canvasOperRef.stroke();
+
+		canvasOperRef.draw(false, () => {
+			if (ini) {
+				styleDisplay.value = 'flex';
+				// #ifdef H5
+				styleTop.value = drawTop + 'px';
+				// #endif
+				// #ifndef H5
+				styleTop.value = '0';
+				// #endif
+				if (props.fillColor && props.fillColor !== 'transparent') {
+					canvasRef.setFillStyle(props.fillColor);
+				}
+				drawImage();
+			}
+		});
+
+		emit("avtinit");
+	}
+
+	async function drawImage() {
+		await initCanvasRefs();
+		const tm_now = Date.now();
+		if (tm_now - drawTm < 20) return;
+		drawTm = tm_now;
+		const canvasRef = ctxCanvas;
+		// 图片对象先取回（dd-canvas 内部有缓存，二次绘制走同步路径）；
+		// 加载期间若新帧已触发（token 失配）则丢弃本帧，避免旧帧续体把图片画回旧位置
+		_drawToken = (_drawToken || 0) + 1;
+		const token = _drawToken;
+		const image = await canvasRef.loadImage(imgPath).catch(() => null);
+		if (!image || token !== _drawToken) return;
+		// H5/小程序 type=2d 为立即模式画布，ctx.draw() 在 dd-canvas 内是 no-op，
+		// 上一帧像素不会自动清空——拖动残影的根因，每帧必须先 clearRect
+		canvasRef.clearRect(0, 0, windowWidth, windowHeight);
+		if (props.fillColor && props.fillColor !== 'transparent') {
+			canvasRef.fillRect(0, 0, windowWidth, windowHeight - tabHeight);
+		}
+		canvasRef.save();
+		canvasRef.translate(posWidth + useWidth / 2, posHeight + useHeight / 2);
+		canvasRef.scale(scaleSize, scaleSize);
+		canvasRef.rotate(rotateDeg * Math.PI / 180);
+		canvasRef.drawImage(image, -useWidth / 2, -useHeight / 2, useWidth, useHeight);
+		canvasRef.restore();
+		canvasRef.draw(false);
+	}
+
+	function hideImg() {
+		prvImg = '';
+		prvTop.value = '-10000px';
+		showOper.value = true;
+		prvImgData = null;
+		target = null;
+	}
+
+	function close() {
+		styleDisplay.value = 'none';
+		styleTop.value = '-10000px';
+		hasSel = false;
+		hideImg();
+		noBar || uni.showTabBar();
+		emit('cancel');
+	}
+
+	async function preview() {
+		if (fPreviewing) return;
+		fPreviewing = true;
+		setTimeout(() => { fPreviewing = false; }, 1000);
+		const style = selStyle.value,
+			x = parseInt(style.left),
+			y = parseInt(style.top),
+			width = parseInt(style.width),
+			height = parseInt(style.height);
+
+		uni.showLoading({ mask: true });
+		await initCanvasRefs();
+		ctxCanvas.toTempFilePath({
+			x: x,
+			y: y,
+			width: width,
+			height: height,
+			fileType: 'png',
+			quality: qlty,
+			success: async (res: any) => {
+				prvImgTmp = res.tempFilePath;
+
+				const canvasPrvRef = ctxCanvasPrv;
+				let pX = windowWidth,
+					pY = parseInt(cvsStyleHeight.value),
+					pW = parseInt(selStyle.value.width),
+					pH = parseInt(selStyle.value.height),
+					useW = pX - 40,
+					useH = pY - 80,
+					radio = useW / pW,
+					rHeight = pH * radio;
+				// 立即模式画布：清掉上一次预览的残影再画新帧
+				canvasPrvRef.clearRect(0, 0, windowWidth, windowHeight);
+				if (rHeight < useH) {
+					pW = useW;
+					pH = rHeight;
+				} else {
+					radio = useH / pH;
+					pW *= radio;
+					pH = useH;
+				}
+				if (props.fillColor && props.fillColor !== 'transparent') {
+					canvasPrvRef.setFillStyle(props.fillColor);
+					canvasPrvRef.fillRect(0, 0, pX, pY);
+					canvasPrvRef.fillRect(x, y, width, height);
+				}
+				prvX = pX = (pX - pW) / 2;
+				prvY = pY = (pY - pH) / 2;
+				prvWidth = pW;
+				prvHeight = pH;
+				await canvasPrvRef.drawImage(prvImgTmp, pX, pY, pW, pH);
+				canvasPrvRef.draw(false, () => {
+					// #ifdef H5
+					btop(prvImgTmp).then(() => {
+						showOper.value = false;
+						prvTop.value = drawTop + 'px';
+					})
+					// #endif
+					// #ifndef H5
+					if (platform != 'android') {
+						showOper.value = false;
+					}
+					prvTop.value = '0';
+					// #endif
 				});
 			},
+			fail: () => {
+				uni.showToast({
+					title: "生成预览失败",
+					duration: 2000,
+				})
+			},
+			complete: () => {
+				uni.hideLoading();
+			}
+		});
+	}
+
+	function chooseImage(index: any = undefined, params: any = undefined, data: any = undefined) {
+		if (params) {
+			let areaWidth = params.areaWidth || props.areaWidth,
+				areaHeight = params.areaHeight || props.areaHeight,
+				expW = params.exportWidth || props.exportWidth,
+				expH = params.exportHeight || props.exportHeight,
+				quality = params.quality,
+				canRotate = params.canRotate,
+				canScale = params.canScale,
+				canChangeSize = params.canChangeSize,
+				minScale = params.minScale,
+				maxScale = params.maxScale,
+				stretch = params.stretch,
+				inner = params.inner,
+				lock = params.lock;
+
+			expW && (expWidth.value = expW.indexOf('rpx') >= 0 ? parseInt(expW) * pxRatio : parseInt(expW));
+			expH && (expHeight.value = expH.indexOf('rpx') >= 0 ? parseInt(expH) * pxRatio : parseInt(expH));
+			isin = inner === true ? 1 : 0;
+			letRotate = (canRotate === false || isin) ? 0 : 1;
+			letScale = canScale === false ? 0 : 1;
+			letChangeSize.value = canChangeSize || false;
+			qlty = parseInt(quality) || 0.9;
+			mnScale = minScale || 0.3;
+			mxScale = maxScale || 4;
+			stc = stretch;
+			lck = lock;
+			if (isin) {
+				btnWidth.value = '24%';
+				btnDsp.value = 'none';
+			} else {
+				btnWidth.value = '19%';
+				btnDsp.value = 'flex';
+			}
+
+			if (areaWidth && areaHeight) {
+				areaWidth = areaWidth.indexOf('rpx') >= 0 ? parseInt(areaWidth) * pxRatio : parseInt(areaWidth);
+				areaHeight = areaHeight.indexOf('rpx') >= 0 ? parseInt(areaHeight) * pxRatio : parseInt(areaHeight);
+				selStyle.value.width = areaWidth + 'px';
+				selStyle.value.height = areaHeight + 'px';
+				selStyle.value.top = (windowHeight - areaHeight - tabHeight) / 2 + 'px';
+				selStyle.value.left = (windowWidth - areaWidth) / 2 + 'px';
+				hasSel = true;
+			}
+		}
+		rtn = data;
+		indx = index;
+		select();
+	}
+
+	function rotate() {
+		// #ifdef APP-PLUS
+		if (platform === 'android') {
+			if (fRotateing) return;
+			fRotateing = true;
+			setTimeout(() => { fRotateing = false; }, 500);
+		}
+		// #endif
+
+		rotateDeg += 90 - rotateDeg % 90;
+		drawImage();
+	}
+
+	function start(e: any) {
+		const touches = e.touches,
+			t0 = touches[0],
+			t1 = touches[1];
+
+		touch0 = t0;
+		touch1 = t1;
+
+		if (t1) {
+			const x = t1.x - t0.x,
+				y = t1.y - t0.y;
+			fgDistance = Math.sqrt(x * x + y * y);
+		} else if (letChangeSize.value) {
+			// 单指落在四角控制点附近时进入裁剪框调整模式
+			const controlPointSize = 20;
+			const x = t0.x;
+			const y = t0.y;
+			const style = selStyle.value;
+			const left = parseInt(style.left);
+			const top = parseInt(style.top);
+			const width = parseInt(style.width);
+			const height = parseInt(style.height);
+
+			if (Math.abs(x - left) < controlPointSize && Math.abs(y - top) < controlPointSize) {
+				resizeHandle = 'top-left';
+			} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - top) < controlPointSize) {
+				resizeHandle = 'top-right';
+			} else if (Math.abs(x - left) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
+				resizeHandle = 'bottom-left';
+			} else if (Math.abs(x - (left + width)) < controlPointSize && Math.abs(y - (top + height)) < controlPointSize) {
+				resizeHandle = 'bottom-right';
+			} else {
+				resizeHandle = null;
+			}
+		} else {
+			resizeHandle = null;
 		}
 	}
+
+	function move(e: any) {
+		const touches = e.touches,
+			t0 = touches[0],
+			t1 = touches[1];
+
+		if (t1) {
+			let x = t1.x - t0.x,
+				y = t1.y - t0.y;
+			const nextDistance = Math.sqrt(x * x + y * y),
+				deltaScale = 0.005 * (nextDistance - fgDistance),
+				beScaleSize = scaleSize + deltaScale;
+
+			do {
+				if (!letScale) break;
+				if (beScaleSize < mnScale) break;
+				if (beScaleSize > mxScale) break;
+				if (isin) {
+					const imgW = useWidth * beScaleSize,
+						imgH = useHeight * beScaleSize,
+						rx0 = posWidth + useWidth / 2,
+						ry0 = posHeight + useHeight / 2,
+						l = rx0 - imgW / 2, t = ry0 - imgH / 2,
+						r = l + imgW, b = t + imgH,
+						left = parseInt(selStyle.value.left),
+						top = parseInt(selStyle.value.top),
+						width = parseInt(selStyle.value.width),
+						height = parseInt(selStyle.value.height);
+					if (left < l || left + width > r || top < t || top + height > b) break;
+					scaleWidth = (useWidth - imgW) / 2;
+					scaleHeight = (useHeight - imgH) / 2;
+				}
+
+				scaleSize = beScaleSize;
+			} while (0);
+			fgDistance = nextDistance;
+
+			if (t1.x !== t0.x && letRotate) {
+				x = (touch1.y - touch0.y) / (touch1.x - touch0.x);
+				y = (t1.y - t0.y) / (t1.x - t0.x);
+				rotateDeg += Math.atan((y - x) / (1 + x * y)) * 180 / Math.PI;
+				touch0 = t0;
+				touch1 = t1;
+			}
+
+			drawImage();
+		} else if (touch0) {
+			if (resizeHandle && letChangeSize.value) {
+				// 拖拽控制点调整裁剪框
+				const style = { ...selStyle.value };
+				const left = parseInt(style.left);
+				const top = parseInt(style.top);
+				const width = parseInt(style.width);
+				const height = parseInt(style.height);
+				const minWidth = 50;
+				const minHeight = 50;
+
+				switch (resizeHandle) {
+					case 'top-left':
+						style.left = t0.x + 'px';
+						style.top = t0.y + 'px';
+						style.width = (left + width - t0.x) + 'px';
+						style.height = (top + height - t0.y) + 'px';
+						break;
+					case 'top-right':
+						style.top = t0.y + 'px';
+						style.width = (t0.x - left) + 'px';
+						style.height = (top + height - t0.y) + 'px';
+						break;
+					case 'bottom-left':
+						style.left = t0.x + 'px';
+						style.width = (left + width - t0.x) + 'px';
+						style.height = (t0.y - top) + 'px';
+						break;
+					case 'bottom-right':
+						style.width = (t0.x - left) + 'px';
+						style.height = (t0.y - top) + 'px';
+						break;
+				}
+
+				// 约束裁剪框：最小尺寸、屏幕边界，inner 模式下再限制在图片内
+				let nl = parseInt(style.left);
+				let nt = parseInt(style.top);
+				let nw = parseInt(style.width);
+				let nh = parseInt(style.height);
+
+				if (nl < 0) nl = 0;
+				if (nt < 0) nt = 0;
+				if (nl + nw > windowWidth) nw = windowWidth - nl;
+				if (nt + nh > windowHeight - tabHeight) nh = windowHeight - tabHeight - nt;
+
+				if (isin) {
+					const imgW = useWidth * scaleSize;
+					const imgH = useHeight * scaleSize;
+					const rx0 = posWidth + useWidth / 2;
+					const ry0 = posHeight + useHeight / 2;
+					const imgL = rx0 - imgW / 2;
+					const imgT = ry0 - imgH / 2;
+					const imgR = imgL + imgW;
+					const imgB = imgT + imgH;
+					if (nl < imgL) nl = imgL;
+					if (nt < imgT) nt = imgT;
+					if (nl + nw > imgR) nw = imgR - nl;
+					if (nt + nh > imgB) nh = imgB - nt;
+				}
+
+				if (nw >= minWidth && nh >= minHeight) {
+					style.left = nl + 'px';
+					style.top = nt + 'px';
+					style.width = nw + 'px';
+					style.height = nh + 'px';
+					selStyle.value = style;
+					drawInit();
+				}
+			} else {
+				// 单指拖动图片
+				let x = t0.x - touch0.x,
+					y = t0.y - touch0.y,
+					beX = posWidth + x,
+					beY = posHeight + y;
+				if (isin) {
+					const imgW = useWidth * scaleSize,
+						imgH = useHeight * scaleSize,
+						rx0 = beX + useWidth / 2,
+						ry0 = beY + useHeight / 2,
+						l = rx0 - imgW / 2, t = ry0 - imgH / 2,
+						r = l + imgW, b = t + imgH,
+						left = parseInt(selStyle.value.left),
+						top = parseInt(selStyle.value.top),
+						width = parseInt(selStyle.value.width),
+						height = parseInt(selStyle.value.height);
+					if (!lckWidth && Math.abs(x) < 100) {
+						if (left >= l && left + width <= r) {
+							posWidth = beX;
+						} else if (left < l) {
+							posWidth = left - scaleWidth;
+						} else if (left + width > r) {
+							posWidth = left - (imgW - width) - scaleWidth;
+						}
+					}
+					if (!lckHeight && Math.abs(y) < 100) {
+						if (top >= t && top + height <= b) {
+							posHeight = beY;
+						} else if (top < t) {
+							posHeight = top - scaleHeight;
+						} else if (top + height > b) {
+							posHeight = top - (imgH - height) - scaleHeight;
+						}
+					}
+				} else {
+					if (Math.abs(x) < 100 && !lckWidth) posWidth = beX;
+					if (Math.abs(y) < 100 && !lckHeight) posHeight = beY;
+				}
+
+				touch0 = t0;
+				drawImage();
+			}
+		}
+	}
+
+	function end(e: any) {
+		const touches = e.touches,
+			t0 = touches && touches[0];
+		if (t0) {
+			touch0 = t0;
+		} else {
+			touch0 = null;
+			touch1 = null;
+			resizeHandle = null;
+		}
+	}
+
+	async function getImgData(): Promise<any> {
+		await initCanvasRefs();
+		return new Promise((resolve, reject) => {
+			let x = prvX,
+				y = prvY,
+				width = prvWidth,
+				height = prvHeight;
+			// #ifdef APP-PLUS||H5
+			x *= pixelRatio;
+			y *= pixelRatio;
+			width *= pixelRatio;
+			height *= pixelRatio;
+			// #endif
+			ctxCanvasPrv.getImageData({
+				x: x,
+				y: y,
+				width: width,
+				height: height,
+				success(res: any) {
+					resolve(res.data);
+				},
+				fail(err: any) {
+					reject(err);
+				}
+			});
+		});
+	}
+
+	// 预览模式饱和度滑杆：HSL 调整后 putImageData 回写预览画布
+	async function colorChange(e: any) {
+		const tm_now = Date.now();
+		if (tm_now - prvTm < 100) return;
+		prvTm = tm_now;
+
+		uni.showLoading({ mask: true });
+
+		if (!prvImgData) {
+			if (!(prvImgData = await getImgData().catch(() => {
+				uni.showToast({
+					title: "读取图片失败",
+					duration: 2000,
+				})
+			}))) return;
+			target = new Uint8ClampedArray(prvImgData.length);
+		}
+
+		const data = prvImgData;
+		let tar = target,
+			i = e.detail.value,
+			r: any, g: any, b: any, a: any, h: any, s: any, l: any, d: any, p: any, q: any, min: any, max: any, hK: any, tR: any, tG: any, tB: any;
+
+		if (i === 0) {
+			tar = data;
+		} else {
+			i = (i + 100) / 200;
+			if (i < 0.005) i = 0;
+			if (i > 0.995) i = 1;
+			for (let n = data.length - 1; n >= 0; n -= 4) {
+				r = data[n - 3] / 255;
+				g = data[n - 2] / 255;
+				b = data[n - 1] / 255;
+				max = Math.max(r, g, b);
+				min = Math.min(r, g, b);
+				d = max - min;
+				if (max === min) {
+					h = 0;
+				} else if (max === r && g >= b) {
+					h = 60 * ((g - b) / d);
+				} else if (max === r && g < b) {
+					h = 60 * ((g - b) / d) + 360;
+				} else if (max === g) {
+					h = 60 * ((b - r) / d) + 120;
+				} else if (max === b) {
+					h = 60 * ((r - g) / d) + 240;
+				}
+				l = (max + min) / 2;
+				if (l === 0 || max === min) {
+					s = 0;
+				} else if (0 < l && l <= 0.5) {
+					s = d / (2 * l);
+				} else if (l > 0.5) {
+					s = d / (2 - 2 * l);
+				}
+				data[n] && (a = data[n]);
+
+				if (i < 0.5) {
+					s = s * i / 0.5;
+				} else if (i > 0.5) {
+					s = 2 * s + 2 * i - (s * i / 0.5) - 1;
+				}
+
+				if (s === 0) {
+					r = g = b = Math.round(l * 255);
+				} else {
+					if (l < 0.5) {
+						q = l * (1 + s);
+					} else if (l >= 0.5) {
+						q = l + s - (l * s);
+					}
+					p = 2 * l - q;
+					hK = h / 360;
+					tR = hK + 1 / 3;
+					tG = hK;
+					tB = hK - 1 / 3;
+					const correctRGB = (t: any) => {
+						if (t < 0) {
+							return t + 1.0;
+						}
+						if (t > 1) {
+							return t - 1.0;
+						}
+						return t;
+					};
+					const createRGB = (t: any) => {
+						if (t < (1 / 6)) {
+							return p + ((q - p) * 6 * t);
+						} else if (t >= (1 / 6) && t < (1 / 2)) {
+							return q;
+						} else if (t >= (1 / 2) && t < (2 / 3)) {
+							return p + ((q - p) * 6 * ((2 / 3) - t));
+						}
+						return p;
+					};
+					r = tR = Math.round(createRGB(correctRGB(tR)) * 255);
+					g = tG = Math.round(createRGB(correctRGB(tG)) * 255);
+					b = tB = Math.round(createRGB(correctRGB(tB)) * 255);
+				}
+				a && (tar[n] = a);
+				tar[n - 3] = r;
+				tar[n - 2] = g;
+				tar[n - 1] = b;
+			}
+		}
+		let pX = prvX,
+			pY = prvY,
+			pW = prvWidth,
+			pH = prvHeight;
+
+		if (props.fillColor && props.fillColor !== 'transparent') {
+			ctxCanvasPrv.setFillStyle(props.fillColor);
+			ctxCanvasPrv.fillRect(pX, pY, pW, pH);
+		}
+		ctxCanvasPrv.draw(true);
+
+		// #ifdef APP-PLUS||H5
+		pX *= pixelRatio;
+		pY *= pixelRatio;
+		pW *= pixelRatio;
+		pH *= pixelRatio;
+		// #endif
+		ctxCanvasPrv.putImageData({
+			x: pX,
+			y: pY,
+			width: pW,
+			height: pH,
+			data: tar,
+			fail() {
+				uni.showToast({
+					title: "导出图片失败",
+					duration: 2000
+				})
+			},
+			complete() {
+				uni.hideLoading();
+			}
+		});
+	}
+
+	// H5 专用：base64 转 blob URL，规避部分浏览器 canvas 跨域限制
+	function btop(base64: string): any {
+		// #ifdef H5
+		return new Promise(function (resolve) {
+			const arr = base64.split(','),
+				mime = arr[0].match(/:(.*?);/)![1],
+				bstr = atob(arr[1]),
+				u8arr = new Uint8Array(bstr.length);
+			let n = bstr.length;
+			while (n--) {
+				u8arr[n] = bstr.charCodeAt(n);
+			}
+			return resolve((window.URL || (window as any).webkitURL).createObjectURL(new Blob([u8arr], { type: mime })));
+		});
+		// #endif
+	}
+
+	defineExpose({
+		instanceId,
+		cvsStyleHeight,
+		styleDisplay,
+		styleTop,
+		prvTop,
+		selStyle,
+		showOper,
+		imgSrc,
+		btnWidth,
+		btnDsp,
+		expWidth,
+		expHeight,
+		letChangeSize,
+		safeAreaInsetsBottom,
+		zc,
+		zcOper,
+		zcPrv,
+		zcBar,
+		initCanvasRefs,
+		windowResize,
+		select,
+		confirm,
+		prvUpload,
+		drawInit,
+		drawImage,
+		hideImg,
+		close,
+		preview,
+		chooseImage,
+		rotate,
+		start,
+		move,
+		end,
+		getImgData,
+		colorChange,
+		btop
+	});
 </script>
 
 <style lang="scss" scoped>
 	@import '../../scss/variables';
-
+	@import '../../scss/mixins';
 	.dd-cropper {
-		.my-canvas {
+		.dd-cropper__avatar-canvas {
 			display: flex;
 			position: fixed !important;
 			background: $dd-color-black;
@@ -1229,14 +1318,14 @@
 			width: 100%;
 		}
 
-		.oper-canvas {
+		.dd-cropper__oper-canvas {
 			display: flex;
 			position: fixed !important;
 			left: 0;
 			width: 100%;
 		}
 
-		.prv-canvas {
+		.dd-cropper__preview-canvas {
 			display: flex;
 			position: fixed !important;
 			background: $dd-color-black;
@@ -1244,8 +1333,8 @@
 			width: 100%;
 		}
 
-		.oper-wrapper {
-			height: 50px;
+		.dd-cropper__oper-wrapper {
+			height: 100rpx;
 			position: fixed !important;
 			box-sizing: border-box;
 			border: 1px solid $dd-neutral-50;
@@ -1256,7 +1345,7 @@
 			flex-direction: row;
 		}
 
-		.oper {
+		.dd-cropper__oper {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -1267,19 +1356,19 @@
 			align-self: center;
 		}
 
-		.btn-wrapper {
+		.dd-cropper__btn-wrapper {
 			display: flex;
 			flex-direction: row;
 			/* #ifndef H5 */
 			flex-grow: 1;
 			/* #endif */
 			/* #ifdef H5 */
-			height: 50px;
+			height: 100rpx;
 			/* #endif */
 			justify-content: space-between;
 		}
 
-		.btn-wrapper view {
+		.dd-cropper__btn-wrapper view {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -1289,18 +1378,18 @@
 			border-radius: 6%;
 		}
 
-		.hover {
+		.dd-cropper__btn-hover {
 			background: $dd-neutral-50;
 			border-radius: 6%;
 		}
 
-		.clr-wrapper {
+		.dd-cropper__clear-wrapper {
 			display: flex;
 			flex-direction: row;
 			flex-grow: 1;
 		}
 
-		.clr-wrapper view {
+		.dd-cropper__clear-wrapper view {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -1310,7 +1399,7 @@
 			border-radius: 6%;
 		}
 
-		.my-slider {
+		.dd-cropper__slider {
 			flex-grow: 1;
 		}
 	}

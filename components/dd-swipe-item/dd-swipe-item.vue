@@ -20,6 +20,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@import '../../scss/variables';
+@import '../../scss/mixins';
 .dd-swipe-item {
   width: 100%;
   height: 100%;

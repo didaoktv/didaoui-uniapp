@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，99 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，101 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -18,7 +18,7 @@
 ```ts
 // main.ts —— 两端（uniapp-staff/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
-app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
+app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 // App.vue <style> —— 运行时主题（不引入则组件用 SCSS 兜底值渲染）
 // @import '@didaoktv/didaoui-uniapp/scss/theme';
@@ -32,7 +32,7 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 ### 表单输入 (25)
 
-- [dd-button](components/dd-button/dd-button.vue): 按钮。type primary/secondary/ghost/text/success/warning/danger；size xs/sm/md/lg；block/round/loading/disabled/icon/iconPosition
+- [dd-button](components/dd-button/dd-button.vue): 按钮。type primary/secondary/ghost/text/success/warning/danger；size xxs(行内附属最小号)/xs/sm/md/lg；block/round/loading/disabled/icon/iconPosition
 - [dd-code-button](components/dd-code-button/dd-code-button.vue): 获取验证码按钮（倒计时防重）。time/startText/changeText(X占位秒数)/endText/keepRunning(跨页续跑,存储恢复)/uniqueKey；事件 click/start/change/finish；ref: start/reset/canGetCode。验证码场景选它而非 dd-count-down
 - [dd-input](components/dd-input/dd-input.vue): 输入框，v-model。type text/password/search/number；clearable/showPassword/error/maxlength
 - [dd-field](components/dd-field/dd-field.vue): 表单单元格（配合 dd-form 校验）。label/required(true|'auto')/isLink/size；default 插槽可放任意控件（radio-group 等）参与校验
@@ -69,12 +69,13 @@ app.use(ui) // 98 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-dropdown-menu](components/dd-dropdown-menu/dd-dropdown-menu.vue) / [dd-dropdown-item](components/dd-dropdown-item/dd-dropdown-item.vue): 下拉筛选菜单
 - [dd-sidebar](components/dd-sidebar/dd-sidebar.vue) / [dd-sidebar-item](components/dd-sidebar-item/dd-sidebar-item.vue): 侧边栏导航（垂直一级导航；tree-select 左列同款，v-model 索引、title/dot/badge/disabled）
 
-### 布局/卡片/业务 (12)
+### 布局/卡片/业务 (13)
 
 - [dd-card](components/dd-card/dd-card.vue): 通用卡片容器
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
 - [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md/xs（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格，xs 竖向=一行四列订单卡缩略图无底色阴影且价格用 dd-price xs 档）、thumb/title/desc/price/originPrice/tag/num/disabled；价格在左数量在右，价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price/price-right 插槽（price 可整块替换价格位，如赠品改「赠送」标签）
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
+- [dd-waterfall](components/dd-waterfall/dd-waterfall.vue): 瀑布流（不等高多列）。v-model 数据数组（组件只读消费）、columns(默认2)、gap(默认16rpx)、customStyle/customClass；默认插槽作用域 {item, index}。按数据顺序轮流填列（第 i 项进第 i % 列），视觉读序 = 数据顺序，不做测高与均衡
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
 - [dd-workorder-card](components/dd-workorder-card/dd-workorder-card.vue): 工单卡。title、type service/repair/feedback/decoration/todo、status、checklist、progress、time；emit check({item, done})/click

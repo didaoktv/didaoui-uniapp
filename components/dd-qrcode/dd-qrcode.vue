@@ -41,437 +41,464 @@
     </view>
 </template>
 
-<script>
-import QRCode from "./qrcode.js"
-export default {
-    name: "dd-qrcode",
-    props: {
-        cid: {
-            type: String,
-            default: () => {
-				return `dd-qrcode-canvas${Math.floor(Math.random() * 1000000)}`
-			}
-        },
-        size: {
-            type: Number,
-            default: 200
-        },
-        unit: {
-            type: String,
-            default: 'px'
-        },
-        show: {
-            type: Boolean,
-            default: true
-        },
-        val: {
-            type: String,
-            default: ''
-        },
-        background: {
-            type: String,
-            default: '#ffffff'
-        },
-        foreground: {
-            type: String,
-            default: '#000000'
-        },
-        pdground: {
-            type: String,
-            default: '#000000'
-        },
-        icon: {
-            type: String,
-            default: ''
-        },
-        iconSize: {
-            type: Number,
-            default: 40
-        },
-        lv: {
-            type: Number,
-            default: 3
-        },
-        quietZone: {
-            type: Number,
-            default: 0
-        },
-        onval: {
-            type: Boolean,
-            default: true
-        },
-        loadMake: {
-            type: Boolean,
-            default: true
-        },
-        usingComponents: {
-            type: Boolean,
-            default: true
-        },
-        showLoading: {
-            type: Boolean,
-            default: true
-        },
-        loadingText: {
-            type: String,
-            default: '生成中'
-        },
-        allowPreview: {
-            type: Boolean,
-            default: false
-        },
-        // 是否使用根节点宽高
-        useRootHeightAndWidth: {
-            type: Boolean,
-            default: () => false
-        },
-    },
-    emits: ['preview', 'result', 'longpressCallback'],
-    data() {
-        return {
-            loading: false,
-            result: '',
-            popupShow: false,
-            list: [
-                {
-                    name: '保存二维码',
-                }
-            ],
-            rootId: `rootId${Number(Math.random() * 100).toFixed(0)}`,
-            canvasObj: {},
-            sizeLocal: this.size,
-            ctx: null,
-            isNvue: false,
-            canvasHost: null
-        }
-    },
-    created() {
-        this._qrcode = null
-    },
-    async mounted(){
-        // 如果使用根节点的宽高 则 重新设置 size
-        if(this.useRootHeightAndWidth){
-            await this.setNewSize()
-        }
-        // #ifdef APP-NVUE
-		this.isNvue = true
-		// #endif
-		await this.initCanvas()
+<script setup lang="ts">
+import { getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue'
+// @ts-ignore qrcode.js 无类型声明
+import QRCode from './qrcode.js'
 
-        if (this.loadMake) {
-            if (!this._empty(this.val)) {
-                setTimeout(() => {
-                    setTimeout(()=>{
-                        this._makeCode().catch(error => {
-                            console.error('二维码生成失败', error)
-                        })
-                    })
-                }, 0);
-            }
-        }
+interface Props {
+    cid?: string
+    size?: number
+    unit?: string
+    show?: boolean
+    val?: string
+    background?: string
+    foreground?: string
+    pdground?: string
+    icon?: string
+    iconSize?: number
+    lv?: number
+    quietZone?: number
+    onval?: boolean
+    loadMake?: boolean
+    usingComponents?: boolean
+    showLoading?: boolean
+    loadingText?: string
+    allowPreview?: boolean
+    // 是否使用根节点宽高
+    useRootHeightAndWidth?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    cid: () => {
+        return `dd-qrcode-canvas${Math.floor(Math.random() * 1000000)}`
     },
-    methods: {
-        async _makeCode() {
-            let that = this
-			if (this._empty(this.val)) {
-                uni.showToast({
-                    title: '二维码内容不能为空',
-                    icon: 'none',
-                    duration: 2000
-                });
-                return ''
-            }
-			if (!this.ctx) {
-                await this.initCanvas(true)
-            }
-			if (!this.ctx) throw new Error('无法获取二维码画布实例')
-            return new Promise((resolve, reject) => {
-                this.loading = true
-                try {
-                    this._qrcode = new QRCode({
-                        vuectx: that, // 上下文环境
-                        canvasId: that.cid, // canvas-id
-                        ctx: that.ctx,
-                        canvasHost: that.canvasHost,
-                        isNvue: that.isNvue,
-                        usingComponents: that.usingComponents, // 是否是自定义组件
-                        showLoading: false, // 是否显示loading
-                        loadingText: that.loadingText, // loading文字
-                        text: that.val, // 生成内容
-                        size: that.sizeLocal, // 二维码大小
-                        width: that.sizeLocal,
-                        height: that.sizeLocal,
-                        background: that.background, // 背景色
-                        foreground: that.foreground, // 前景色
-                        pdground: that.pdground, // 定位角点颜色
-                        quietZone: that.quietZone, // 静区宽度
-                        correctLevel: that.lv, // 容错级别
-                        image: that.icon, // 二维码图标
-                        imageSize: that.iconSize,// 二维码图标大小
-                        cbResult: function (res) { // 生成二维码的回调
-                            if (typeof res === 'string') {
-                                that._result(res)
-                                resolve(res)
-                            } else {
-                                that.loading = false
-                                reject(res instanceof Error ? res : new Error(`二维码生成失败: ${JSON.stringify(res)}`))
-                            }
-                        },
-                    });
-                } catch (error) {
-                    that.loading = false
-                    reject(error)
-                }
+    size: 200,
+    unit: 'px',
+    show: true,
+    val: '',
+    background: '#ffffff',
+    foreground: '#000000',
+    pdground: '#000000',
+    icon: '',
+    iconSize: 40,
+    lv: 3,
+    quietZone: 0,
+    onval: true,
+    loadMake: true,
+    usingComponents: true,
+    showLoading: true,
+    loadingText: '生成中',
+    allowPreview: false,
+    useRootHeightAndWidth: () => false,
+})
+
+const emit = defineEmits<{
+    (e: 'preview', payload: { url: string }, event: any): void
+    (e: 'result', res: any): void
+    (e: 'longpressCallback', path: any): void
+}>()
+
+const instance = getCurrentInstance()
+const qrcodeCanvas = ref<any>(null)
+
+const loading = ref(false)
+const result = ref('')
+const popupShow = ref(false)
+const list = [
+    {
+        name: '保存二维码',
+    },
+]
+const rootId = `rootId${Number(Math.random() * 100).toFixed(0)}`
+const canvasObj = ref({})
+const sizeLocal = ref(props.size)
+const ctx = ref<any>(null)
+const isNvue = ref(false)
+const canvasHost = ref<any>(null)
+
+let _qrcode: any = null
+
+onMounted(async () => {
+    // 如果使用根节点的宽高 则 重新设置 size
+    if (props.useRootHeightAndWidth) {
+        await setNewSize()
+    }
+    // #ifdef APP-NVUE
+    isNvue.value = true
+    // #endif
+    await initCanvas()
+
+    if (props.loadMake) {
+        if (!_empty(props.val)) {
+            setTimeout(() => {
+                setTimeout(() => {
+                    _makeCode().catch(error => {
+                        console.error('二维码生成失败', error)
+                    })
+                })
+            }, 0)
+        }
+    }
+})
+
+async function _makeCode() {
+    if (_empty(props.val)) {
+        uni.showToast({
+            title: '二维码内容不能为空',
+            icon: 'none',
+            duration: 2000,
+        })
+        return ''
+    }
+    if (!ctx.value) {
+        await initCanvas(true)
+    }
+    if (!ctx.value) throw new Error('无法获取二维码画布实例')
+    return new Promise((resolve, reject) => {
+        loading.value = true
+        try {
+            _qrcode = new QRCode({
+                vuectx: { drawImage }, // 上下文环境
+                canvasId: props.cid, // canvas-id
+                ctx: ctx.value,
+                canvasHost: canvasHost.value,
+                isNvue: isNvue.value,
+                usingComponents: props.usingComponents, // 是否是自定义组件
+                showLoading: false, // 是否显示loading
+                loadingText: props.loadingText, // loading文字
+                text: props.val, // 生成内容
+                size: sizeLocal.value, // 二维码大小
+                width: sizeLocal.value,
+                height: sizeLocal.value,
+                background: props.background, // 背景色
+                foreground: props.foreground, // 前景色
+                pdground: props.pdground, // 定位角点颜色
+                quietZone: props.quietZone, // 静区宽度
+                correctLevel: props.lv, // 容错级别
+                image: props.icon, // 二维码图标
+                imageSize: props.iconSize, // 二维码图标大小
+                cbResult: function (res: any) {
+                    // 生成二维码的回调
+                    if (typeof res === 'string') {
+                        _result(res)
+                        resolve(res)
+                    } else {
+                        loading.value = false
+                        reject(res instanceof Error ? res : new Error(`二维码生成失败: ${JSON.stringify(res)}`))
+                    }
+                },
             })
-        },
-        _clearCode() {
-            this._result('')
-            if (this._qrcode) this._qrcode.clear()
-        },
-        _saveCode() {
-            let that = this;
-            if (this.result != "") {
+        } catch (error) {
+            loading.value = false
+            reject(error)
+        }
+    })
+}
+
+function _clearCode() {
+    _result('')
+    if (_qrcode) _qrcode.clear()
+}
+
+function _saveCode() {
+    if (result.value != '') {
+        uni.saveImageToPhotosAlbum({
+            filePath: result.value,
+            success: function () {
+                uni.showToast({
+                    title: '二维码保存成功',
+                    icon: 'success',
+                    duration: 2000,
+                })
+            },
+        })
+    } else {
+        toTempFilePath({
+            success: (res: any) => {
+                result.value = res.tempFilePath
                 uni.saveImageToPhotosAlbum({
-                    filePath: that.result,
+                    filePath: result.value,
                     success: function () {
                         uni.showToast({
                             title: '二维码保存成功',
                             icon: 'success',
-                            duration: 2000
-                        });
-                    }
-                });
-            } else {
-				this.toTempFilePath({
-				    success: res => {
-						that.result = res.tempFilePath
-						uni.saveImageToPhotosAlbum({
-						    filePath: that.result,
-						    success: function () {
-						        uni.showToast({
-						            title: '二维码保存成功',
-						            icon: 'success',
-						            duration: 2000
-						        });
-						    }
-						});
-				    },
-				    fail: err => {
-				    }
-				})
-			}
-        },
-        preview(e) {
-            // 预览图片
-            // console.log(this.result)
-            if (this.allowPreview) {
-                uni.previewImage({
-                    urls: [this.result],
-                    longPressActions: {
-                        itemList: ['保存二维码图片'],
-                        success: function(data) {
-                            // console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
-                            switch (data.tapIndex) {
-                                case 0:
-                                    that._saveCode();
-                                    break;
-                            }
-                        },
-                        fail: function(err) {
-                            console.log(err.errMsg);
-                        }
-                    }
-                });
-            }
-            this.$emit('preview', {
-                url: this.result
-            }, e)
-        },
-        async toTempFilePath({success, fail} = {}) {
-            try {
-                if (!this.canvasHost) {
-                    await this.initCanvas(true)
-                }
-                if (!this.canvasHost) {
-                    throw new Error('无法获取二维码画布实例')
-                }
-                const res = await this.canvasHost.toTempFilePath({
-                    width: this.sizeLocal,
-                    height: this.sizeLocal
-                })
-                if (success) success(res)
-                return res
-            } catch (error) {
-                if (fail) {
-                    fail(error)
-                    return false
-                }
-                throw error
-            }
-        },
-        async longpress() {
-            this.toTempFilePath({
-                success: res => {
-                    this.$emit('longpressCallback', res.tempFilePath)
-                },
-                fail: err => {
-                }
-            })
-        },
-
-        /**
-         * 使用根节点宽高 设置新的size
-         * @return {Promise<void>}
-         */
-        async setNewSize(){
-            const rootNode = await this.getRootNode();
-            if (!rootNode) return
-            const { width , height } = rootNode;
-            // 将最短的设置为二维码 的size
-            if(width > height){
-                this.sizeLocal = height
-            }
-            else{
-                this.sizeLocal = width
-            }
-        },
-
-        async getRootNode() {
-            return new Promise((resolve, reject) => {
-                try {
-                    const query = uni.createSelectorQuery().in(this).select(`#${this.rootId}`);
-                    query.fields({
-                            size: true
+                            duration: 2000,
                         })
-                        .exec((res) => {
-                            resolve(res[0] || false)
-                        })
-                } catch (e) {
-                    console.error("获取二维码根节点失败", e)
-                    resolve(false)
-                }
-            })
-        },
-        async initCanvas(force = false) {
-            await this.$nextTick()
-            const canvasRef = this.$refs.qrcodeCanvas
-            if (!canvasRef) return false
-            const initialized = await canvasRef.initCanvas(force)
-            if (!initialized) {
-                this.canvasHost = null
-                this.ctx = null
-                return false
-            }
-            this.canvasHost = canvasRef
-            this.ctx = canvasRef.getRawContext()
-            return !!this.ctx
-        },
-        async refreshCanvas(force = false) {
-            await this.$nextTick()
-            return this.initCanvas(force)
-        },
-		getUPCanvasContext() {
-            return this.canvasHost ? this.canvasHost.getRawContext() : null
-		},
-        async drawImage(url, x, y, w, h) {
-            try {
-                if (!this.canvasHost) {
-                    const initialized = await this.initCanvas(true)
-                    if (!initialized) {
-                        throw new Error('无法初始化二维码画布')
-                    }
-                }
-                if (!this.canvasHost || !this.ctx) {
-                    throw new Error('无法获取二维码画布实例')
-                }
-                await this.canvasHost.drawImage(url, x, y, w, h)
-            } catch (error) {
-                console.error('drawImage绘制出错', error)
-                throw error
-			}
-		},
-        _queueMakeCode(delay = 0) {
-            if (this._empty(this.val)) return
-            setTimeout(() => {
-                this._makeCode().catch(error => {
-                    console.error('二维码生成失败', error)
+                    },
                 })
-            }, delay)
-        },
-
-        selectClick(index) {
-            switch (index) {
-                case 0:
-                    alert('保存二维码')
-                    this._saveCode();
-                    break;
-            }
-        },
-        _result(res) {
-            this.loading = false;
-            this.result = res;
-            this.$emit('result', res);
-        },
-        _empty(v) {
-            let tp = typeof v,
-                rt = false;
-            if (tp == "number" && String(v) == "") {
-                rt = true
-            } else if (tp == "undefined") {
-                rt = true
-            } else if (tp == "object") {
-                if (JSON.stringify(v) == "{}" || JSON.stringify(v) == "[]" || v == null) rt = true
-            } else if (tp == "string") {
-                if (v == "" || v == "undefined" || v == "null" || v == "{}" || v == "[]") rt = true
-            } else if (tp == "function") {
-                rt = false
-            }
-            return rt
-        },
-    },
-    watch: {
-        size: function (n, o) {
-            if (n != o && !this._empty(n)) {
-                this.sizeLocal = n
-                if (this.onval) {
-                    this._queueMakeCode(100)
-                }
-            }
-        },
-        val: function (n, o) {
-            if (this.onval) {
-                if (n != o && !this._empty(n)) {
-                    this._queueMakeCode()
-                }
-            }
-        },
-        icon: function (n, o) {
-            if (n === o) return
-            this._queueMakeCode(100)
-        },
-        background: function () {
-            this._queueMakeCode()
-        },
-        foreground: function () {
-            this._queueMakeCode()
-        },
-        iconSize: function () {
-            this._queueMakeCode()
-        },
-        quietZone: function () {
-            this._queueMakeCode()
-        },
-        lv: function () {
-            this._queueMakeCode()
-        }
-    },
-    computed: {
+            },
+            fail: (err: any) => {},
+        })
     }
 }
+
+function preview(e: any) {
+    // 预览图片
+    // console.log(this.result)
+    if (props.allowPreview) {
+        uni.previewImage({
+            urls: [result.value],
+            longPressActions: {
+                itemList: ['保存二维码图片'],
+                success: function (data: any) {
+                    // console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+                    switch (data.tapIndex) {
+                        case 0:
+                            // ponytail: 原实现此处引用了未定义的 that（必然 ReferenceError），按原意直接保存
+                            _saveCode()
+                            break
+                    }
+                },
+                fail: function (err: any) {
+                    console.log(err.errMsg)
+                },
+            },
+        })
+    }
+    emit('preview', { url: result.value }, e)
+}
+
+async function toTempFilePath({ success, fail }: any = {}) {
+    try {
+        if (!canvasHost.value) {
+            await initCanvas(true)
+        }
+        if (!canvasHost.value) {
+            throw new Error('无法获取二维码画布实例')
+        }
+        const res = await canvasHost.value.toTempFilePath({
+            width: sizeLocal.value,
+            height: sizeLocal.value,
+        })
+        if (success) success(res)
+        return res
+    } catch (error) {
+        if (fail) {
+            fail(error)
+            return false
+        }
+        throw error
+    }
+}
+
+async function longpress() {
+    toTempFilePath({
+        success: (res: any) => {
+            emit('longpressCallback', res.tempFilePath)
+        },
+        fail: (err: any) => {},
+    })
+}
+
+/**
+ * 使用根节点宽高 设置新的size
+ * @return {Promise<void>}
+ */
+async function setNewSize() {
+    const rootNode: any = await getRootNode()
+    if (!rootNode) return
+    const { width, height } = rootNode
+    // 将最短的设置为二维码 的size
+    if (width > height) {
+        sizeLocal.value = height
+    } else {
+        sizeLocal.value = width
+    }
+}
+
+async function getRootNode() {
+    return new Promise((resolve, reject) => {
+        try {
+            const query: any = uni.createSelectorQuery().in(instance?.proxy as any).select(`#${rootId}`)
+            query
+                .fields({
+                    size: true,
+                })
+                .exec((res: any) => {
+                    resolve(res[0] || false)
+                })
+        } catch (e) {
+            console.error('获取二维码根节点失败', e)
+            resolve(false)
+        }
+    })
+}
+
+async function initCanvas(force = false) {
+    await nextTick()
+    const canvasRef = qrcodeCanvas.value
+    if (!canvasRef) return false
+    const initialized = await canvasRef.initCanvas(force)
+    if (!initialized) {
+        canvasHost.value = null
+        ctx.value = null
+        return false
+    }
+    canvasHost.value = canvasRef
+    ctx.value = canvasRef.getRawContext()
+    return !!ctx.value
+}
+
+async function refreshCanvas(force = false) {
+    await nextTick()
+    return initCanvas(force)
+}
+
+function getUPCanvasContext() {
+    return canvasHost.value ? canvasHost.value.getRawContext() : null
+}
+
+async function drawImage(url: any, x: any, y: any, w: any, h: any) {
+    try {
+        if (!canvasHost.value) {
+            const initialized = await initCanvas(true)
+            if (!initialized) {
+                throw new Error('无法初始化二维码画布')
+            }
+        }
+        if (!canvasHost.value || !ctx.value) {
+            throw new Error('无法获取二维码画布实例')
+        }
+        await canvasHost.value.drawImage(url, x, y, w, h)
+    } catch (error) {
+        console.error('drawImage绘制出错', error)
+        throw error
+    }
+}
+
+function _queueMakeCode(delay = 0) {
+    if (_empty(props.val)) return
+    setTimeout(() => {
+        _makeCode().catch(error => {
+            console.error('二维码生成失败', error)
+        })
+    }, delay)
+}
+
+function selectClick(index: number) {
+    switch (index) {
+        case 0:
+            alert('保存二维码')
+            _saveCode()
+            break
+    }
+}
+
+function _result(res: any) {
+    loading.value = false
+    result.value = res
+    emit('result', res)
+}
+
+function _empty(v: any) {
+    let tp = typeof v,
+        rt = false
+    if (tp == 'number' && String(v) == '') {
+        rt = true
+    } else if (tp == 'undefined') {
+        rt = true
+    } else if (tp == 'object') {
+        if (JSON.stringify(v) == '{}' || JSON.stringify(v) == '[]' || v == null) rt = true
+    } else if (tp == 'string') {
+        if (v == '' || v == 'undefined' || v == 'null' || v == '{}' || v == '[]') rt = true
+    } else if (tp == 'function') {
+        rt = false
+    }
+    return rt
+}
+
+watch(
+    () => props.size,
+    function (n, o) {
+        if (n != o && !_empty(n)) {
+            sizeLocal.value = n
+            if (props.onval) {
+                _queueMakeCode(100)
+            }
+        }
+    }
+)
+watch(
+    () => props.val,
+    function (n, o) {
+        if (props.onval) {
+            if (n != o && !_empty(n)) {
+                _queueMakeCode()
+            }
+        }
+    }
+)
+watch(
+    () => props.icon,
+    function (n, o) {
+        if (n === o) return
+        _queueMakeCode(100)
+    }
+)
+watch(
+    () => props.background,
+    function () {
+        _queueMakeCode()
+    }
+)
+watch(
+    () => props.foreground,
+    function () {
+        _queueMakeCode()
+    }
+)
+watch(
+    () => props.iconSize,
+    function () {
+        _queueMakeCode()
+    }
+)
+watch(
+    () => props.quietZone,
+    function () {
+        _queueMakeCode()
+    }
+)
+watch(
+    () => props.lv,
+    function () {
+        _queueMakeCode()
+    }
+)
+
+defineExpose({
+    loading,
+    result,
+    popupShow,
+    list,
+    rootId,
+    canvasObj,
+    sizeLocal,
+    ctx,
+    isNvue,
+    canvasHost,
+    _makeCode,
+    _clearCode,
+    _saveCode,
+    preview,
+    toTempFilePath,
+    longpress,
+    setNewSize,
+    getRootNode,
+    initCanvas,
+    refreshCanvas,
+    getUPCanvasContext,
+    drawImage,
+    _queueMakeCode,
+    selectClick,
+    _result,
+    _empty,
+})
 </script>
 <style lang="scss" scoped>
 @import '../../scss/variables';
-
+@import '../../scss/mixins';
 .dd-qrcode {
     &__loading {
         display: flex;
@@ -499,4 +526,3 @@ export default {
     }
 }
 </style>
-

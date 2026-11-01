@@ -43,11 +43,12 @@ import DdDropdownItem from './components/dd-dropdown-item/dd-dropdown-item.vue'
 import DdSidebar from './components/dd-sidebar/dd-sidebar.vue'
 import DdSidebarItem from './components/dd-sidebar-item/dd-sidebar-item.vue'
 
-// === Layout (11) ===
+// === Layout (13) ===
 import DdCard from './components/dd-card/dd-card.vue'
 import DdRoomCard from './components/dd-room-card/dd-room-card.vue'
 import DdGoodsCard from './components/dd-goods-card/dd-goods-card.vue'
 import DdFeatureGrid from './components/dd-feature-grid/dd-feature-grid.vue'
+import DdWaterfall from './components/dd-waterfall/dd-waterfall.vue'
 import DdSticky from './components/dd-sticky/dd-sticky.vue'
 import DdBillDetail from './components/dd-bill-detail/dd-bill-detail.vue'
 import DdWorkorderCard from './components/dd-workorder-card/dd-workorder-card.vue'
@@ -125,7 +126,7 @@ const components = {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
@@ -158,7 +159,7 @@ export {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,

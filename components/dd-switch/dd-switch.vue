@@ -56,7 +56,7 @@ function onToggle() {
     top: 50%;
     left: 6rpx;
     transform: translateY(-50%);
-    background: #ffffff;
+    background: $dd-color-white;
     border-radius: 50%;
     box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.3);
     @include dd-transition(left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1));

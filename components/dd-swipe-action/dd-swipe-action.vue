@@ -43,6 +43,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { rpxToPx } from '../../libs/function/index.js'
 import DdIcon from '../dd-icon/dd-icon.vue'
 // z-index 统一取 libs/config/zIndex.js（操作层 base 档，内容层档内 +1 盖住操作层）
 import zIndexConfig from '../../libs/config/zIndex.js'
@@ -91,15 +92,6 @@ let moved = false
 const actionWidthPx = computed(() => rpxToPx(props.actionWidth))
 const leftWidthPx = computed(() => actionWidthPx.value * props.leftActions.length)
 const rightWidthPx = computed(() => actionWidthPx.value * props.rightActions.length)
-
-function rpxToPx(rpx: number): number {
-  try {
-    const info = uni.getWindowInfo()
-    return (rpx / 750) * info.windowWidth
-  } catch {
-    return rpx / 2
-  }
-}
 
 function onTouchStart(e: any) {
   if (props.disabled) return

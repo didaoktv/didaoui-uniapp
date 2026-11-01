@@ -6,7 +6,7 @@
 
 - **帝王级配色** — 帝王金 `#F5A623` + 皇家蓝 `#2D4BA0` 双主色，暗色主题默认
 - **玻璃拟态设计** — 多层级玻璃拟态效果，打造高端夜店沉浸感
-- **99 个精心打磨的组件** — 覆盖表单、导航、布局卡片、数据展示、浮层反馈、交互、画布七大类，含 KTV 业务组件（房态卡、账单明细、工单卡、日历、二维码）
+- **101 个精心打磨的组件** — 覆盖表单、导航、布局卡片、数据展示、浮层反馈、交互、画布七大类，含 KTV 业务组件（房态卡、账单明细、工单卡、日历、二维码）
 - **Vue3 + TypeScript** — 完整类型定义，Composition API
 - **多端兼容** — H5 / 微信小程序 / 抖音小程序 / Android / iOS
 
@@ -52,7 +52,7 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 | ----- | -- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | 表单输入  | 25 | Button, CodeButton, Input, Form, Field, Switch, Checkbox, CheckboxGroup, Radio, RadioGroup, Stepper, SearchBar, Slider, DatePicker, Picker, Rate, Upload, Icon, Keyboard, NumberKeyboard, CarKeyboard, Cascader, GoodsSku, PackageSku, TreeSelect |
 | 导航     | 14 | Navigation, TopNavbar, SegmentedTab, SwipeableTab, Drawer, Tabbar, TabbarItem, Backtop, Collapse, CollapseItem, DropdownMenu, DropdownItem, Sidebar, SidebarItem |  |
-| 布局/卡片 | 11 | Card, RoomCard, GoodsCard, FeatureGrid, Sticky, BillDetail, WorkorderCard, Calendar, Qrcode, SubmitBar, CartBar                                                             |
+| 布局/卡片 | 12 | Card, RoomCard, GoodsCard, FeatureGrid, Waterfall, Sticky, BillDetail, WorkorderCard, Calendar, Qrcode, SubmitBar, CartBar                                                             |
 | 数据展示  | 26 | Tag, StatCard, ChampionCard, Avatar, AvatarGroup, Badge, ListCell, Cell, CellGroup, Fold, CountDown, Divider, Image, Progress, Skeleton, EmptyState, Step, Steps, Text, Link, Copy, Album, Coupon, Parse, Markdown, Price |
 | 浮层反馈  | 11 | Modal, ActionSheet, Toast, Alert, Loading, Dialog, Overlay, Popup, Popover, PopoverItem, Portal                                                   |
 | 交互    | 5  | SwipeAction, Swipe, SwipeItem, PullRefresh, Loadmore                                                                                         |
@@ -73,15 +73,15 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 - 主字体: 'Noto Sans SC', sans-serif
 - 展示字体: 'Playfair Display', serif
 - 等宽字体: 'JetBrains Mono', monospace
-- 字号阶梯: 12 / 14 / 16 / 18 / 20 / 24 / 32 px
+- 字号阶梯: 24 / 28 / 32 / 36 / 40 / 48 / 64 rpx（1px=2rpx，对应设计稿 12~32px）
 
 ### 圆角
 
-2 / 4 / 8 / 12 / 16 / 9999 px
+4 / 8 / 16 / 24 / 32 / 9999 rpx（1px=2rpx）
 
 ### 间距
 
-4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 px (8pt 基础网格)
+8 / 16 / 24 / 32 / 48 / 64 / 96 / 128 rpx（1px=2rpx，8pt 基础网格）
 
 ### 主题与浅色模式（v1.3.0+）
 
@@ -91,7 +91,7 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 |----|------|---------|
 | SCSS 编译期 | `_variables.scss` 全量 `!default`，消费者先声明变量再引入即可覆盖 | 整个 App 固定品牌换肤 |
 | CSS 变量运行时 | 组件消费 `var(--dd-x, #{$dd-x})`，SCSS 值为兜底（不引入主题文件时与旧版渲染一致） | 明暗切换、多主题共存 |
-| delta 级联 | `:root`/`page` 发射全量默认值（base 59 + 暗色 44），主题类只声明与默认不同的变量，未声明自动继承 | 快速配置新主题 |
+| delta 级联 | `:root`/`page` 发射全量默认值（base 65 + 暗色 45），主题类只声明与默认不同的变量，未声明自动继承 | 快速配置新主题 |
 
 **启用运行时主题**：在 `App.vue` 全局样式引入：
 

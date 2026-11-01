@@ -4,10 +4,7 @@
     class="dd-seg dd-seg--pill"
     :class="{ 'dd-seg--sm': size === 'sm' }"
   >
-    <view
-      ref="trackRef"
-      class="dd-seg__track"
-    >
+    <view class="dd-seg__track">
       <view
         v-for="(opt, index) in options"
         :key="index"
@@ -43,8 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue'
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue'
 // z-index 统一取 libs/config/zIndex.js（分段项盖住滑块指示器取 base 档）
 import zIndexConfig from '../../libs/config/zIndex.js'
 
@@ -95,7 +91,9 @@ function measure() {
         const track = res[1] as UniApp.NodeInfo
         if (!items.length || !track) return
         const target = items[props.modelValue]
-        if (!target) return
+        // 宽为 0 说明此刻容器不可见（弹层/抽屉/未激活 tab 内挂载），此时不写入几何：
+        // 否则指示块会被钉成 0 宽且再无重测触发（可见性变化不会经过本组件的 watch）
+        if (!target || !target.width || !track.width) return
         const left = (target.left || 0) - (track.left || 0)
         indicatorStyle.value = {
           width: (target.width || 0) + 'px',
@@ -106,8 +104,12 @@ function measure() {
 }
 
 onMounted(measure)
-watch(() => props.modelValue, measure)
-watch(() => props.options, measure)
+// modelValue（停靠位）/ options（标签改动或引用变化）/ size（sm↔md 档位，改项宽）三者都影响几何，
+// 统一监听；deep 用于捕捉 options 元素 label 被就地改写（数组引用不变的场景）
+watch([() => props.modelValue, () => props.options, () => props.size], measure, { deep: true })
+
+// 隐藏态挂载的补测入口：父级容器变可见后（弹层打开 / tab 切换）调用一次即可收敛
+defineExpose({ refresh: measure })
 </script>
 
 <style lang="scss" scoped>
@@ -122,16 +124,21 @@ watch(() => props.options, measure)
 .dd-seg--pill {
   .dd-seg__track {
     position: relative;
-    display: inline-flex;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
     padding: $dd-space-1;
     background: var(--dd-surface-container-high, #{$dd-surface-container-high});
     border: 1px solid var(--dd-border-default, #{$dd-border-default});
     border-radius: $dd-radius-full;
   }
 
+  // 等分填充父容器（antd-mobile Segmented 的做法）：项按 flex 等分，标签超长省略而非撑破容器
   .dd-seg__item {
     position: relative;
-    min-width: 120rpx;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
     padding: 12rpx $dd-space-4;
     @include dd-flex-center;
     color: var(--dd-text-tertiary, #{$dd-text-tertiary});
@@ -148,7 +155,6 @@ watch(() => props.options, measure)
   // sm 小号：字号 caption（12px=24rpx）、更紧内边距，整体高度对齐页面 24rpx 字号胶囊
   &.dd-seg--sm {
     .dd-seg__item {
-      min-width: 96rpx;
       padding: $dd-space-1;
       font-size: $dd-font-size-caption;
     }
@@ -161,7 +167,7 @@ watch(() => props.options, measure)
     left: 0;
     background: $dd-color-white;
     border-radius: $dd-radius-full;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--dd-shadow-1, #{$dd-shadow-1});
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -171,7 +177,9 @@ watch(() => props.options, measure)
 .dd-seg--text {
   display: flex;
   flex-direction: row;
-  gap: $dd-space-6;
+  flex-wrap: wrap;
+  column-gap: $dd-space-6;
+  row-gap: $dd-space-2;
 
   &.dd-seg--sm {
     .dd-seg-text__item {

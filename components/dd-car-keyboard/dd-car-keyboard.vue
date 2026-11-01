@@ -176,7 +176,7 @@ function emitValue() {
 <style lang="scss" scoped>
 /* 头部固定引入；只消费 $dd-* token，样式值一律 var() 兜底形式 */
 @import '../../scss/variables';
-@import '../../scss/dd-shared';
+@import '../../scss/mixins';
 
 $dd-car-keyboard-gap: 8rpx !default;
 $dd-car-keyboard-box-height: 76rpx !default;
@@ -186,12 +186,12 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 
 .dd-car-keyboard {
 	&__boxes {
-		@include flex;
+		@include dd-flex;
 		gap: $dd-car-keyboard-gap;
 	}
 
 	&__box {
-		@include flex;
+		@include dd-flex;
 		position: relative;
 		justify-content: center;
 		align-items: center;
@@ -219,12 +219,12 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 	}
 
 	&__box-text {
-		font-size: 17px;
+		font-size: 34rpx;
 		color: var(--dd-text-primary, #{$dd-text-primary});
 	}
 
 	&__badge {
-		@include flex;
+		@include dd-flex;
 		justify-content: center;
 		position: absolute;
 		top: -14rpx;
@@ -236,7 +236,7 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 	}
 
 	&__badge-text {
-		font-size: 10px;
+		font-size: $dd-font-size-overline;
 		color: var(--dd-success-contrast, #{$dd-success-contrast});
 	}
 
@@ -246,16 +246,16 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 
 	// 工具条对齐 dd-keyboard：取消 / 提示 / 完成
 	&__tooltip {
-		@include flex;
+		@include dd-flex;
 		justify-content: space-between;
 		background-color: var(--dd-bg-elevated, #{$dd-bg-elevated});
-		padding: 14px 12px;
+		padding: 28rpx $dd-space-3;
 
 		&-item {
 			color: var(--dd-text-primary, #{$dd-text-primary});
 			flex: 1;
 			text-align: center;
-			font-size: 15px;
+			font-size: 30rpx;
 
 			&--cancel {
 				text-align: left;
@@ -278,13 +278,13 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 	}
 
 	&__row {
-		@include flex;
+		@include dd-flex;
 		margin-top: $dd-space-2;
 		gap: $dd-car-keyboard-gap;
 	}
 
 	&__key {
-		@include flex;
+		@include dd-flex;
 		justify-content: center;
 		align-items: center;
 		flex: 1;
@@ -307,7 +307,7 @@ $dd-car-keyboard-panel-padding: 0 $dd-space-2 $dd-space-2 !default;
 	}
 
 	&__key-text {
-		font-size: 16px;
+		font-size: $dd-font-size-h4;
 		color: var(--dd-text-primary, #{$dd-text-primary});
 	}
 }

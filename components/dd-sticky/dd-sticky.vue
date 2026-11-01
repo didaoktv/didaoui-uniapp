@@ -1,5 +1,6 @@
 <template>
   <view
+    ref="rootRef"
     class="dd-sticky"
     :class="{ 'dd-sticky--disabled': disabled }"
     :style="stickyStyle"
@@ -12,6 +13,7 @@
 import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 // z-index 统一取 libs/config/zIndex.js：默认吸顶层级取 sticky 档（zIndex prop 保留可覆盖）
 import zIndexConfig from '../../libs/config/zIndex.js'
+import { rpxToPx } from '../../libs/function/index.js'
 
 interface Props {
   offsetTop?: number // rpx
@@ -28,6 +30,8 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{ (e: 'change', val: { isFixed: boolean; scrollTop: number }): void }>()
 
 const isFixed = ref(false)
+// H5 侧观察自身根节点（避免全局选择器在多实例下取到第一个）
+const rootRef = ref<HTMLElement | null>(null)
 
 const stickyStyle = computed(() => {
   if (props.disabled) {
@@ -44,15 +48,6 @@ const stickyStyle = computed(() => {
 let observer: any = null
 const instance = getCurrentInstance()
 
-function rpxToPx(rpx: number): number {
-  try {
-    const info = uni.getWindowInfo()
-    return (rpx / 750) * info.windowWidth
-  } catch {
-    return rpx / 2
-  }
-}
-
 onMounted(() => {
   if (props.disabled) return
   // #ifdef H5
@@ -66,7 +61,7 @@ onMounted(() => {
 // H5: 使用原生 IntersectionObserver API
 function setupH5Observer() {
   // #ifdef H5
-  const el = document.querySelector('.dd-sticky')
+  const el = rootRef.value
   if (!el) return
   const px = rpxToPx(props.offsetTop)
   const io = new IntersectionObserver(

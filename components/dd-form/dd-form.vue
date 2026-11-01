@@ -109,6 +109,8 @@ defineExpose({ validate, validateField, resetValidation, submit, getValues })
 </script>
 
 <style lang="scss" scoped>
+@import '../../scss/variables';
+@import '../../scss/mixins';
 .dd-form {
   display: block;
   width: 100%;

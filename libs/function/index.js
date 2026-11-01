@@ -112,6 +112,20 @@ export function rpx2px(value) {
 }
 
 /**
+ * @description rpx 转 px（按 750 设计稿宽度等比缩放），取不到窗口宽度时按 2 倍换算兜底
+ * @param {number} rpx 设计稿 rpx 值
+ * @returns {number}
+ */
+export function rpxToPx(rpx) {
+	try {
+		const info = uni.getWindowInfo()
+		return (Number(rpx) / 750) * info.windowWidth
+	} catch {
+		return Number(rpx) / 2
+	}
+}
+
+/**
  * @description 进行延时，以达到可以简写代码的目的 比如: await sleep(20)将会阻塞20ms
  * @param {number} value 堵塞时间 单位ms 毫秒
  * @returns {Promise} 返回promise

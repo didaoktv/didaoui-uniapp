@@ -36,7 +36,7 @@ provide('dd-radio-group', {
 
 <style lang="scss" scoped>
 @import '../../scss/variables';
-
+@import '../../scss/mixins';
 .dd-radio-group {
   display: flex;
   flex-wrap: wrap;
