@@ -102,9 +102,9 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-skeleton](components/dd-skeleton/dd-skeleton.vue): 骨架屏
 - [dd-empty-state](components/dd-empty-state/dd-empty-state.vue): 空状态
 - [dd-step](components/dd-step/dd-step.vue) / [dd-steps](components/dd-steps/dd-steps.vue): 步骤条
-- [dd-text](components/dd-text/dd-text.vue): 文本（uview 移植，props.js mixin 定义；主题色/省略/装饰）
+- [dd-text](components/dd-text/dd-text.vue): 文本（uview 移植，script setup 内联 props；主题色/省略/装饰）
 - [dd-link](components/dd-link/dd-link.vue): 超链接文本
-- [dd-copy](components/dd-copy/dd-copy.vue): 点击复制。content/notice/alertStyle；emit success（Options API）
+- [dd-copy](components/dd-copy/dd-copy.vue): 点击复制。content/notice/alertStyle；emit success
 - [dd-album](components/dd-album/dd-album.vue): 图片相册（urls 数组，自动九宫格折叠）
 - [dd-coupon](components/dd-coupon/dd-coupon.vue): 优惠券票券。amount/unit/unitPosition/limit/title/desc/time/actionText/shape/disabled；emit click
 - [dd-parse](components/dd-parse/dd-parse.vue): 富文本 HTML 渲染（H5 的 uni 时序问题已修为惰性初始化）
@@ -141,7 +141,7 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-barcode](components/dd-barcode/dd-barcode.vue): 条形码
 - [dd-cropper](components/dd-cropper/dd-cropper.vue): 图片裁剪
 - [dd-signature](components/dd-signature/dd-signature.vue): 手写签名
-- [dd-poster](components/dd-poster/dd-poster.vue): json 配置生成海报（文本/图片/矩形/二维码混排），ref 调 exportImage() 导出临时图片（Options API）
+- [dd-poster](components/dd-poster/dd-poster.vue): json 配置生成海报（文本/图片/矩形/二维码混排），ref 调 exportImage() 导出临时图片
 
 ## 易混组件选型
 
