@@ -75,7 +75,7 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-room-card](components/dd-room-card/dd-room-card.vue): KTV 房态卡。view grid/list、status occupied/idle/reserved、type vip/standard/theme、roomNo/roomName/capacity/time；emit click({roomNo, status})
 - [dd-goods-card](components/dd-goods-card/dd-goods-card.vue): 商品卡（下单页）。layout horizontal/vertical、size sm/md/xs（sm 横向=购物车行 96rpx 紧凑图不渲染 desc，sm 竖向=一行三列宫格，xs 竖向=一行四列订单卡缩略图无底色阴影且价格用 dd-price xs 档）、thumb/title/desc/price/originPrice/tag/num/disabled；价格在左数量在右，价格经 dd-price 渲染、tag 金色角标；emit click；thumb/default/bottom/price/price-right 插槽（price 可整块替换价格位，如赠品改「赠送」标签）
 - [dd-feature-grid](components/dd-feature-grid/dd-feature-grid.vue): 功能宫格（工作台九宫格）。items、columns(默认4)、variant circle/squircle、labelKey/iconKey/colorKey 字段映射；emit item-click({item, index})
-- [dd-waterfall](components/dd-waterfall/dd-waterfall.vue): 瀑布流（不等高多列）。v-model 数据数组（组件只读消费）、columns(默认2)、gap(默认16rpx)、customStyle/customClass；默认插槽作用域 {item, index}。按数据顺序轮流填列（第 i 项进第 i % 列），视觉读序 = 数据顺序，不做测高与均衡
+- [dd-waterfall](components/dd-waterfall/dd-waterfall.vue): 瀑布流（不等高多列）。v-model 数据数组（组件只读消费）、columns(默认2)、gap(默认16rpx)、customStyle/customClass；默认插槽作用域 {item, index}。按数据顺序逐项塞进当前最矮列（渲染后实测项高，约 200ms 后重排一次）
 - [dd-sticky](components/dd-sticky/dd-sticky.vue): 吸顶/吸底容器
 - [dd-bill-detail](components/dd-bill-detail/dd-bill-detail.vue): 账单明细。items: BillItem[]、total/subtotal/deliveryFee、status unpaid/paid/refunding/refunded/cancelled、header；emit click({item, index})；操作按钮走 slot
 - [dd-workorder-card](components/dd-workorder-card/dd-workorder-card.vue): 工单卡。title、type service/repair/feedback/decoration/todo、status、checklist、progress、time；emit check({item, done})/click
@@ -92,7 +92,7 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-champion-card](components/dd-champion-card/dd-champion-card.vue): 冠军榜卡（金银铜固定配色）。variant podium/horizontal/list、rank/name/score/avatar；emit click({rank})
 - [dd-avatar](components/dd-avatar/dd-avatar.vue) / [dd-avatar-group](components/dd-avatar-group/dd-avatar-group.vue): 头像/头像组
 - [dd-badge](components/dd-badge/dd-badge.vue): 徽标
-- [dd-cell](components/dd-cell/dd-cell.vue) / [dd-cell-group](components/dd-cell-group/dd-cell-group.vue): 单元格
+- [dd-cell](components/dd-cell/dd-cell.vue) / [dd-cell-group](components/dd-cell-group/dd-cell-group.vue): 单元格 / 分组容器（同时兼容 DdCell 与 DdListCell 子项，自动去末行发丝线）
 - [dd-list-cell](components/dd-list-cell/dd-list-cell.vue): 列表单元格（title/subtitle/value/icon、size xs|sm|md|lg 行高 32/44/48/56、arrow/isLink/borderless）
 - [dd-fold](components/dd-fold/dd-fold.vue): 定高折叠容器（maxHeight rpx + 底部渐变遮罩 + 展开/收起入口，v-model:expanded 受控，自动量高、未超高不折叠）
 - [dd-count-down](components/dd-count-down/dd-count-down.vue): 倒计时
@@ -153,7 +153,7 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 | 自定义内容弹层 | dd-popup（五方向）/ dd-modal（dialog/bottom-sheet） | — |
 | 选择菜单 | dd-action-sheet（动作）/ dd-picker（数据列） | — |
 | 分类选择 | dd-tree-select（两级同屏：左导航右子项）/ dd-cascader（多级逐级弹层） | — |
-| 列表项 | dd-cell / dd-list-cell（副标题行） | — |
+| 列表项 | dd-cell / dd-list-cell（副标题行），分组容器 dd-cell-group | — |
 | 轻提示 | showToast 等函数（勿重复挂多个 dd-toast） | — |
 | 左滑删除 | dd-swipe-action；轮播才是 dd-swipe | — |
 

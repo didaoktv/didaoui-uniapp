@@ -10,6 +10,7 @@
         v-for="cell in column"
         :key="cell.index"
         class="dd-waterfall__item"
+        :id="itemId(cell.index)"
         :style="`margin-bottom: ${gap}rpx;`"
       >
         <slot :item="cell.item" :index="cell.index" />
@@ -19,7 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue'
+import { assignColumns } from './waterfall'
 
 type WaterfallItem = Record<string, any>
 
@@ -48,21 +50,77 @@ interface Cell {
   index: number
 }
 
+const instance = getCurrentInstance()
+/** 实例前缀：同一页面挂多个瀑布流时按 id 前缀串起「数据下标 → 视高」，
+ *  列内 DOM 顺序是列主序，不能靠 query 返回顺序对应数据顺序 */
+const uid = `dd-wf-${Math.random().toString(36).slice(2, 8)}`
+
 const columnCount = computed(() => Math.max(1, Math.floor(props.columns) || 1))
 
-/**
- * 按数据顺序轮流填列：第 i 项进第 i % 列。
- * 这是瀑布流对「顺序敏感」列表的正确填充口径——按最矮列塞下一个会把顺序彻底打散
- * （房态看板要按包厢号找房，A101、A104、AB202 交错是不可接受的）；
- * 列各自独立堆叠，因此仍没有普通 grid 的整行等高空白。
- */
+/** 每项所在列号（下标 = 数据下标）：首屏按奇偶预排，量到视高后改为「谁矮进谁」 */
+const columnOf = ref<number[]>([])
+
+const itemId = (index: number): string => `${uid}-${index}`
+
 const columnList = computed<Cell[][]>(() => {
   const cols = Array.from({ length: columnCount.value }, () => [] as Cell[])
   ;(props.modelValue || []).forEach((item, index) => {
-    cols[index % cols.length].push({ item, index })
+    const col = columnOf.value[index] ?? index % cols.length
+    cols[col].push({ item, index })
   })
   return cols
 })
+
+let measuring = false
+
+/** 小程序 setData 后布局是异步的（H5 也得等一帧），量高前留出渲染窗口；uview 同款口径（默认 300ms） */
+const MEASURE_DELAY = 200
+
+/**
+ * 按「当前最矮列」落位：按数据顺序逐项找累计高度最小的列塞入。
+ * 这是瀑布流对不等高卡片的常规口径——列内独立堆叠不留整行空白，末项也会跟在较矮的那列下面。
+ * 量不到高度（0 高/容器不可见/布局未就绪）时整轮放弃，保留奇偶预排，避免把全部卡片挤进第一列。
+ * ponytail: 只在数据/列数变化时重量；卡片自己变高（如倒计时文案换行）不触发重排，需要时再说
+ */
+function layout(): void {
+  const list = props.modelValue || []
+  if (!list.length || measuring) return
+  measuring = true
+  nextTick(() => {
+    setTimeout(() => {
+      const query = uni.createSelectorQuery().in(instance)
+      query.selectAll('.dd-waterfall__item').boundingClientRect()
+      query.exec((res) => {
+        measuring = false
+        const rects = ((res && res[0]) || []) as UniApp.NodeInfo[]
+        const heightById = new Map<string, number>()
+        for (const r of rects) {
+          if (r.id && r.id.startsWith(uid)) heightById.set(r.id, r.height || 0)
+        }
+        if (!heightById.size) return
+        // 全部量不到高（容器不可见/布局未就绪）才放弃整轮；个别 0 高按 0 参与计算，不影响其余项落位
+        let ready = 0
+        heightById.forEach((h) => {
+          if (h > 0) ready += 1
+        })
+        if (!ready) return
+        const gapPx = uni.upx2px(props.gap)
+        // 逐项进当前最矮列（纯逻辑在 waterfall.ts，附 scripts/waterfall-selfcheck.ts）
+        const next = assignColumns(
+          list.map((_, i) => heightById.get(itemId(i)) ?? 0),
+          columnCount.value,
+          gapPx,
+        )
+        // 结果没变就不触发重渲染，避免量高 → 重排 → 再量高的循环
+        const same = next.length === columnOf.value.length && next.every((c, i) => c === columnOf.value[i])
+        if (!same) columnOf.value = next
+      })
+    }, MEASURE_DELAY)
+  })
+}
+
+onMounted(layout)
+watch([() => props.modelValue, columnCount], layout)
 </script>
 
 <style lang="scss" scoped>
