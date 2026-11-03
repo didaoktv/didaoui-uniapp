@@ -25,7 +25,8 @@
                 <text v-if="originPrice" class="dd-goods-sku__header__info__price__origin">¥{{ originPrice }}</text>
               </view>
               <view class="dd-goods-sku__header__info__stock">库存 {{ stock }} 件</view>
-              <view class="dd-goods-sku__header__info__selected">已选: {{ selectedSkuText }}</view>
+              <view v-if="selectedSkuText" class="dd-goods-sku__header__info__selected">已选: {{ selectedSkuText }}</view>
+              <view v-else class="dd-goods-sku__header__info__selected dd-goods-sku__header__info__selected--hint">请选择规格</view>
             </view>
           </slot>
         </view>
@@ -404,6 +405,10 @@ defineExpose({ open, close, reset })
       &__selected {
         font-size: 26rpx;
         color: var(--dd-text-primary, #{$dd-text-primary});
+
+        &--hint {
+          color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+        }
       }
     }
   }

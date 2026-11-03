@@ -27,7 +27,9 @@
             <view v-if="stock !== undefined && stock !== null" class="dd-package-sku__header__info__stock">
               库存 {{ stock }} 件
             </view>
-            <view class="dd-package-sku__header__info__selected">已选: {{ selectedText || '未选择' }}</view>
+            <view v-if="selectedText" class="dd-package-sku__header__info__selected">已选: {{ selectedText }}</view>
+            <view v-else-if="!hasSelectable" class="dd-package-sku__header__info__selected dd-package-sku__header__info__selected--hint">无需选择</view>
+            <view v-else class="dd-package-sku__header__info__selected dd-package-sku__header__info__selected--hint">请选择套餐内容</view>
           </view>
         </view>
 
@@ -50,6 +52,7 @@
                 @click="onItemClick(group, item)"
               >
                 <text>{{ item.name }}</text>
+                <text v-if="qtyText(item)" class="dd-package-sku__chip__qty">{{ qtyText(item) }}</text>
                 <text v-if="surchargeText(item)" class="dd-package-sku__chip__surcharge">{{ surchargeText(item) }}</text>
                 <text v-if="itemDisabled(item)" class="dd-package-sku__chip__soldout">已售罄</text>
               </view>
@@ -156,6 +159,10 @@ const originPrice = computed(() => props.goodsInfo.originPrice || props.goodsInf
 const stock = computed(() => props.goodsInfo.stock ?? props.goodsInfo.quantity)
 /** 已选项实时摘要（确认前即联动展示） */
 const selectedText = computed(() => buildSelectedText(props.groups, selections))
+/** 是否存在可选的 OPTIONAL 项：全部 FIXED 或可选项全售罄/停用时无需选择 */
+const hasSelectable = computed(() =>
+  props.groups.some((g) => !isFixed(g) && g.items.some((it) => !isItemDisabled(it))),
+)
 
 // 模板内避免复杂表达式（小程序约束），逐一下沉为方法
 function isFixedGroup(group: PackageSkuGroup): boolean {
@@ -172,6 +179,12 @@ function hintText(group: PackageSkuGroup): string {
 
 function surchargeText(item: PackageSkuItem): string {
   return surchargeLabel(item)
+}
+
+/** 件数标签：「×N」（单次选中/每份固定含份数，>1 才标，与 buildSelectedText 摘要口径一致），返回空串不显示 */
+function qtyText(item: PackageSkuItem): string {
+  const n = item.perQty ?? 1
+  return n > 1 ? `×${n}` : ''
 }
 
 function isSelected(group: PackageSkuGroup, item: PackageSkuItem): boolean {
@@ -304,6 +317,10 @@ defineExpose({ open, close, reset })
       &__selected {
         font-size: 26rpx;
         color: var(--dd-text-primary, #{$dd-text-primary});
+
+        &--hint {
+          color: var(--dd-text-tertiary, #{$dd-text-tertiary});
+        }
       }
     }
   }
@@ -365,6 +382,12 @@ defineExpose({ open, close, reset })
     }
 
     &--fixed {
+      color: var(--dd-text-secondary, #{$dd-text-secondary});
+    }
+
+    &__qty {
+      margin-left: 8rpx;
+      font-size: 24rpx;
       color: var(--dd-text-secondary, #{$dd-text-secondary});
     }
 
