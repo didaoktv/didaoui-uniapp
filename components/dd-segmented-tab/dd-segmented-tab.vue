@@ -2,7 +2,7 @@
   <view
     v-if="variant === 'pill'"
     class="dd-seg dd-seg--pill"
-    :class="{ 'dd-seg--sm': size === 'sm' }"
+    :class="{ 'dd-seg--sm': size === 'sm', 'dd-seg--no-ellipsis': !ellipsis }"
   >
     <view class="dd-seg__track">
       <view
@@ -24,7 +24,8 @@
   <view
     v-else
     class="dd-seg dd-seg--text"
-    :class="{ 'dd-seg--sm': size === 'sm' }"
+    :class="{ 'dd-seg--sm': size === 'sm', 'dd-seg--no-ellipsis': !ellipsis }"
+    :style="gapStyle"
   >
     <view
       v-for="(opt, index) in options"
@@ -40,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue'
 // z-index 统一取 libs/config/zIndex.js（分段项盖住滑块指示器取 base 档）
 import zIndexConfig from '../../libs/config/zIndex.js'
 
@@ -50,6 +51,17 @@ interface Props {
   variant?: 'pill' | 'text'
   /** 尺寸：md 标准；sm 小号（与页面 24rpx 字号胶囊控件同高，用于工具行等紧凑场景） */
   size?: 'sm' | 'md'
+  /**
+   * text 变体水平间距（rpx）。不传则沿用 SCSS 默认 $dd-space-6；
+   * 项数多（如 7 项横滑）需要收窄时由消费方显式传值，避免把整体节奏写死在组件里
+   */
+  gap?: number
+  /**
+   * 标签超长是否打点省略。默认 true（单行省略号）；
+   * false 时不打点也不换行：项改为按内容自适应宽度（放弃等分）、标签强制单行，
+   * 总宽超出容器会溢出——标签过长时请精简文案或保留省略
+   */
+  ellipsis?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -57,6 +69,7 @@ const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   variant: 'pill',
   size: 'md',
+  ellipsis: true,
 })
 
 const emit = defineEmits<{
@@ -66,6 +79,10 @@ const emit = defineEmits<{
 
 const instance = getCurrentInstance()
 const indicatorStyle = ref({ width: '0px', transform: 'translateX(0px)' })
+// 未传 gap 时不产出内联样式，交回 SCSS 里的 $dd-space-6 兜底
+const gapStyle = computed(() =>
+  props.gap === undefined ? undefined : { columnGap: `${props.gap}rpx` },
+)
 
 function labelOf(opt: string | { label: string }): string {
   return typeof opt === 'string' ? opt : opt.label
@@ -216,5 +233,25 @@ defineExpose({ refresh: measure })
 .dd-seg__label {
   line-height: 1.2;
   @include dd-ellipsis(1);
+}
+
+// ellipsis=false：不打点不换行，项按内容自适应宽度（放弃等分），标签强制单行；
+// ponytail: 总宽超出容器会溢出（未做横滑），标签过长请精简文案或保留省略
+.dd-seg--no-ellipsis {
+  .dd-seg__item,
+  .dd-seg-text__item {
+    flex: 0 0 auto;
+  }
+
+  .dd-seg__label {
+    overflow: visible;
+    white-space: nowrap;
+    text-overflow: clip;
+  }
+}
+
+// text 变体容器本可换行，no-ellipsis 时整体强制单行
+.dd-seg--text.dd-seg--no-ellipsis {
+  flex-wrap: nowrap;
 }
 </style>
