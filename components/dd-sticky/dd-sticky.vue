@@ -61,8 +61,9 @@ onMounted(() => {
 // H5: 使用原生 IntersectionObserver API
 function setupH5Observer() {
   // #ifdef H5
-  const el = rootRef.value
-  if (!el) return
+  // uni H5 模板 ref 拿到的是组件实例包装，真实 DOM 节点在 $el 上
+  const el = (rootRef.value as any)?.$el ?? rootRef.value
+  if (!(el instanceof Element)) return
   const px = rpxToPx(props.offsetTop)
   const io = new IntersectionObserver(
     (entries) => {

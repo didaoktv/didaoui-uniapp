@@ -21,11 +21,11 @@
           :style="{ width: 100 / columns + '%' }"
           @click="onSelect(item, i)"
         >
-          <view class="dd-action-sheet__icon">
-            <dd-icon v-if="item.icon" :name="item.icon" class="dd-action-sheet__icon-text" />
-            <text v-else class="dd-action-sheet__icon-text">{{ item.name.charAt(0) }}</text>
+          <view class="dd-action-sheet__icon" :style="iconStyle(item)">
+            <dd-icon v-if="item.icon" :name="item.icon" class="dd-action-sheet__icon-text" :color="iconFg(item)" />
+            <text v-else class="dd-action-sheet__icon-text" :style="{ color: iconFg(item) }">{{ item.name.charAt(0) }}</text>
           </view>
-          <text class="dd-action-sheet__name">{{ item.name }}</text>
+          <text class="dd-action-sheet__name" :style="item.color ? { color: item.color } : undefined">{{ item.name }}</text>
         </view>
       </view>
 
@@ -48,6 +48,8 @@ interface ActionItem {
   name: string
   icon?: string
   color?: string
+  /** 圆底上图标/首字的颜色；默认白。color 为浅色（金/黄等）时必须传深色，否则白字看不清 */
+  iconColor?: string
 }
 
 interface Props {
@@ -79,6 +81,21 @@ const emit = defineEmits<{
 function close() {
   emit('update:modelValue', false)
   emit('close')
+}
+
+/**
+ * 图标圆底配色：默认沿用品牌金渐变 + gold glow；item.color 指定时改用该色实心底
+ * ponytail: ceiling — color 项放弃 gold glow（glow 变量按语义名静态拼装，无法从任意色值推导），
+ * 视觉上仍是实心圆 + 白色图标，足够辨识；若后续需要彩色 glow，改在 item 上传 glow 变体名
+ */
+function iconStyle(item: ActionItem): Record<string, string> | undefined {
+  return item.color ? { background: item.color } : undefined
+}
+
+/** 圆底上的图标/首字颜色：仅在自定义底色时接管（默认白），否则返回 undefined 保持原有继承行为 */
+function iconFg(item: ActionItem): string | undefined {
+  if (!item.color && !item.iconColor) return undefined
+  return item.iconColor ?? '#ffffff'
 }
 
 function onMaskClick() {

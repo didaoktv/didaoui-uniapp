@@ -113,7 +113,7 @@ function onClick(e: Event) {
   }
 
   &__body {
-    padding: $dd-space-5;
+    padding: $dd-space-4 $dd-space-5;
     box-sizing: border-box;
   }
 
@@ -139,7 +139,7 @@ function onClick(e: Event) {
   }
 }
 
-// horizontal: 去除 header/footer 分隔线, body flex
+// horizontal: 行内排布；收窄相邻区块内侧间距，消除双倍缝隙（外缘与区块间均 32rpx）
 .dd-card--horizontal {
   display: flex;
   flex-direction: row;
@@ -152,15 +152,20 @@ function onClick(e: Event) {
     }
   }
 
-  .dd-card__body {
-    flex: 1;
-    padding: $dd-space-4;
+  .dd-card__header {
+    flex-shrink: 0;
+    padding: $dd-space-4 $dd-space-2 $dd-space-4 $dd-space-4;
   }
 
-  // horizontal 不堆叠 header/footer, 整体作为 row
-  .dd-card__header,
+  .dd-card__body {
+    flex: 1;
+    min-width: 0;
+    padding: $dd-space-4 $dd-space-2;
+  }
+
   .dd-card__footer {
-    padding: $dd-space-4;
+    flex-shrink: 0;
+    padding: $dd-space-4 $dd-space-4 $dd-space-4 $dd-space-2;
   }
 }
 
@@ -190,9 +195,5 @@ function onClick(e: Event) {
       padding: $pad;
     }
   }
-}
-
-.dd-card--horizontal.dd-card--active {
-  border: 2px solid var(--dd-primary, #{$dd-primary});
 }
 </style>
