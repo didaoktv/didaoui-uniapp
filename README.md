@@ -66,7 +66,7 @@ import { DdButton, DdInput } from '@didaoktv/didaoui-uniapp'
 - **帝王金** `#F5A623` — 主操作、强调、高光
 - **皇家蓝** `#2D4BA0` — 辅助色、深色基底
 - **星空黑** `#0A0A0A` — 页面底色
-- 语义色: success `#4CAF50` / warning `#F9A825` / error `#E53935` / info `#00BCD4`
+- 语义色: success `#32F08C` / warning `#F9A825` / error `#E53935` / info `#00BCD4`
 
 ### 字体
 

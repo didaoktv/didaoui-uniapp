@@ -50,7 +50,7 @@ $dd-success-100: #c8e6c9 !default;
 $dd-success-200: #a5d6a7 !default;
 $dd-success-300: #81c784 !default;
 $dd-success-400: #66bb6a !default;
-$dd-success-500: #4caf50 !default;
+$dd-success-500: #32f08c !default;
 $dd-success-600: #388e3c !default;
 $dd-success-700: #2e7d32 !default;
 $dd-success-800: #1b5e20 !default;
@@ -326,12 +326,12 @@ $dd-shadow-glow-blue-lg:
   0 0 24px rgba(45, 75, 160, 0.5),
   0 0 48px rgba(45, 75, 160, 0.25) !default;
 // 语义色发光 — md 带暗影托底，lg 为双层霓虹
-$dd-shadow-glow-success-sm: 0 0 8px rgba(76, 175, 80, 0.4) !default;
+$dd-shadow-glow-success-sm: 0 0 8px rgba(50, 240, 140, 0.4) !default;
 $dd-shadow-glow-success-md:
-  0 0 16px rgba(76, 175, 80, 0.4),
+  0 0 16px rgba(50, 240, 140, 0.4),
   0 4px 12px rgba(0, 0, 0, 0.3) !default;
 $dd-shadow-glow-success-lg:
-  0 0 24px rgba(76, 175, 80, 0.5),
+  0 0 24px rgba(50, 240, 140, 0.5),
   0 8px 24px rgba(0, 0, 0, 0.4) !default;
 $dd-shadow-glow-warning-sm: 0 0 8px rgba(249, 168, 37, 0.4) !default;
 $dd-shadow-glow-warning-md:
