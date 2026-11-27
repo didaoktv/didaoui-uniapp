@@ -43,7 +43,7 @@ import DdDropdownItem from './components/dd-dropdown-item/dd-dropdown-item.vue'
 import DdSidebar from './components/dd-sidebar/dd-sidebar.vue'
 import DdSidebarItem from './components/dd-sidebar-item/dd-sidebar-item.vue'
 
-// === Layout (13) ===
+// === Layout (14) ===
 import DdCard from './components/dd-card/dd-card.vue'
 import DdRoomCard from './components/dd-room-card/dd-room-card.vue'
 import DdGoodsCard from './components/dd-goods-card/dd-goods-card.vue'
@@ -54,6 +54,7 @@ import DdBillDetail from './components/dd-bill-detail/dd-bill-detail.vue'
 import DdWorkorderCard from './components/dd-workorder-card/dd-workorder-card.vue'
 import DdOrderList from './components/dd-order-list/dd-order-list.vue'
 import DdCalendar from './components/dd-calendar/dd-calendar.vue'
+import DdWeekGrid from './components/dd-week-grid/dd-week-grid.vue'
 import DdQrcode from './components/dd-qrcode/dd-qrcode.vue'
 import DdSubmitBar from './components/dd-submit-bar/dd-submit-bar.vue'
 import DdCartBar from './components/dd-cart-bar/dd-cart-bar.vue'
@@ -126,7 +127,7 @@ const components = {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdWeekGrid, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,
@@ -159,7 +160,7 @@ export {
   DdDrawer, DdTabbar, DdTabbarItem, DdBacktop,
   DdCollapse, DdCollapseItem, DdDropdownMenu, DdDropdownItem,
   DdSidebar, DdSidebarItem,
-  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdQrcode,
+  DdCard, DdRoomCard, DdGoodsCard, DdFeatureGrid, DdWaterfall, DdSticky, DdBillDetail, DdWorkorderCard, DdOrderList, DdCalendar, DdWeekGrid, DdQrcode,
   DdSubmitBar,
   DdCartBar,
   DdTag, DdStatCard, DdChampionCard, DdAvatar, DdAvatarGroup, DdBadge,

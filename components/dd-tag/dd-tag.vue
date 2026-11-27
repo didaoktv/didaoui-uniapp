@@ -24,7 +24,7 @@ import DdIcon from '../dd-icon/dd-icon.vue'
 
 interface Props {
   type?: 'filled' | 'outlined' | 'dot'
-  variant?: 'primary' | 'accent' | 'success' | 'warning' | 'error' | 'info' | 'default'
+  variant?: 'primary' | 'accent' | 'success' | 'mint' | 'warning' | 'error' | 'info' | 'default'
   size?: 'sm' | 'md'
   round?: boolean
   closable?: boolean
@@ -141,6 +141,11 @@ function onClose(e: Event) {
     background: var(--dd-success, #{$dd-success});
     color: var(--dd-success-contrast, #{$dd-success-contrast});
   }
+  // mint 实心：薄荷绿底 + 深墨字（白字在 mint-500 上仅 1.5:1，不可读）
+  &.dd-tag--mint {
+    background: var(--dd-mint, #{$dd-mint});
+    color: var(--dd-mint-contrast, #{$dd-mint-contrast});
+  }
   &.dd-tag--warning {
     background: var(--dd-warning, #{$dd-warning});
     color: var(--dd-warning-contrast, #{$dd-warning-contrast});
@@ -167,6 +172,7 @@ function onClose(e: Event) {
   &.dd-tag--primary { color: var(--dd-primary-400, #{$dd-primary-400}); border-color: var(--dd-primary, #{$dd-primary}); }
   &.dd-tag--accent { color: var(--dd-accent-300, #{$dd-accent-300}); border-color: var(--dd-accent, #{$dd-accent}); }
   &.dd-tag--success { color: var(--dd-success-400, #{$dd-success-400}); border-color: var(--dd-success, #{$dd-success}); }
+  &.dd-tag--mint { color: var(--dd-mint-700, #{$dd-mint-700}); border-color: var(--dd-mint, #{$dd-mint}); }
   &.dd-tag--warning { color: var(--dd-warning-400, #{$dd-warning-400}); border-color: var(--dd-warning, #{$dd-warning}); }
   &.dd-tag--error { color: var(--dd-error-400, #{$dd-error-400}); border-color: var(--dd-error, #{$dd-error}); }
   &.dd-tag--info { color: var(--dd-info-400, #{$dd-info-400}); border-color: var(--dd-info, #{$dd-info}); }
@@ -182,6 +188,7 @@ function onClose(e: Event) {
   &.dd-tag--primary .dd-tag__dot { background: var(--dd-primary, #{$dd-primary}); }
   &.dd-tag--accent .dd-tag__dot { background: var(--dd-accent, #{$dd-accent}); }
   &.dd-tag--success .dd-tag__dot { background: var(--dd-success, #{$dd-success}); }
+  &.dd-tag--mint .dd-tag__dot { background: var(--dd-mint, #{$dd-mint}); }
   &.dd-tag--warning .dd-tag__dot { background: var(--dd-warning, #{$dd-warning}); }
   &.dd-tag--error .dd-tag__dot { background: var(--dd-error, #{$dd-error}); }
   &.dd-tag--info .dd-tag__dot { background: var(--dd-info, #{$dd-info}); }

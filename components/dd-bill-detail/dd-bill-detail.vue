@@ -245,7 +245,7 @@ function onClick(item: BillItem, index: number) {
   border-radius: $dd-radius-sm;
 
   &--unpaid { color: var(--dd-warning-400, #{$dd-warning-400}); background: rgba(249, 168, 37, 0.12); }
-  &--paid { color: var(--dd-success-400, #{$dd-success-400}); background: rgba(50, 240, 140, 0.12); }
+  &--paid { color: var(--dd-success-400, #{$dd-success-400}); background: rgba(76, 175, 80, 0.12); }
   &--refunding { color: var(--dd-info-400, #{$dd-info-400}); background: rgba(0, 188, 212, 0.12); }
   &--refunded { color: var(--dd-warning-400, #{$dd-warning-400}); background: rgba(249, 168, 37, 0.12); }
   &--cancelled { color: var(--dd-text-tertiary, #{$dd-text-tertiary}); background: rgba(255, 255, 255, 0.08); }

@@ -153,7 +153,7 @@ function onMaskClick() {
 
     &--success {
       background: var(--dd-gradient-success, #{$dd-gradient-success});
-      box-shadow: 0 0 40rpx rgba(50, 240, 140, 0.4);
+      box-shadow: 0 0 40rpx rgba(76, 175, 80, 0.4);
     }
 
     &--warning {

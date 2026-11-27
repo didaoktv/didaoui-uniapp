@@ -4,7 +4,7 @@
 
 ## 事实源（信息冲突时以此为准）
 
-- [index.ts](index.ts): 组件注册与导出的唯一事实源，101 个组件按分类注释归组；新增/删除组件必须同步此文件
+- [index.ts](index.ts): 组件注册与导出的唯一事实源，102 个组件按分类注释归组；新增/删除组件必须同步此文件
 - [AGENTS.md](AGENTS.md): 编码守则——目录结构、BEM、`var(--dd-x, #{$dd-x})` 主题消费形式、多端条件编译、type-check 与发布红线
 - [README.md](README.md): 面向使用者的安装说明、三层主题机制、设计规范
 - [scss/_variables.scss](scss/_variables.scss): 全量 `$dd-*` 设计 token（`!default`，消费者可编译期覆盖）
@@ -18,7 +18,7 @@
 ```ts
 // main.ts —— 两端（uniapp-staff/customer）已统一此接法
 import ui from '@didaoktv/didaoui-uniapp'
-app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
+app.use(ui) // 102 个 dd-* 全局注册，模板直接写 <dd-xxx>
 
 // App.vue <style> —— 运行时主题（不引入则组件用 SCSS 兜底值渲染）
 // @import '@didaoktv/didaoui-uniapp/scss/theme';
@@ -81,6 +81,7 @@ app.use(ui) // 101 个 dd-* 全局注册，模板直接写 <dd-xxx>
 - [dd-workorder-card](components/dd-workorder-card/dd-workorder-card.vue): 工单卡。title、type service/repair/feedback/decoration/todo、status、checklist、progress、time；emit check({item, done})/click
 - [dd-order-list](components/dd-order-list/dd-order-list.vue): 订单列表（外卖平台式订单卡，收银合并收款场景）。选择器在卡片最左侧垂直居中；内容三行（订单号+收款状态 / 商品卡横向滚动+右侧渐变蒙版总价件数 / 账单信息与时间左右分列）。orders: DdOrderItem[](id/title/statusText/timeText/remark/lines{name,qty/thumb/price(分)}/total(分))、v-model:selected 已选 id 集合（点卡片切换，选中态主色描边）、checkable；emit update:selected/item-click；金额经 dd-price 渲染；类型 DdOrderItem/DdOrderLine 从 index.ts 导出；空列表走 empty 插槽
 - [dd-calendar](components/dd-calendar/dd-calendar.vue): 月历+时段选择（日期多选区间/禁选/时段格）
+- [dd-week-grid](components/dd-week-grid/dd-week-grid.vue): 周视图排班网格（7 列周一~周日）；days 契约（服务端补齐 7 天，REST 日 shifts 为空、前端零派生）；组件库首个周视图，dd-calendar 是月历语义不复用；day-tap 事件回传所点日期格
 - [dd-qrcode](components/dd-qrcode/dd-qrcode.vue): canvas 二维码（内容/尺寸/前景背景色/logo；前景背景色是库内仅有的硬编码色值例外）
 - [dd-submit-bar](components/dd-submit-bar/dd-submit-bar.vue): 提交订单栏（底部固定：合计价格+提交按钮+tip 提示）。price(分)/label/currency/decimalLength/suffixLabel、buttonText/buttonType/buttonColor/loading/disabled、tip/tipIcon、textAlign、placeholder/safeAreaInsetBottom；emit submit；slots top/tip/default/button（价格区由 dd-price 渲染）
 - [dd-cart-bar](components/dd-cart-bar/dd-cart-bar.vue): 购物车栏（外卖式：入口圆钮+数量角标 → 弹出已选商品弹层）。items: DdCartItem[](id/name/image/price(分)/count/specs) 受控、v-model 弹层显隐、label/suffixLabel/tips/title/clearText/clearConfirm、buttonText/buttonType/buttonColor/loading/disabled（空车自动禁）、maxListHeight/placeholder/safeAreaInsetBottom；emit update:modelValue/change(items，减到0剔除)/submit/clear/item-click/open/close；类型 DdCartItem 从 index.ts 导出；弹层复用 dd-popup，商品行复用 dd-goods-card 小号横卡（stepper 走 price-right 插槽），清空走库内 dd-dialog 二次确认（H5 恒在弹层之上）
